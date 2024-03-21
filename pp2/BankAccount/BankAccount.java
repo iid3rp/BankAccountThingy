@@ -1,5 +1,13 @@
 package pp2.BankAccount; // packaging rani.. ayaw sundoga kung ang imohang java file kay same sa folder saimohang BankAccount java file
 
+import java.awt.*;
+import javax.swing.*;
+import java.awt.image.*;
+import java.util.*;
+import java.io.*;
+import javax.imageio.*;
+import java.net.*;
+
 public class BankAccount
 {
     // self-explanatory na mga variables
@@ -10,7 +18,7 @@ public class BankAccount
     private String givenName;
     private long accountNumber;
     private double balance;
-    private static double interestRate = 0;
+    private static double interestRate = 0; 
     
     // default constructor
     public BankAccount()
@@ -51,6 +59,31 @@ public class BankAccount
         givenName = last == null? first : last;
         accountName = givenName + ", " + firstName + " " + middleName.toUpperCase().charAt(0) + ".";
         accountNumber = num;
+    }
+    
+    public BankAccount(BankAccount bank)
+    {
+        firstName = bank.getFirstName();
+        middleName = bank.getMiddleName();
+        lastName = bank.getLastName();
+        givenName = bank.getLastName() == null? getFirstName() : getLastName();
+        accountName = givenName + ", " + firstName + " " + middleName.toUpperCase().charAt(0) + ".";
+        accountNumber = bank.getAccountNumber();
+    }
+    
+    public String getFirstName()
+    {
+        return firstName;
+    }
+    
+    public String getMiddleName()
+    {
+        return middleName;
+    }
+    
+    public String getLastName()
+    {
+        return lastName;
     }
     
     // magkuha ug account number:
@@ -141,4 +174,44 @@ public class BankAccount
         }
         else return false;
     }
+    
+    // optional: magkuha ug image sa bankaccount with the use of the bank account's number as the file name:
+    public BufferedImage tryImage(String s)
+    {
+        BufferedImage bf = new BufferedImage(80, 80, BufferedImage.TYPE_INT_ARGB);  
+        try
+        {     
+            String path = this.getClass().getResource("Accounts/" + getAccountNumber() + ".png") == null? 
+                          this.getClass().getResource("Resources/default-image.jpg").getPath() :  // true
+                          this.getClass().getResource("Accounts/" + getAccountNumber() + ".png").getPath(); // false
+                          
+            Image image = ImageIO.read(new File(path));
+            image = image.getScaledInstance(80, 80, Image.SCALE_SMOOTH); 
+            bf = paintImage(bf, image);
+        }
+        catch(NullPointerException | IOException e)
+        {
+            e.printStackTrace();
+            System.out.print("hello WOrld!");
+        }  
+        return bf;
+    }
+    
+    private BufferedImage paintImage(BufferedImage b, Image i)
+    {
+        Graphics2D g2d = b.createGraphics();
+        g2d.setRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
+        g2d.setColor(Color.GREEN);
+        g2d.fillOval(0, 0, 80, 80);
+        g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
+        g2d.drawImage(i, 0, 0, null);
+        g2d.dispose();
+        return b;
+    }
+    
+    public static void main(String[] a) {
+        BankAccount bank = new BankAccount();
+        System.out.print(bank.tryImage(""));
+    }
+
 }
