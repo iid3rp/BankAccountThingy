@@ -1,9 +1,45 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.text.*;
-import javax.swing.event.*;
-import pp2.BankAccount.*;
+import java.util.Arrays;
+import java.util.Random;
+import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JLabel;
+import javax.swing.JDialog;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.SwingConstants;
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.Point;
+import java.awt.image.BufferedImage;
+import java.awt.Image;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Cursor;
+import java.awt.FontMetrics;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseMotionAdapter;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.io.IOException;
+import java.io.File;
+import java.net.URL;
+import pp2.BankAccount.BankAccount;
+import pp2.BankAccount.BankAccountList;
+import pp2.BankAccount.BankAccountInterface;
+import pp2.BankAccount.Dialogs.AddBankAccount;
+import pp2.BankAccount.Dialogs.EditBankAccount;
 
 public class InitialFrame extends JFrame
 {
@@ -15,12 +51,7 @@ public class InitialFrame extends JFrame
     public InitialFrame()
     {
         super();
-        setVisible(false);
-        setSize(new Dimension(1280, 720));
-        setDefaultCloseOperation(3);
-        setLocationRelativeTo(null);
-        setUndecorated(true);
-        
+        initializeComponent();        
         JPanel panel = createPanel();
         add(panel);
         setContentPane(panel);
@@ -77,6 +108,29 @@ public class InitialFrame extends JFrame
         new InitialFrame();
     }
     
+    public void initializeComponent()
+    {
+        setVisible(false);
+        setSize(new Dimension(1280, 720));
+        setDefaultCloseOperation(3);
+        setLocationRelativeTo(null);
+        setUndecorated(true);
+        addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                if(e.getKeyCode() == KeyEvent.VK_SLASH)
+                {
+                    search.setFocusable(true);
+                    search.setText("");
+                    search.requestFocus();
+                }
+            }
+        });
+
+    }
+    
     public JPanel createPanel()
     {
         JPanel panel = new JPanel();
@@ -96,7 +150,7 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                search.setEnabled(false);
+                search.setFocusable(false);
                 search.setText("[/] to Search   ");
                 list.restore();
             }
@@ -185,26 +239,9 @@ public class InitialFrame extends JFrame
         searchBar.setBounds(300, 5, 400, 30);
         searchBar.setText("[/] to Search   ");
         searchBar.setEditable(true);
-        searchBar.setFocusable(true);
-        searchBar.setEnabled(false); // Disabled initially
+        searchBar.setFocusable(false);
         searchBar.setHorizontalAlignment(SwingConstants.RIGHT);
-        
-        // Action listener for forward slash trigger
-        searchBar.getActionMap().put("triggerSearch", new AbstractAction() 
-        {
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-                if(searchBar.getText().startsWith("/")) 
-                {
-                    // Handle search logic here if text starts with "/"
-                    String searchTerm = searchBar.getText().substring(1); // Remove leading "/"
-                    // Implement your search logic based on searchTerm
-                    // Update UI to display search results
-                }
-            }   
-        });
-        
+
         searchBar.getDocument().addDocumentListener(new DocumentListener() 
         {
             @Override
@@ -243,9 +280,10 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e) 
             {
-                    searchBar.setEnabled(true);
-                    searchBar.setText("");
-                    searchBar.setForeground(Color.BLACK); // Set back to default color
+                search.setEditable(true);
+                search.setFocusable(true);
+                searchBar.setText(""); // Set back 
+                search.requestFocus();
             }
         });
         searchBar.setVisible(true);
@@ -308,7 +346,17 @@ public class InitialFrame extends JFrame
             new BankAccount("cirstName", "MiddleName", "LastName", 123455643355L, 0),
             new BankAccount("dirstName", "MiddleName", "LastName", 674853456345L, 0),
             new BankAccount("eirstName", "MiddleName", "LastName", 947537432498L, 0),
-            new BankAccount("Francis", "L<nope>", "Maiden", 1234567890123456L, 0),
+            new BankAccount("girstName", "MiddleName", "LastName", 734097398562L, 0),
+            new BankAccount("hirstName", "MiddleName", "LastName", 20848728474L, 0),
+            new BankAccount("iirstName", "MiddleName", "LastName", 130927348635L, 0),
+            new BankAccount("jirstName", "MiddleName", "LastName", 698474724381L, 0),
+            new BankAccount("kirstName", "MiddleName", "LastName", 243756398642L, 0),
+            new BankAccount("lirstName", "MiddleName", "LastName", 834956298424L, 0),
+            new BankAccount("a", "MiddleName", "LastName", 234562356235L, 0),
+            new BankAccount("birstName", "MiddleName", "LastName", 234562356235L, 0),
+            new BankAccount("cirstName", "MiddleName", "LastName", 123455643355L, 0),
+            new BankAccount("dirstName", "MiddleName", "LastName", 674853456345L, 0),
+            new BankAccount("eirstName", "MiddleName", "LastName", 947537432498L, 0),
             new BankAccount("girstName", "MiddleName", "LastName", 734097398562L, 0),
             new BankAccount("hirstName", "MiddleName", "LastName", 20848728474L, 0),
             new BankAccount("iirstName", "MiddleName", "LastName", 130927348635L, 0),
@@ -439,7 +487,7 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                search.setEnabled(false);
+                search.setFocusable(false);
                 search.setText("[/] to Search   ");
                 list.restore();
             }
@@ -473,7 +521,7 @@ public class InitialFrame extends JFrame
                 {
                     Point currentMouse = e.getLocationOnScreen();
 
-                    int deltaX = currentMouse.x - offset.x;
+                    int deltaX = currentMouse.x - offset.x - 250;
                     int deltaY = currentMouse.y - offset.y;
 
                     setLocation(deltaX, deltaY);
@@ -483,7 +531,8 @@ public class InitialFrame extends JFrame
         return panel;
     }
     
-    public JLabel createTitlexeew()
+    @Deprecated
+    public JLabel createTitlexeew() // reference of the new label
     {
         JLabel label = new JLabel();
         return label;

@@ -55,16 +55,17 @@ public class BankAccountList
         size = 0;
     }
     
-    public boolean search(String queue)
+    // search query,, diri ang process sa hybrid searching..
+    public boolean search(String query)
     {
         container.removeAll();
         int index = 0; 
         for(BankAccount bank : ba)
         {
-            if((bank.getFirstName().toLowerCase().trim().contains(queue.toLowerCase().trim()) || queue.contains(bank.getFirstName().toLowerCase().trim())) || 
-               (bank.getMiddleName().toLowerCase().trim().contains(queue.toLowerCase().trim()) || queue.contains(bank.getMiddleName().toLowerCase().trim())) ||
-               (bank.getLastName().toLowerCase().trim().contains(queue.toLowerCase().trim()) || queue.contains(bank.getLastName().toLowerCase().trim())) ||
-               ((bank.getAccountNumber() + "").contains(queue))) 
+            if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getFirstName().toLowerCase().trim())) || 
+               (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getMiddleName().toLowerCase().trim())) ||
+               (bank.getLastName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getLastName().toLowerCase().trim())) ||
+               ((bank.getAccountNumber() + "").contains(query))) 
             {
                 container.setPreferredSize(new Dimension(1030, 104 * index + 1));
                 BankAccountInterface bankInterface = new BankAccountInterface(bank);

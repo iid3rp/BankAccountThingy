@@ -7,7 +7,7 @@ import java.awt.event.*;
 public class BankAccountInterface extends JPanel
 {
     public BankAccount b;
-    
+    public JLabel image;
     public BankAccountInterface(BankAccount ba)
     {
         super();
@@ -55,7 +55,7 @@ public class BankAccountInterface extends JPanel
         JLabel deposit = createDeposit();
         JLabel withdraw = createWithdraw();
         
-        JLabel image = createImage();
+        image = createImage();
         
         add(image);
         add(name);
@@ -158,7 +158,7 @@ public class BankAccountInterface extends JPanel
             }
         };
         label.setLayout(null);
-        label.setBounds(10, 10, 80, 80);
+        label.setBounds(15, 15, 70, 70);
         label.setVisible(true);
         return label;
     }
