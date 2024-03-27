@@ -1,99 +1,18 @@
 package pp2.BankAccount;
-import java.awt.*;
-import javax.swing.*;
-import java.awt.event.*;
 
 public class BankAccountList
 {
-    // katong bank account na array
-    private JScrollPane pane;
-    private BankAccount[] ba;
-    private JPanel container;
-    private int size;
-    
-    public BankAccountList(BankAccount[] b)
-    {
-        size = b.length;
-        ba = b;
-        // add a container to put stuff :3
-        container = new JPanel();
-        container.setLayout(null);
-        container.setLocation(0, 0);
-        container.setBackground(Color.GRAY);
-        container.setSize(new Dimension(1030, 104 * b.length));
-        container.setPreferredSize(new Dimension(1030, 104 * b.length));
-        
-        int index = 0;
-        // we put the components here instead
-        for(BankAccount bank : b)
-        {
-            BankAccountInterface bankInterface = new BankAccountInterface(bank);
-            bankInterface.setBounds(0, (101 * index++), 1030, 100);
-            container.add(bankInterface);
-        }
-        
-        pane = new JScrollPane(container);     
-        pane.setSize(new Dimension(1030, 720));
-        pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        pane.addMouseWheelListener(new MouseWheelListener() 
-        {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e) 
-            {
-                // Increase scroll sensitivity by multiplying the scroll distance
-                int unitsToScroll = e.getWheelRotation() * e.getScrollAmount() * 5; // Adjust multiplier as needed
-                JScrollBar verticalScrollBar = pane.getVerticalScrollBar();
-                verticalScrollBar.setValue(verticalScrollBar.getValue() + unitsToScroll);
-            }
-        });  
-    }
-    
-     // default constructor
+    public int size;
+    public BankAccount[] ba;
     public BankAccountList()
     {
         size = 0;
     }
     
-    // search query,, diri ang process sa hybrid searching..
-    public boolean search(String query)
+    public BankAccountList(BankAccountList b)
     {
-        container.removeAll();
-        int index = 0; 
-        for(BankAccount bank : ba)
-        {
-            if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getFirstName().toLowerCase().trim())) || 
-               (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getMiddleName().toLowerCase().trim())) ||
-               (bank.getLastName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getLastName().toLowerCase().trim())) ||
-               ((bank.getAccountNumber() + "").contains(query))) 
-            {
-                container.setPreferredSize(new Dimension(1030, 104 * index + 1));
-                BankAccountInterface bankInterface = new BankAccountInterface(bank);
-                bankInterface.setBounds(0, (101 * index), 1030, 100);
-                container.add(bankInterface);  
-                index++;  
-            }
-        }
-        container.validate();
-        pane.validate();
-        return true;
-    }
-    
-    public boolean restore()
-    {
-        container.removeAll();
-        int index = 0; 
-        for(BankAccount bank : ba)
-        {
-            container.setPreferredSize(new Dimension(1030, 104 * index + 1));
-            BankAccountInterface bankInterface = new BankAccountInterface(bank);
-            bankInterface.setBounds(0, (101 * index), 1030, 100);
-            container.add(bankInterface);   
-            index++; 
-        }
-        container.validate();
-        pane.validate();
-        return true;
+        size = b.getLength();
+        ba = b.getList();
     }
     
     // addition sa bank account sa array
@@ -181,12 +100,32 @@ public class BankAccountList
         else return false;
     }
     
-    public JScrollPane getPane()
+    // getting the length of the list..
+    public int getLength()
     {
-        return pane;
+        return ba.length;
     }
-
+    
+    // same sa searchByName() na method, pero dapat exact number ang ibutang...
+    @Deprecated
+    public BankAccount searchByNumber(long num)
+    {
+        for(BankAccount b : ba)
+        {
+            if(b != null)
+            {
+                if(b.getAccountNumber() == num)
+                {
+                    return b;
+                }
+            }
+        }
+        return null;
+    }
+    
+    
     // search sa index
+    @Deprecated
     public BankAccount searchByIndex(int i)
     {
         if(i >= 0 && i <= size)
@@ -197,6 +136,7 @@ public class BankAccountList
     }   
     
     // search sa pangalan
+    @Deprecated
     public BankAccount searchByName(String name)
     {
         for(BankAccount b : ba)
@@ -213,22 +153,7 @@ public class BankAccountList
         return null;
     }
     
-    // same sa searchByName() na method, pero dapat exact number ang ibutang...
-    public BankAccount searchByNumber(long num)
-    {
-        for(BankAccount b : ba)
-        {
-            if(b != null)
-            {
-                if(b.getAccountNumber() == num)
-                {
-                    return b;
-                }
-            }
-        }
-        return null;
-    }
-    
+    @Deprecated
     // update katong account nimo..
     public void updateAccount(BankAccountInterface b, String name, long num)
     {
@@ -236,14 +161,8 @@ public class BankAccountList
         b.b.setAccountNumber(num);
     }
     
-    // getting the length of the list..
-    public int getLength()
-    {
-        return ba.length;
-    }
-    
     // getting the ArrayList<BankAccount>
-    public BankAccount[] getArray()
+    public BankAccount[] getList()
     {
         return this.ba;
     }

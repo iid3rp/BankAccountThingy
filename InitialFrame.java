@@ -37,14 +37,14 @@ import java.io.File;
 import java.net.URL;
 import pp2.BankAccount.BankAccount;
 import pp2.BankAccount.BankAccountList;
+import pp2.BankAccount.BankAccountListPane;
 import pp2.BankAccount.BankAccountInterface;
 import pp2.BankAccount.Dialogs.AddBankAccount;
-import pp2.BankAccount.Dialogs.EditBankAccount;
 
 public class InitialFrame extends JFrame
 {
     public JTextField search;
-    public BankAccountList list;
+    public BankAccountListPane list;
     public JLabel closeApplication;
     public boolean isDragging;
     public Point offset;
@@ -73,7 +73,7 @@ public class InitialFrame extends JFrame
         info.add(closeBank);
         info.add(closeApplication);
                 
-        /*BankAccountList*/ list = createList();
+        /*BankAccountListPane*/ list = createList();
         JScrollPane pane = list.getPane();
         //JScrollPane pane = createScrollPane();
         pane.setLocation(250, 40);
@@ -218,10 +218,10 @@ public class InitialFrame extends JFrame
         label.setLayout(null);
         label.setText("Title of The Frame..");
         label.setForeground(Color.BLACK);
-        // Get the FontMetrics object associated with the font
+        
         FontMetrics metrics = getFontMetrics(label.getFont());
         
-        // Calculate the width and height of the text
+        
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(10, 10, width, height);
@@ -234,7 +234,6 @@ public class InitialFrame extends JFrame
     {
         JTextField searchBar = new JTextField();
         
-        // Set font style to Segoe UI 15 plain
         searchBar.setFont(new Font("Segoe UI", Font.PLAIN, 15));
         searchBar.setBounds(300, 5, 400, 30);
         searchBar.setText("[/] to Search   ");
@@ -298,10 +297,10 @@ public class InitialFrame extends JFrame
         label.setLayout(null);
         label.setText("closeBank");
         label.setForeground(Color.BLACK);
-        // Get the FontMetrics object associated with the font
+        
         FontMetrics metrics = getFontMetrics(label.getFont());
         
-        // Calculate the width and height of the text
+        
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(1030 - width - 30 - 100, 10, width, height);
@@ -316,10 +315,10 @@ public class InitialFrame extends JFrame
         label.setLayout(null);
         label.setText("closeApp");
         label.setForeground(Color.RED);
-        // Get the FontMetrics object associated with the font
+        
         FontMetrics metrics = getFontMetrics(label.getFont());
         
-        // Calculate the width and height of the text
+        
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(1030 - width - 20, 10, width, height);
@@ -336,37 +335,29 @@ public class InitialFrame extends JFrame
     }
     
     
-    public BankAccountList createList()
+    public BankAccountListPane createList()
     {
-        BankAccount[] b =
-        {
-       
-            new BankAccount("a", "MiddleName", "LastName", 234562356235L, 0),
-            new BankAccount("birstName", "MiddleName", "LastName", 234562356235L, 0),
-            new BankAccount("cirstName", "MiddleName", "LastName", 123455643355L, 0),
-            new BankAccount("dirstName", "MiddleName", "LastName", 674853456345L, 0),
-            new BankAccount("eirstName", "MiddleName", "LastName", 947537432498L, 0),
-            new BankAccount("girstName", "MiddleName", "LastName", 734097398562L, 0),
-            new BankAccount("hirstName", "MiddleName", "LastName", 20848728474L, 0),
-            new BankAccount("iirstName", "MiddleName", "LastName", 130927348635L, 0),
-            new BankAccount("jirstName", "MiddleName", "LastName", 698474724381L, 0),
-            new BankAccount("kirstName", "MiddleName", "LastName", 243756398642L, 0),
-            new BankAccount("lirstName", "MiddleName", "LastName", 834956298424L, 0),
-            new BankAccount("a", "MiddleName", "LastName", 234562356235L, 0),
-            new BankAccount("birstName", "MiddleName", "LastName", 234562356235L, 0),
-            new BankAccount("cirstName", "MiddleName", "LastName", 123455643355L, 0),
-            new BankAccount("dirstName", "MiddleName", "LastName", 674853456345L, 0),
-            new BankAccount("eirstName", "MiddleName", "LastName", 947537432498L, 0),
-            new BankAccount("girstName", "MiddleName", "LastName", 734097398562L, 0),
-            new BankAccount("hirstName", "MiddleName", "LastName", 20848728474L, 0),
-            new BankAccount("iirstName", "MiddleName", "LastName", 130927348635L, 0),
-            new BankAccount("jirstName", "MiddleName", "LastName", 698474724381L, 0),
-            new BankAccount("kirstName", "MiddleName", "LastName", 243756398642L, 0),
-            new BankAccount("lirstName", "MiddleName", "LastName", 834956298424L, 0),
-            new BankAccount("mirstName", "MiddleName", "LastName", 995084504030L, 0)
-        };
+        BankAccountList bankie = new BankAccountList();
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
                
-        BankAccountList bl = new BankAccountList(b);
+        BankAccountListPane bl = new BankAccountListPane(bankie);
         return bl;
     }
     
@@ -378,10 +369,10 @@ public class InitialFrame extends JFrame
         label.setText("<html>" +
                        "Bank <br/> Account <br/> Center </html>");
         label.setForeground(Color.WHITE);
-        // Get the FontMetrics object associated with the font
+        
         FontMetrics metrics = getFontMetrics(label.getFont());
         
-        // Calculate the width and height of the text
+        
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(30, 30, width, height * 3);

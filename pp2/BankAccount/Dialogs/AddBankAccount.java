@@ -37,11 +37,12 @@ import java.io.IOException;
 import java.io.File;
 import java.net.URL;
 import pp2.BankAccount.BankAccount;
-import pp2.BankAccount.BankAccountList;
+import pp2.BankAccount.BankAccountListPane;
 import pp2.BankAccount.BankAccountInterface;
 public class AddBankAccount extends JDialog
 {
     private boolean result;
+    
     
     public JPanel imageEditor;
     
@@ -50,16 +51,33 @@ public class AddBankAccount extends JDialog
     public JTextField lastName;
     public JLabel accountNumber;
     
+    public JLabel zoomIn;
+    public JLabel zoomOut;
+    public JLabel removeImage;
+    
+    public JLabel accountPicture;
+    
     public Point offset;
     public boolean isDragging;
     
     private boolean confirm = false;
     
+    private enum zoom
+    {
+        IN, OUT
+    }
+    
     public Random rand = new Random();
+    
+    public double mult = 1;
+    public double refX = .5;
+    public double refY = .5;
+    
+    private int picWidth, picHeight, picX, picY;
     public AddBankAccount()
     {
         super();
-        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL); // this ensures modallity of the jdialog
+        setModalityType(ModalityType.APPLICATION_MODAL); // this ensures modallity of the jdialog
         setTitle("Adding a Bank Account");    
         setSize(new Dimension(550, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -68,6 +86,10 @@ public class AddBankAccount extends JDialog
         
         JPanel panel = createPanel();
         add(panel);
+        
+        removeImage = createRemoveImage();
+        zoomIn = createZoom(zoom.IN);
+        zoomOut = createZoom(zoom.OUT);
         
         imageEditor = createImagePanel();
         imageEditor.addMouseListener(new MouseAdapter()
@@ -88,11 +110,16 @@ public class AddBankAccount extends JDialog
         panel.add(createCancel(10, "X"));
         panel.add(createCancel(getHeight() - 50, "Cancel"));
         
+        
         panel.add(createTitle(20, 20, 10, "Add Account"));
         
         accountNumber = createCreditNumber();
         panel.add(accountNumber);
         panel.add(createNumber());
+        
+        panel.add(zoomIn);
+        panel.add(zoomOut);
+        panel.add(removeImage);
         
         panel.add(firstName);
         panel.add(middleName);
@@ -181,24 +208,26 @@ public class AddBankAccount extends JDialog
     {
         System.out.println(i.getWidth() + " "+  i.getHeight());
         
-        double ratio = Math.min(i.getWidth(), i.getHeight()) / 270;
+        double ratio = Math.min(i.getWidth(), i.getHeight()) / 180;
         int width = (int) (i.getWidth() / ratio);  
-        int height = (int) (i.getHeight() / ratio); 
-        System.out.println("" + width + " " + height + " " + ratio);
+        int height = (int) (i.getHeight() / ratio);
+        picWidth = (int) (width * mult);
+        picHeight = (int) (height * mult);
+        // System.out.println("" + width + " " + height + " " + ratio);
         JLabel label = new JLabel()
         {
-           
-            Image img = i.getScaledInstance(width, height, Image.SCALE_SMOOTH); 
             @Override
             protected void paintComponent(Graphics g)
             {
                 super.paintComponent(g);
-                g.drawImage(i, 0, 0, width, height, null);
+                Image img = i.getScaledInstance((int) (width * mult),(int) (height * mult), Image.SCALE_SMOOTH); 
+                g.drawImage(i, 0, 0, (int) (width * mult),(int) (height * mult), null);
             }
         };
         label.setLayout(null);
-        label.setBounds((imageEditor.getWidth() / 2) - (width / 2),
-                        (imageEditor.getHeight() / 2) - (height / 2), width, height);
+        label.setBounds((int) (imageEditor.getWidth() * refX) - (int) (width * refX),
+                        (int) (imageEditor.getHeight() * refY) - (int) (height * refY), 
+                        (int) (width * mult),(int) (height * mult));
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()
         {   
@@ -253,9 +282,71 @@ public class AddBankAccount extends JDialog
                     newY = newY > 0? 0
                          : newY < imageEditor.getHeight() - label.getHeight()? imageEditor.getHeight() - label.getHeight()
                          : newY;
-                    
-                    System.out.println(newX + ", " + newY);
+                    refX = (Math.abs(newX) + (imageEditor.getWidth() / 2)) / (width * mult);
+                    refY = (Math.abs(newY) + (imageEditor.getWidth() / 2)) / (height * mult); 
+                    System.out.println(refX + ", " + refY);
                     label.setLocation(newX, newY);
+                }
+            }
+        });
+        return label;
+    }
+    
+    private JLabel createZoom(zoom z)
+    {   
+        
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        label.setText(z == zoom.IN? "+" : "-");
+        Point p = z == zoom.IN? new Point(100, 230) : new Point(130, 230);
+        label.setBounds(p.x, p.y, 30, 30);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                System.out.println();
+                mult = mult < 1 ? 1 
+                                : (mult > 3 ? 3 
+                                            : (z == zoom.IN ? Math.min(mult + .1, 3) 
+                                                            : Math.max(mult - .1, 1)));
+                
+                // System.out.println(mult); // debug;
+                double zoomedWidth = picWidth * mult;
+                double zoomedHeight = picHeight * mult; 
+                System.out.print(zoomedWidth + " " + zoomedHeight + " " + picWidth + " " + picHeight); //debug
+            
+                double xOffset = (imageEditor.getWidth() - zoomedWidth) * refX;
+                double yOffset = (imageEditor.getWidth() - zoomedHeight) * refY;
+                
+                // Set new bounds for the component (replace with your library's method)
+                accountPicture.setBounds((int) xOffset, (int) yOffset, (int) (picWidth * mult), (int) (picHeight * mult));
+                accountPicture.repaint();
+                accountPicture.validate();
+                imageEditor.repaint();
+
+            }
+        });
+        return label;
+    }
+    
+    private JLabel createRemoveImage()
+    {   
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 30));
+        label.setText("x");
+        label.setBounds(70, 230, 30, 30);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if(accountPicture != null)
+                {
+                    imageEditor.remove(accountPicture);
+                    imageEditor.repaint();
                 }
             }
         });
@@ -271,7 +362,7 @@ public class AddBankAccount extends JDialog
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg");
         fileChooser.setFileFilter(filter);
 
-        JLabel label = new JLabel();
+        accountPicture = new JLabel();
         // Show the file chooser dialog
         int result = fileChooser.showOpenDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) 
@@ -283,15 +374,15 @@ public class AddBankAccount extends JDialog
             try 
             {
                 image = ImageIO.read(selectedFile);
-                label = createImageEditor(image); // Initialize the image editor
+                accountPicture = createImageEditor(image); // Initialize the image editor
                 if(imageEditor.getComponentCount() == 0) // checking if the panel is empty...
                 {
-                    imageEditor.add(label);  // Add the label to the panel
+                    imageEditor.add(accountPicture);  // Add the label to the panel
                 }
                 else
                 {
                     imageEditor.removeAll();
-                    imageEditor.add(label);
+                    imageEditor.add(accountPicture);
                 }
                 imageEditor.repaint();
                 imageEditor.validate();

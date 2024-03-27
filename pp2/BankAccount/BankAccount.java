@@ -217,7 +217,6 @@ public class BankAccount
     private BufferedImage paintImage(BufferedImage b, Image i)
     {
         Graphics2D g2d = b.createGraphics();
-        //g2d.setRenderingHints(new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON));
         g2d.setColor(Color.GREEN);
         g2d.fillOval(0, 0, 70, 70);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
