@@ -40,6 +40,7 @@ import pp2.BankAccount.BankAccountList;
 import pp2.BankAccount.BankAccountListPane;
 import pp2.BankAccount.BankAccountInterface;
 import pp2.BankAccount.Dialogs.AddBankAccount;
+import pp2.BankAccount.Utils.Region;
 
 public class InitialFrame extends JFrame
 {
@@ -103,6 +104,8 @@ public class InitialFrame extends JFrame
         setVisible(true);
     }
     
+    // STATThread   
+    @Region("Static Thread Must go here")
     public static void main(String[] args)
     {
         SwingUtilities.invokeLater(() ->
@@ -360,7 +363,7 @@ public class InitialFrame extends JFrame
         bankie.add(new BankAccount("FirstName", "MiddleName", "zastName", 1234567890123456L));
         bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
           
-        bankie.ba = bankie.sort(BankAccountList.Sort.LAST_NAME, BankAccountList.SortType.SORT_ASCENDING);       
+        bankie.ba = bankie.sort(BankAccountList.Sort.LAST_NAME, BankAccountList.SortType.SORT_DESCENDING);       
         BankAccountListPane bl = new BankAccountListPane(bankie);
         return bl;
     }

@@ -20,7 +20,7 @@ public class BankAccount
     private String givenName;
     private long accountNumber;
     private double balance;
-    private static double interestRate = 0; 
+    private static double interestRate = .5; 
     
     // default constructor
     public BankAccount()

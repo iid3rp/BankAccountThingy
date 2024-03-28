@@ -3,7 +3,7 @@ package pp2.BankAccount;
 public class BankAccountList
 {
     private int size;
-    public BankAccount[] ba;
+    public BankAccount[] ba; // this is public for certain reasons...
     
     // sorting enum kay pangit mugamit ug int lol
     public enum Sort
@@ -50,6 +50,7 @@ public class BankAccountList
     }
     
     // addition sa bank account sa array (but including index to specifically put it)
+    @Deprecated
     public boolean add(int index, BankAccount b)
     {
         if(index >= 0 || index <= size)
@@ -77,6 +78,7 @@ public class BankAccountList
     }
     
     // removes the part...
+    @Deprecated
     public boolean removeBankAccount(BankAccount b)
     {
         // mangita siya sa BankAccount, one by one, in order.
@@ -92,6 +94,7 @@ public class BankAccountList
     }
     
     // much simpler than the remove(BankAccount)
+    @Deprecated
     public boolean removeBankAccount(int index)
     {
         if(index >= 0 && index < size)
@@ -162,7 +165,7 @@ public class BankAccountList
     }
     
     // same sa searchByName() na method, pero dapat exact number ang ibutang...
-    @Deprecated
+    // not @Deprecated anymore
     public BankAccount searchByNumber(long num)
     {
         for(BankAccount b : ba)
