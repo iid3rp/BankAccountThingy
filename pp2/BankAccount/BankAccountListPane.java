@@ -20,6 +20,7 @@ public class BankAccountListPane
         container.setLayout(null);
         container.setLocation(0, 0);
         container.setBackground(new Color(200, 200, 200));
+        container.setDoubleBuffered(true);
         container.setSize(new Dimension(1030, 104 * b.getLength()));
         container.setPreferredSize(new Dimension(1030, 104 * b.getLength()));
         
@@ -34,6 +35,7 @@ public class BankAccountListPane
         
         pane = new JScrollPane(container);     
         pane.setSize(new Dimension(1030, 720));
+        pane.setDoubleBuffered(true);
         pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         pane.addMouseWheelListener(new MouseWheelListener() 

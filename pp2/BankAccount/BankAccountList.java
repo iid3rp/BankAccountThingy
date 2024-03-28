@@ -2,13 +2,27 @@ package pp2.BankAccount;
 
 public class BankAccountList
 {
-    public int size;
+    private int size;
     public BankAccount[] ba;
+    
+    // sorting enum kay pangit mugamit ug int lol
+    public enum Sort
+    {
+        FIRST_NAME, MIDDLE_NAME, LAST_NAME, ACCOUNT_NUMBER
+    }
+    
+    public enum SortType
+    {
+        SORT_ASCENDING, SORT_DESCENDING
+    }
+    
+    // default construtor
     public BankAccountList()
     {
         size = 0;
     }
     
+    // constructor with @param
     public BankAccountList(BankAccountList b)
     {
         size = b.getLength();
@@ -98,6 +112,47 @@ public class BankAccountList
             return true;
         }
         else return false;
+    }
+    
+    // sorting the whole stuff based on the enum Sort
+    public BankAccount[] sort(Sort s, SortType t)
+    {
+        // the reference getting to actually return as a BankAccount[]
+        BankAccount[] ref = ba;
+        
+        // this is going to sort chronologically ascending or descending
+        // only using one for loop this time :3
+        for(int i = 0; i < ref.length; i++)
+        {
+            for(int j = 0; j < ref.length - i - 1; j++)
+            {
+                // find the sorting type xd
+                String a = s == Sort.FIRST_NAME? ref[j].getFirstName().toLowerCase()
+                         : s == Sort.MIDDLE_NAME? ref[j].getMiddleName().toLowerCase()
+                         : s == Sort.LAST_NAME? ref[j].getLastName().toLowerCase()
+                         : s == Sort.ACCOUNT_NUMBER? String.valueOf(ref[j].getAccountNumber())
+                         : "";
+                
+                // find the sorting type too         
+                String b = s == Sort.FIRST_NAME? ref[j + 1].getFirstName().toLowerCase()
+                         : s == Sort.MIDDLE_NAME? ref[j + 1].getMiddleName().toLowerCase()
+                         : s == Sort.LAST_NAME? ref[j + 1].getLastName().toLowerCase()
+                         : s == Sort.ACCOUNT_NUMBER? String.valueOf(ref[j + 1].getAccountNumber())
+                         : "";
+                 
+                // ascending or descending if case         
+                if(t == SortType.SORT_ASCENDING? a.compareTo(b) > 0
+                                               : a.compareTo(b) < 0)
+                {
+                    // bali-balihon ang mga classes to sort the way we wanted xd
+                    // pp1 days ww.,.,.,.,,,..,
+                    BankAccount temp = ref[j];
+                    ref[j] = ref[j + 1];
+                    ref[j + 1] = temp;
+                }
+            }
+        }
+        return ref;
     }
     
     // getting the length of the list..

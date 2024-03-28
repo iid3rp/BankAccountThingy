@@ -105,7 +105,10 @@ public class InitialFrame extends JFrame
     
     public static void main(String[] args)
     {
-        new InitialFrame();
+        SwingUtilities.invokeLater(() ->
+        {
+            new InitialFrame();
+        });
     }
     
     public void initializeComponent()
@@ -339,24 +342,25 @@ public class InitialFrame extends JFrame
     {
         BankAccountList bankie = new BankAccountList();
         bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("airstName", "MiddleName", "dastName", 1234567890123456L));
         bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("birstName", "MiddleName", "castName", 1234567890123456L));
         bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
         bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
+        bankie.add(new BankAccount("cirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "bastName", 1234567890123456L));
         bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("dirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "aastName", 1234567890123456L));
         bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
-               
+        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("virstName", "MiddleName", "LastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "rastName", 1234567890123456L));
+        bankie.add(new BankAccount("wirstName", "MiddleName", "LtastName", 1234567890123456L));
+        bankie.add(new BankAccount("FirstName", "MiddleName", "zastName", 1234567890123456L));
+        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
+          
+        bankie.ba = bankie.sort(BankAccountList.Sort.LAST_NAME, BankAccountList.SortType.SORT_ASCENDING);       
         BankAccountListPane bl = new BankAccountListPane(bankie);
         return bl;
     }
