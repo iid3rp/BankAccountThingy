@@ -71,6 +71,7 @@ public class BankAccount
         givenName = bank.getLastName();
         accountName = (givenName.isEmpty()? " " : givenName + ", ") + firstName + " " + (middleName.isEmpty()? " " : middleName.toUpperCase().charAt(0) + ".");
         accountNumber = bank.getAccountNumber();
+        balance = bank.getBalance(); // how did i forget about this??????????? :sob:
     }
     
     public String getFirstName()
@@ -152,6 +153,7 @@ public class BankAccount
         return interestRate;
     }    
     
+    @Deprecated
     public void addInterestRate()
     {
         balance += balance * interestRate;

@@ -51,19 +51,18 @@ import pp2.BankAccount.BankAccountListPane;
 import pp2.BankAccount.BankAccountInterface;
 import pp2.BankAccount.StreamIO.BankMaker;
 import pp2.BankAccount.Utils.TextFieldFilter;
-public class DepositDialog extends JDialog
+public class WithdrawDialog extends JDialog
 {
     private BankAccount allocation; // this will be reference of the bankaccount to be withdrawn :#
     private boolean result;
     
     public JPanel imageEditor;
     public JPanel panel;
-    
-    
+     
     public JTextField accountNumber;
     public JTextField moneyHandler;
-    public JCheckBox addInterest;
     public JLabel bankIdentifier;
+    public JLabel checkBalance;
     public JLabel amount;
     public JLabel ok;
     
@@ -75,7 +74,7 @@ public class DepositDialog extends JDialog
     
     public Random rand = new Random();
     public double totalAmount;
-    public DepositDialog(BankAccountList b)
+    public WithdrawDialog(BankAccountList b)
     {
         super();
         lib = b; // this creates a reference of the list of the BankAccounts when depositing/withdrawing..
@@ -92,21 +91,20 @@ public class DepositDialog extends JDialog
         accountNumber = createAccountNumber();
         bankIdentifier = createBankIdentifier();
         amount = createAmount();
+        checkBalance = createCheckBalance();
         
         ok = createOk();
         panel.add(createCancel(10, "X"));
         panel.add(createCancel(getHeight() - 50, "Cancel"));
-        
-        addInterest = createCheckBox();
-        panel.add(createTitle(20, 20, 10, "Deposit Money"));
+        panel.add(createTitle(20, 20, 10, "Withdraw Money"));
         
         panel.add(createText("<html><b>Account Number", 50));
         panel.add(createText("<html><b>Amount [$]", 135));
         panel.add(createText("<html><b>Total Amount:", 235));
         panel.add(bankIdentifier);
+        panel.add(checkBalance);
         panel.add(moneyHandler);
         panel.add(amount);
-        panel.add(addInterest);
         
         panel.add(accountNumber);
         panel.add(ok);
@@ -139,7 +137,8 @@ public class DepositDialog extends JDialog
         }
         if(confirm)
         {
-            b.deposit(totalAmount);
+            b.withdraw(totalAmount);
+            System.out.println(b.getBalance());
         }
         return confirm? b : null;
     }
@@ -218,7 +217,7 @@ public class DepositDialog extends JDialog
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         label.setLayout(null);
-        label.setText("Deposit Money");
+        label.setText("Withdraw Money");
         label.setEnabled(false);
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
@@ -262,26 +261,6 @@ public class DepositDialog extends JDialog
             }
         });
         return label;
-    }
-    
-    // Method to create a checkbox with listener
-    private JCheckBox createCheckBox() 
-    {
-        JCheckBox checkBox = new JCheckBox();
-        checkBox.setLayout(null);
-        checkBox.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        checkBox.setText("Add Interest rate on deposit (" + (1 + BankAccount.getInterestRate()) + ")");
-        Dimension d = checkBox.getPreferredSize();
-        checkBox.setBounds(20, 200, (int) d.getWidth() + 20, (int) d.getHeight());
-        checkBox.addItemListener(new ItemListener()
-        {
-            @Override
-            public void itemStateChanged(ItemEvent e) 
-            {
-                putAmount();
-            }
-        });
-        return checkBox;
     }
        
     private JTextField createAccountNumber() 
@@ -347,16 +326,17 @@ public class DepositDialog extends JDialog
         }
         finally
         {
-           BankAccount b = lib.searchByNumber(num);
+            BankAccount b = lib.searchByNumber(num);
             if(b == null)
             {
                 bankIdentifier.setText("No Bank Account was found.");
-                moneyHandler.setText("Enter Amount [$]");
+                checkBalance.setText("<html>The current balance will be shown <b>here.</b></html>");
                 moneyHandler.setEnabled(false);
             }
             else 
             {
                 bankIdentifier.setText("<html> Bank Account identified as <b>'" + b.getAccountName() + "'</b>");
+                checkBalance.setText("<html>Your current balance is $<b>" + b.getBalance() +"</b></html>");
                 allocation = new BankAccount(b); // deep copying
                 moneyHandler.setEnabled(true);
             }
@@ -380,9 +360,12 @@ public class DepositDialog extends JDialog
             @Override
             public void mouseClicked(MouseEvent e) 
             {
-                textField.setCaretColor(Color.BLACK);
-                textField.setText("");
-                textField.setForeground(Color.BLACK); // Set back to default color
+                if(moneyHandler.isEnabled())
+                {
+                    textField.setCaretColor(Color.BLACK);
+                    textField.setText("");
+                    textField.setForeground(Color.BLACK); // Set back to default color
+                }
             }
         });
         
@@ -418,21 +401,20 @@ public class DepositDialog extends JDialog
             totalAmount = 0;
             if(allocation != null)
             {
-                ok.setEnabled(totalAmount > 0);
+                ok.setEnabled(totalAmount <= allocation.getBalance());
             }
         }
         else
         {
-            double moneyAmount = Double.parseDouble(moneyHandler.getText());
-            totalAmount = moneyAmount * (addInterest.isSelected() ? (1 + BankAccount.getInterestRate()) : 1);
+            totalAmount = Double.parseDouble(moneyHandler.getText());
             // Format the total amount like currency
             String formattedAmount = String.format("$%.2f", totalAmount);
             amount.setText(formattedAmount);
-            
-            if(allocation != null)
-            {
-                ok.setEnabled(totalAmount > 0);
-            }
+        }
+        if(allocation != null)
+        {
+            ok.setEnabled(totalAmount <= allocation.getBalance());
+            amount.setForeground(totalAmount > allocation.getBalance()? Color.RED : Color.BLACK);
         }
     }
     
@@ -444,6 +426,18 @@ public class DepositDialog extends JDialog
         label.setText("<html>The Bank Acoount will be indentified <b>here.</b></html>");
         Dimension d = label.getPreferredSize();
         label.setBounds(20, 100, (int) d.getWidth() +30, (int)d.getHeight());
+        label.setVisible(true);
+
+        return label;
+    }
+    
+    private JLabel createCheckBalance()
+    {
+        JLabel label = new JLabel();
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        label.setText("<html>The current balance will be shown <b>here.</b></html>");
+        Dimension d = label.getPreferredSize();
+        label.setBounds(20, 185, (int) d.getWidth() +30, (int)d.getHeight());
         label.setVisible(true);
 
         return label;
@@ -525,7 +519,8 @@ public class DepositDialog extends JDialog
         bankie.add(new BankAccount("wirstName", "MiddleName", "LtastName", 1234567890123456L));
         bankie.add(new BankAccount("FirstName", "MiddleName", "zastName", 1234567890123456L));
         bankie.add(new BankAccount("hewwohgjhgj", "ggfhfuuyuiame", "ame", 5555555555555555L)); 
-        DepositDialog i = new DepositDialog(bankie);
+        WithdrawDialog i = new WithdrawDialog(bankie);
+        bankie.ba[17].deposit(5000); // example of what would happen to deposit smth and the withdraw
         BankAccount b = bankie.ba[8];
         b = i.showDialog(null);
         System.out.print(b);
