@@ -72,9 +72,9 @@ public class BankAccountListPane extends JScrollPane
                ((bank.getAccountNumber() + "").contains(query))) 
             {
                 container.setPreferredSize(new Dimension(1030, 104 * index + 1));
-                BankAccountInterface bankInterface = new BankAccountInterface(bank);
-                bankInterface.setBounds(0, (101 * index), 1030, 100);
-                container.add(bankInterface);  
+                BankAccountInterface bankInterface = new BankAccountInterface(bank, ba);
+                bankInterface.panel.setBounds(0, (101 * index), 1030, 100);
+                container.add(bankInterface.panel);  
                 index++;  
             }
         }
@@ -97,38 +97,9 @@ public class BankAccountListPane extends JScrollPane
         int index = 0; // iterator
         for(BankAccount bank : ba.ba)
         {
-            intf = new BankAccountInterface(bank);
-            intf.setBounds(0, ((intf.getHeight() + 1) * index++), intf.getWidth(), intf.getHeight());
-            
-            // add mouse listeners to the public labels here yay :3
-            intf.edit.addMouseListener(new MouseAdapter()
-            {
-                @Override
-                public void mouseEntered(MouseEvent e)
-                {
-                    intf.edit.setForeground(Color.WHITE);
-                    intf.repaint();
-                }
-                
-                @Override
-                public void mouseExited(MouseEvent e)
-                {
-                    intf.edit.setForeground(Color.BLACK);
-                    intf.repaint();
-                }
-                
-                @Override
-                public void mouseClicked(MouseEvent e)
-                {
-                    BankAccount ref = new EditBankAccount().showDialog(bank);
-                    if(ref != null)
-                    {
-                        replaceAccount(ref);
-                    }
-                }
-            });
-            
-            container.add(intf);
+            intf = new BankAccountInterface(bank, ba);
+            intf.panel.setBounds(0, ((intf.panel.getHeight() + 1) * index++), intf.panel.getWidth(), intf.panel.getHeight());
+            container.add(intf.getPanel());
         }
     }
     

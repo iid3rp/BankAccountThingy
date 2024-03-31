@@ -8,12 +8,14 @@ import java.lang.annotation.*;
 /*
     This was intentionally made (pun intended) to put certain fields in the codes to create a reason
     why it is coded like that, and creates an annotation that some things are intentional and cannot
-    be modified for certain reasons and should be asked for permission to modify when collaboration
-    and code cleaning....
+    be modified for 'that/those' certain reason/s and should be asked for permission to modify when collaboration, 
+    code conflict, and code cleaning....
 */
 
 public @interface Intention 
 {
-    boolean isPublic() default true;
-    String reason() default "";
+    boolean isPublic() default true; // stating the publicity of the feild
+    String design() default ""; // whats the design of that field, the functionality
+    String reason() default ""; // the reason why is it like that...
+    
 }

@@ -435,6 +435,7 @@ public class InitialFrame extends JFrame
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 260, (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
+        
         return label;
     }
     

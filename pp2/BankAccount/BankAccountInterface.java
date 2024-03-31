@@ -4,44 +4,65 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import pp2.BankAccount.Utils.Intention;
-public class BankAccountInterface extends JPanel
+import pp2.BankAccount.Dialogs.EditBankAccount;
+import pp2.BankAccount.Dialogs.WithdrawDialog;
+import pp2.BankAccount.Dialogs.DepositDialog;
+
+/*
+    SOME CHANGES HAVE BEEN MADE (2024, of March 31st, Around 22:20 i think)
+    
+    -> it will be extending within the BankAccount class itself,
+       therefore it'll embed within the interface, and @that interface can be
+       used to actually attached it as a BankAccount (polymorphism into play)
+       class. This ensures proper transition within the class and avoiding finality
+       conflicts. Hopefully :3
+       
+    - derp
+*/
+public class BankAccountInterface extends BankAccount
 {
+
+    // @Intention will be in argument as of this timeline.
+    // will remove this strip of comment if Intention is agreeable... :3
+    @Intention(isPublic = true, 
+               design = "showing the bank account's information and modify within the" + 
+                        "extension of the BankAccount class.",
+               reason = "it conflicts the finality of a certain bankaccount when" +
+                        "overriding the memory referencing in outer classes")
+    public JPanel panel;
+    
     public static final int HEIGHT = 100;
     public static int WIDTH = 1030;
     public BankAccount b;
     public JLabel image;
     
-    // the labels are going to be public for the reason to
-    // make the functionality of the BankAccount EMBEDDED into
-    // the interface work and doing it as expected...
     //
-    // it's like the analogy of a public method to function stuff
-    // but OOP based yk.. :3
-    // - derp
-    @Intention(isPublic = true, reason = "functionality")
-    public JLabel edit;
+    private JLabel name;
+    private JLabel number;
+    private JLabel balance;
     
-    @Intention(isPublic = true, reason = "functionality")
-    public JLabel delete;
-    
-    @Intention(isPublic = true, reason = "functionality")
-    public JLabel deposit;
-    
-    @Intention(isPublic = true, reason = "functionality")
-    public JLabel withdraw;
-    //
-    //
+    // the labels are going to be private for certain reason/s:
+    private JLabel edit;
+    private JLabel delete;
+    private JLabel deposit;
+    private JLabel withdraw;
     //
     
-    public BankAccountInterface(BankAccount ba)
+    @Intention(isPublic = false, 
+               design = "quite arguable, but might test..",
+               reason = "conflicting issues with DepositDialog and WithdrawDialog" +
+                        "with BankAccountList needed")
+    public BankAccountList bl;
+    
+    public BankAccountInterface(BankAccount ba, BankAccountList b)
     {
-        super();
+        super(ba);
+        bl = b;
         initializeComponent(); // for the panel itself.
-      
-        b = new BankAccount(ba);
-        JLabel name = createName();
-        JLabel number = createNumber();
-        JLabel amount = createAmount();
+        
+        name = createName();
+        number = createNumber();
+        balance = createBalance();
         
         //interface stuff goes here
         edit = createEdit();
@@ -49,51 +70,52 @@ public class BankAccountInterface extends JPanel
         deposit = createDeposit();
         withdraw = createWithdraw();
         
-        JLabel image = createImage();
+        image = createImage();
         
-        add(image);
-        add(name);
-        add(number);
-        add(amount);
-        add(edit);
-        add(delete);
-        add(deposit);
-        add(withdraw);
-        repaint();
-        validate();
-        setVisible(true);
+        panel.add(image);
+        panel.add(name);
+        panel.add(number);
+        panel.add(balance);
+        panel.add(edit);
+        panel.add(delete);
+        panel.add(deposit);
+        panel.add(withdraw);
+        
+        panel.repaint();
+        panel.validate();
+        panel.setVisible(true);
     }
     
+    @Deprecated // !!! take note
     public BankAccountInterface(String first, String second, String last, long num)
     {
-        super();
         initializeComponent(); // for the panel itself.
       
         b = new BankAccount(first, second, last, num);
-        JLabel name = createName();
-        JLabel number = createNumber();
-        JLabel amount = createAmount();
+        name = createName();
+        number = createNumber();
+        balance = createBalance();
         
         //interface stuff goes here
-        JLabel edit = createEdit();
-        JLabel delete = createDelete();
-        JLabel deposit = createDeposit();
-        JLabel withdraw = createWithdraw();
+        edit = createEdit();
+        delete = createDelete();
+        deposit = createDeposit();
+        withdraw = createWithdraw();
         
         image = createImage();
         
-        add(image);
-        add(name);
-        add(number);
-        add(amount);
-        add(edit);
-        add(delete);
-        add(deposit);
-        add(withdraw);
+        panel.add(image);
+        panel.add(name);
+        panel.add(number);
+        panel.add(balance);
+        panel.add(edit);
+        panel.add(delete);
+        panel.add(deposit);
+        panel.add(withdraw);
         
-        repaint();
-        validate();
-        setVisible(true);
+        panel.repaint();
+        panel.validate();
+        panel.setVisible(true);
     }
     
     public void updateAccount(String first, String second, String last, long num)
@@ -103,22 +125,23 @@ public class BankAccountInterface extends JPanel
     
     public void initializeComponent()
     {
-        setLayout(null);
-        setBackground(Color.WHITE);
-        setSize(WIDTH, HEIGHT);
+        panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(Color.WHITE);
+        panel.setSize(WIDTH, HEIGHT);
         
-        addMouseListener(new MouseAdapter()
+        panel.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseEntered(MouseEvent e)
             {
-                setBackground(new Color(200, 200, 200));
+                panel.setBackground(new Color(200, 200, 200));
             }
             
             @Override
             public void mouseExited(MouseEvent e)
             {
-                setBackground(Color.WHITE);
+                panel.setBackground(Color.WHITE);
             }
         });
         
@@ -129,10 +152,10 @@ public class BankAccountInterface extends JPanel
         JLabel label = new JLabel();
         label.setLayout(null);
         label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText(b.getAccountName());
+        label.setText(getAccountName());
         label.setForeground(Color.BLACK);
 
-        FontMetrics metrics = getFontMetrics(label.getFont());
+        FontMetrics metrics = panel.getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(100, 8, 400, height);
@@ -141,20 +164,20 @@ public class BankAccountInterface extends JPanel
     
     public JLabel createNumber()
     {
-        JLabel label = createText("Account Number: " + b.getAccountNumber());
+        JLabel label = createText("Account Number: " + getAccountNumber());
 
-        FontMetrics metrics = getFontMetrics(label.getFont());
+        FontMetrics metrics = panel.getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(100, 40, 400, height);
         return label;
     }
     
-    public JLabel createAmount()
+    public JLabel createBalance()
     {
-        JLabel label = createText("Balance: $" + b.getBalance());
+        JLabel label = createText("Balance: $" + getBalance());
 
-        FontMetrics metrics = getFontMetrics(label.getFont());
+        FontMetrics metrics = panel.getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(100, 60, 400, height);
@@ -179,7 +202,7 @@ public class BankAccountInterface extends JPanel
             protected void paintComponent(Graphics g) 
             {
                 super.paintComponent(g);
-                g.drawImage(b.tryImage(b.getAccountNumber() + ""), 0, 0, getWidth(), getHeight(), null);
+                g.drawImage(tryImage(getAccountNumber() + ""), 0, 0, getWidth(), getHeight(), null);
             }
         };
         label.setLayout(null);
@@ -196,10 +219,38 @@ public class BankAccountInterface extends JPanel
         label.setText("edit");
         label.setForeground(Color.BLACK);
 
-        FontMetrics metrics = getFontMetrics(label.getFont());
+        FontMetrics metrics = panel.getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
-        label.setBounds(500, (getHeight() / 2) - (height /2), 400, height);
+        label.setBounds(500, (panel.getHeight() / 2) - (height /2), width + 40, height);
+        
+        // adding an event on this one :3
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                edit.setForeground(Color.GRAY);
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                edit.setForeground(Color.BLACK);
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                BankAccount b = new EditBankAccount().showDialog(getCopy());
+                if(b != null)
+                {
+                    referenceFromBank(b);
+                    update();
+                }
+            }
+        });
+        
         return label;
     }
     
@@ -211,10 +262,36 @@ public class BankAccountInterface extends JPanel
         label.setText("deposit");
         label.setForeground(Color.BLACK);
 
-        FontMetrics metrics = getFontMetrics(label.getFont());
+        FontMetrics metrics = panel.getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
-        label.setBounds(570, (getHeight() / 2)  - (height /2), 400, height);
+        label.setBounds(570, (panel.getHeight() / 2)  - (height /2), width + 40, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.GRAY);
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.BLACK);
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                BankAccount b = new DepositDialog(bl).showDialog(getCopy());
+                if(b != null) // if it confirms
+                {
+                    referenceFromBank(b);
+                    update();
+                }
+            }
+            
+        });
         return label;
     }
     
@@ -226,10 +303,36 @@ public class BankAccountInterface extends JPanel
         label.setText("withdraw");
         label.setForeground(Color.BLACK);
 
-        FontMetrics metrics = getFontMetrics(label.getFont());
+        FontMetrics metrics = panel.getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
-        label.setBounds(700, (getHeight() / 2)  - (height /2), 400, height);
+        label.setBounds(700, (panel.getHeight() / 2)  - (height /2), width + 40, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.GRAY);
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.BLACK);
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                BankAccount b = new WithdrawDialog(bl).showDialog(getCopy());
+                if(b != null) // if it confirms
+                {
+                    referenceFromBank(b);
+                    update();
+                }
+            }
+            
+        });
         return label;
     }
     
@@ -241,10 +344,25 @@ public class BankAccountInterface extends JPanel
         label.setText("delete");
         label.setForeground(Color.RED);
 
-        FontMetrics metrics = getFontMetrics(label.getFont());
+        FontMetrics metrics = panel.getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
-        label.setBounds(850, (getHeight() / 2)  - (height /2), 400, height);
+        label.setBounds(850, (panel.getHeight() / 2)  - (height /2), width + 40, height);
         return label;
+    }
+    
+    public void update()
+    {
+        name.setText(getAccountName());
+        number.setText("Account Number: " + getAccountNumber());
+        balance.setText("Balance: $" + getBalance());
+        
+        // add images sooner ...
+    }
+    
+    // quite unecessary but ok
+    public JPanel getPanel()
+    {
+        return panel;
     }
 }

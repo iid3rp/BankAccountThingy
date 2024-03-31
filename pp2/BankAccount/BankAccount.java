@@ -42,6 +42,7 @@ public class BankAccount
         balance = balance;
     }
     
+    @Deprecated // reason: no one uses this kinda constructor...
     public BankAccount(String first, String second, String last, long num, double b)
     {
         firstName = first;
@@ -72,6 +73,19 @@ public class BankAccount
         accountName = (givenName.isEmpty()? " " : givenName + ", ") + firstName + " " + (middleName.isEmpty()? " " : middleName.toUpperCase().charAt(0) + ".");
         accountNumber = bank.getAccountNumber();
         balance = bank.getBalance(); // how did i forget about this??????????? :sob:
+    }
+    
+    // citation: Mrs. Kim Vera Tequin (from her `makeCopy()` method)
+    // i didnt realized i kinda needed this method now qwq
+    public void referenceFromBank(BankAccount bank)
+    {
+        firstName = bank.getFirstName();
+        middleName = bank.getMiddleName();
+        lastName = bank.getLastName();
+        givenName = bank.getLastName();
+        accountName = (givenName.isEmpty()? " " : givenName + ", ") + firstName + " " + (middleName.isEmpty()? " " : middleName.toUpperCase().charAt(0) + ".");
+        accountNumber = bank.getAccountNumber();
+        balance = bank.getBalance();
     }
     
     public String getFirstName()
