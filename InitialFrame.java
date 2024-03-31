@@ -75,11 +75,10 @@ public class InitialFrame extends JFrame
         info.add(closeApplication);
                 
         /*BankAccountListPane*/ list = createList();
-        JScrollPane pane = list.getPane();
         //JScrollPane pane = createScrollPane();
-        pane.setLocation(250, 40);
+        list.setLocation(250, 40);
         
-        panel.add(pane);
+        panel.add(list);
         
         JLabel title = createTitle();
         
@@ -319,7 +318,7 @@ public class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         label.setLayout(null);
-        label.setText("closeApp");
+        label.setText("X");
         label.setForeground(Color.RED);
         
         FontMetrics metrics = getFontMetrics(label.getFont());
@@ -397,6 +396,32 @@ public class InitialFrame extends JFrame
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 220, (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
+        
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.BLUE);
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.WHITE);
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                BankAccount b = new AddBankAccount().showDialog();
+                if(b != null) // if it confirms
+                {
+                    list.requestAdd(b);
+                }
+            }
+            
+        });
         return label;
     }
     

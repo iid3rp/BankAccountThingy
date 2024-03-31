@@ -3,11 +3,36 @@ package pp2.BankAccount;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-
+import pp2.BankAccount.Utils.Intention;
 public class BankAccountInterface extends JPanel
 {
+    public static final int HEIGHT = 100;
+    public static int WIDTH = 1030;
     public BankAccount b;
     public JLabel image;
+    
+    // the labels are going to be public for the reason to
+    // make the functionality of the BankAccount EMBEDDED into
+    // the interface work and doing it as expected...
+    //
+    // it's like the analogy of a public method to function stuff
+    // but OOP based yk.. :3
+    // - derp
+    @Intention(isPublic = true, reason = "functionality")
+    public JLabel edit;
+    
+    @Intention(isPublic = true, reason = "functionality")
+    public JLabel delete;
+    
+    @Intention(isPublic = true, reason = "functionality")
+    public JLabel deposit;
+    
+    @Intention(isPublic = true, reason = "functionality")
+    public JLabel withdraw;
+    //
+    //
+    //
+    
     public BankAccountInterface(BankAccount ba)
     {
         super();
@@ -19,10 +44,10 @@ public class BankAccountInterface extends JPanel
         JLabel amount = createAmount();
         
         //interface stuff goes here
-        JLabel edit = createEdit();
-        JLabel delete = createDelete();
-        JLabel deposit = createDeposit();
-        JLabel withdraw = createWithdraw();
+        edit = createEdit();
+        delete = createDelete();
+        deposit = createDeposit();
+        withdraw = createWithdraw();
         
         JLabel image = createImage();
         
@@ -73,14 +98,14 @@ public class BankAccountInterface extends JPanel
     
     public void updateAccount(String first, String second, String last, long num)
     {
-        
+        // will be written here
     }
     
     public void initializeComponent()
     {
         setLayout(null);
         setBackground(Color.WHITE);
-        setSize(1030, 100);
+        setSize(WIDTH, HEIGHT);
         
         addMouseListener(new MouseAdapter()
         {

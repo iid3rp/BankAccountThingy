@@ -2,17 +2,19 @@ package pp2.BankAccount;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
+import pp2.BankAccount.Dialogs.EditBankAccount;
 
-public class BankAccountListPane
+public class BankAccountListPane extends JScrollPane
 {
     // katong bank account na array
-    private JScrollPane pane;
+    private BankAccountInterface intf;
     private BankAccountList ba;
     private JPanel container;
     private int size;
     
     public BankAccountListPane(BankAccountList b)
     {
+        super();
         size = b.getLength();
         ba = new BankAccountList(b);
         // add a container to put stuff :3
@@ -21,31 +23,31 @@ public class BankAccountListPane
         container.setLocation(0, 0);
         container.setBackground(new Color(200, 200, 200));
         container.setDoubleBuffered(true);
-        container.setSize(new Dimension(1030, 104 * b.getLength()));
-        container.setPreferredSize(new Dimension(1030, 104 * b.getLength()));
+        container.setSize(new Dimension(intf.WIDTH, ((intf.HEIGHT + 1) * b.getLength()) + (2 * b.getLength()) + 1));
         
-        int index = 0;
-        // we put the components here instead
-        for(BankAccount bank : ba.getList())
-        {
-            BankAccountInterface bankInterface = new BankAccountInterface(bank);
-            bankInterface.setBounds(0, (101 * index++), 1030, 100);
-            container.add(bankInterface);
-        }
+        // you need to get the panel's preffered size "daw" because thats going
+        // to be the reference dimension of the JScrollPane (which is weird but whateve)
+        // xd - derp
+        container.setPreferredSize(new Dimension(intf.WIDTH, ((intf.HEIGHT + 1) * b.getLength()) + (2 * b.getLength()) + 1));
+        //
         
-        pane = new JScrollPane(container);     
-        pane.setSize(new Dimension(1030, 720));
-        pane.setDoubleBuffered(true);
-        pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        pane.addMouseWheelListener(new MouseWheelListener() 
+        // add components into the container here :3
+        addComponents();
+        
+        
+        setViewportView(container);   
+        setSize(new Dimension(1030, 720));
+        setDoubleBuffered(true);
+        setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        addMouseWheelListener(new MouseWheelListener() 
         {
             @Override
             public void mouseWheelMoved(MouseWheelEvent e) 
             {
                 // Increase scroll sensitivity by multiplying the scroll distance
                 int unitsToScroll = e.getWheelRotation() * e.getScrollAmount() * 5; // Adjust multiplier as needed
-                JScrollBar verticalScrollBar = pane.getVerticalScrollBar();
+                JScrollBar verticalScrollBar = getVerticalScrollBar();
                 verticalScrollBar.setValue(verticalScrollBar.getValue() + unitsToScroll);
             }
         });  
@@ -78,30 +80,84 @@ public class BankAccountListPane
         }
         container.repaint();
         container.validate();
-        pane.repaint();
-        pane.validate();
+        repaint();
+        validate();
         return true;
+    }
+    
+    public boolean requestAdd(BankAccount b)
+    {
+        ba.add(b);
+        restore();
+        return true;
+    }
+    
+    public void addComponents()
+    {
+        int index = 0; // iterator
+        for(BankAccount bank : ba.ba)
+        {
+            intf = new BankAccountInterface(bank);
+            intf.setBounds(0, ((intf.getHeight() + 1) * index++), intf.getWidth(), intf.getHeight());
+            
+            // add mouse listeners to the public labels here yay :3
+            intf.edit.addMouseListener(new MouseAdapter()
+            {
+                @Override
+                public void mouseEntered(MouseEvent e)
+                {
+                    intf.edit.setForeground(Color.WHITE);
+                    intf.repaint();
+                }
+                
+                @Override
+                public void mouseExited(MouseEvent e)
+                {
+                    intf.edit.setForeground(Color.BLACK);
+                    intf.repaint();
+                }
+                
+                @Override
+                public void mouseClicked(MouseEvent e)
+                {
+                    BankAccount ref = new EditBankAccount().showDialog(bank);
+                    if(ref != null)
+                    {
+                        replaceAccount(ref);
+                    }
+                }
+            });
+            
+            container.add(intf);
+        }
+    }
+    
+    public void replaceAccount(BankAccount b)
+    {
+        for(BankAccount bank : ba.ba)
+        {
+            if(bank.getAccountNumber() == (b.getAccountNumber()))
+            {
+                bank = new BankAccount(b); 
+            }
+        }
     }
     
     public boolean restore()
     {
         container.removeAll();
-        int index = 0; 
-        for(BankAccount bank : ba.getList())
-        {
-            container.setPreferredSize(new Dimension(1030, 104 * index + 1));
-            BankAccountInterface bankInterface = new BankAccountInterface(bank);
-            bankInterface.setBounds(0, (101 * index), 1030, 100);
-            container.add(bankInterface);   
-            index++; 
-        }
+        container.setSize(new Dimension(intf.WIDTH, ((intf.HEIGHT + 1) * ba.getLength()) + (2 * ba.getLength()) + 1));
+        container.setPreferredSize(new Dimension(intf.WIDTH, ((intf.HEIGHT + 1) * ba.getLength()) + (2 * ba.getLength()) + 1));
+        // add the components to the panel to be put into the scrollPane...
+        addComponents();
         container.validate();
-        pane.validate();
+        validate();
+        System.out.print("restored");
         return true;
     }
     
     public JScrollPane getPane()
     {
-        return pane;
+        return this;
     }
 }
