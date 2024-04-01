@@ -16,6 +16,12 @@ public @interface Intention
 {
     boolean isPublic() default true; // stating the publicity of the feild
     String design() default ""; // whats the design of that field, the functionality
-    String reason() default ""; // the reason why is it like that...
+    String reason() default ""; // the reason why is it like that..
+    RiskRate risk() default RiskRate.LOW;
     
+}
+
+enum RiskRate 
+{
+    LOW, MEDIUM, HIGH
 }
