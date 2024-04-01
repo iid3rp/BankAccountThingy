@@ -241,7 +241,13 @@ public class BankAccount
         return b;
     }
     
-    public static void main(String[] a) {
+    public BankAccount setEmpty()
+    {
+        return null;
+    }
+    
+    public static void main(String[] a) 
+    {
         BankAccount bank = new BankAccount();
         System.out.print(bank.tryImage(""));
     }

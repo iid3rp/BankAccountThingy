@@ -11,18 +11,14 @@ public class BankAccountListPane extends JScrollPane
     private BankAccountList ba;
     private JPanel container;
     private int size;
+    private int index = 0;
     
     public BankAccountListPane(BankAccountList b)
     {
         super();
         size = b.getLength();
         ba = new BankAccountList(b);
-        // add a container to put stuff :3
-        container = new JPanel();
-        container.setLayout(null);
-        container.setLocation(0, 0);
-        container.setBackground(new Color(200, 200, 200));
-        container.setDoubleBuffered(true);
+        initializeComponent();
         container.setSize(new Dimension(intf.WIDTH, ((intf.HEIGHT + 1) * b.getLength()) + (2 * b.getLength()) + 1));
         
         // you need to get the panel's preffered size "daw" because thats going
@@ -59,6 +55,22 @@ public class BankAccountListPane extends JScrollPane
         size = 0;
     }
     
+    public void initializeComponent()
+    {
+        // add a container to put stuff :3
+        container = new JPanel();
+        container.setLayout(null);
+        container.setLocation(0, 0);
+        container.setBackground(new Color(200, 200, 200));
+        container.setDoubleBuffered(true);
+    }
+    
+    // adding the list components here :3
+    public void addList()
+    {
+    
+    }
+    
     // search query,, diri ang process sa hybrid searching..
     public boolean search(String query)
     {
@@ -73,9 +85,9 @@ public class BankAccountListPane extends JScrollPane
             {
                 container.setPreferredSize(new Dimension(1030, 104 * index + 1));
                 BankAccountInterface bankInterface = new BankAccountInterface(bank, ba);
-                bankInterface.panel.setBounds(0, (101 * index), 1030, 100);
-                container.add(bankInterface.panel);  
-                index++;  
+                bankInterface.setBounds(0, (101 * index), 1030, 100);
+                container.add(bankInterface);  
+                index++;
             }
         }
         container.repaint();
@@ -98,8 +110,8 @@ public class BankAccountListPane extends JScrollPane
         for(BankAccount bank : ba.ba)
         {
             intf = new BankAccountInterface(bank, ba);
-            intf.panel.setBounds(0, ((intf.panel.getHeight() + 1) * index++), intf.panel.getWidth(), intf.panel.getHeight());
-            container.add(intf.getPanel());
+            intf.setBounds(0, ((intf.getHeight() + 1) * index++), intf.getWidth(), intf.getHeight());
+            container.add(intf);
         }
     }
     
