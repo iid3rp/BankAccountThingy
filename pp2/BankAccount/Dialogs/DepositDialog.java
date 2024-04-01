@@ -380,9 +380,12 @@ public class DepositDialog extends JDialog
             @Override
             public void mouseClicked(MouseEvent e) 
             {
-                textField.setCaretColor(Color.BLACK);
-                textField.setText("");
-                textField.setForeground(Color.BLACK); // Set back to default color
+                if(moneyHandler.isEnabled())
+                {
+                    textField.setCaretColor(Color.BLACK);
+                    textField.setText("");
+                    textField.setForeground(Color.BLACK); // Set back to default color
+                }
             }
         });
         

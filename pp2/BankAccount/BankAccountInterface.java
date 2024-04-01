@@ -48,17 +48,10 @@ public class BankAccountInterface extends JPanel
     private JLabel withdraw;
     //
     
-    @Intention(isPublic = false, 
-               design = "quite arguable, but might test..",
-               reason = "conflicting issues with DepositDialog and WithdrawDialog" +
-                        "with BankAccountList needed")
-    public BankAccountList bl;
-    
-    public BankAccountInterface(BankAccount ba, BankAccountList list)
+    public BankAccountInterface(BankAccount ba)
     {
         super();
         b = ba;
-        lib = list;
         initializeComponent(); // for the panel itself.
         
         name = createName();
@@ -242,12 +235,7 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount bank = new EditBankAccount().showDialog(b.getCopy());
-                if(bank != null)
-                {
-                    b.referenceFromBank(bank);
-                    update();
-                }
+            
             }
         });
         
@@ -283,12 +271,7 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount bank = new DepositDialog(lib).showDialog(b.getCopy());
-                if(bank != null) // if it confirms
-                {
-                    b.referenceFromBank(bank);
-                    update();
-                }
+            
             }
             
         });
@@ -324,12 +307,7 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount bank = new WithdrawDialog(lib).showDialog(b.getCopy());
-                if(bank != null) // if it confirms
-                {
-                    b.referenceFromBank(bank);
-                    update();
-                }
+            
             }
             
         });
@@ -365,7 +343,7 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                b.setEmpty();
+                //
             }
             
         });

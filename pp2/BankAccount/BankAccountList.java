@@ -158,6 +158,17 @@ public class BankAccountList
         return ref;
     }
     
+    public void replace(BankAccount b)
+    {
+        for(BankAccount bank : ba)
+        {
+            if(bank.getAccountNumber() == b.getAccountNumber())
+            {
+                bank = b;
+            }
+        }
+    }
+    
     // getting the length of the list..
     public int getLength()
     {
@@ -181,6 +192,10 @@ public class BankAccountList
         return null;
     }
     
+    public void requestChange()
+    {
+        
+    }
     
     // search sa index
     @Deprecated

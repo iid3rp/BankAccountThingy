@@ -40,12 +40,16 @@ import pp2.BankAccount.BankAccountList;
 import pp2.BankAccount.BankAccountListPane;
 import pp2.BankAccount.BankAccountInterface;
 import pp2.BankAccount.Dialogs.AddBankAccount;
+import pp2.BankAccount.Dialogs.EditBankAccount;
+import pp2.BankAccount.Dialogs.WithdrawDialog;
+import pp2.BankAccount.Dialogs.DepositDialog;
 import pp2.BankAccount.Utils.Region;
 
 public class InitialFrame extends JFrame
 {
     public JTextField search;
-    public BankAccountListPane list;
+    public BankAccountListPane pane;
+    public BankAccountList list;
     public JLabel closeApplication;
     public boolean isDragging;
     public Point offset;
@@ -74,11 +78,11 @@ public class InitialFrame extends JFrame
         info.add(closeBank);
         info.add(closeApplication);
                 
-        /*BankAccountListPane*/ list = createList();
+        /*BankAccountListPane*/ pane = createList();
         //JScrollPane pane = createScrollPane();
-        list.setLocation(250, 40);
+        pane.setLocation(250, 40);
         
-        panel.add(list);
+        panel.add(pane);
         
         JLabel title = createTitle();
         
@@ -157,7 +161,7 @@ public class InitialFrame extends JFrame
             {
                 search.setFocusable(false);
                 search.setText("[/] to Search   ");
-                list.restore();
+                pane.restore();
             }
             
             @Override
@@ -253,9 +257,9 @@ public class InitialFrame extends JFrame
             {
                 if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
                 {
-                    list.search(searchBar.getText()); // Call this method whenever text is changed
+                    pane.search(searchBar.getText()); // Call this method whenever text is changed
                 }
-                else list.restore();
+                else pane.restore();
             }
         
             @Override
@@ -263,9 +267,9 @@ public class InitialFrame extends JFrame
             {
                 if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
                 {
-                    list.search(searchBar.getText()); // Call this method whenever text is changed
+                    pane.search(searchBar.getText()); // Call this method whenever text is changed
                 }
-                else list.restore();
+                else pane.restore();
             }
          
             @Override
@@ -273,9 +277,9 @@ public class InitialFrame extends JFrame
             {
                 if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
                 {
-                    list.search(searchBar.getText()); // Call this method whenever text is changed
+                    pane.search(searchBar.getText()); // Call this method whenever text is changed
                 }
-                else list.restore();
+                else pane.restore();
             }
         });
         
@@ -342,11 +346,11 @@ public class InitialFrame extends JFrame
     
     public BankAccountListPane createList()
     {
-        BankAccountList bankie = new BankAccountList();
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        list = new BankAccountList();
+        list.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
           
-        bankie.ba = bankie.sort(BankAccountList.Sort.LAST_NAME, BankAccountList.SortType.SORT_DESCENDING);       
-        BankAccountListPane bl = new BankAccountListPane(bankie);
+        list.ba = list.sort(BankAccountList.Sort.LAST_NAME, BankAccountList.SortType.SORT_DESCENDING);       
+        BankAccountListPane bl = new BankAccountListPane(list);
         return bl;
     }
     
@@ -400,7 +404,8 @@ public class InitialFrame extends JFrame
                 BankAccount b = new AddBankAccount().showDialog();
                 if(b != null) // if it confirms
                 {
-                    list.requestAdd(b);
+                    list.add(b);
+                    pane.requestAdd(b);
                 }
             }
             
@@ -418,6 +423,33 @@ public class InitialFrame extends JFrame
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 260, (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.BLUE);
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.WHITE);
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                BankAccount b = new DepositDialog(list).showDialog(null);
+                if(b != null) // if it confirms
+                {
+                    list.replace(b);
+                    pane.replaceAccount(b);
+                }
+            }
+            
+        });
+
         
         return label;
     }
@@ -432,6 +464,33 @@ public class InitialFrame extends JFrame
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 300, (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.BLUE);
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.WHITE);
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                BankAccount b = new WithdrawDialog(list).showDialog(null);
+                if(b != null) // if it confirms
+                {
+                    list.replace(b);
+                    pane.replaceAccount(b);
+                }
+            }
+            
+        });
+
         return label;
     }
     
@@ -445,6 +504,32 @@ public class InitialFrame extends JFrame
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 720 - 160 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.BLUE);
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.WHITE);
+            }
+            
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                BankAccount b = new AddBankAccount().showDialog();
+                if(b != null) // if it confirms
+                {
+                    list.replace(b);
+                    pane.replaceAccount(b);
+                }
+            }
+            
+        });
         return label;
     }
     
@@ -496,7 +581,7 @@ public class InitialFrame extends JFrame
             {
                 search.setFocusable(false);
                 search.setText("[/] to Search   ");
-                list.restore();
+                pane.restore();
             }
             
             @Override

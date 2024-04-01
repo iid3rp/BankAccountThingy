@@ -8,7 +8,7 @@ public class BankAccountListPane extends JScrollPane
 {
     // katong bank account na array
     private BankAccountInterface intf;
-    private BankAccountList ba;
+    public BankAccountList ba;
     private JPanel container;
     private int size;
     private int index = 0;
@@ -84,7 +84,7 @@ public class BankAccountListPane extends JScrollPane
                ((bank.getAccountNumber() + "").contains(query))) 
             {
                 container.setPreferredSize(new Dimension(1030, 104 * index + 1));
-                BankAccountInterface bankInterface = new BankAccountInterface(bank, ba);
+                BankAccountInterface bankInterface = new BankAccountInterface(bank);
                 bankInterface.setBounds(0, (101 * index), 1030, 100);
                 container.add(bankInterface);  
                 index++;
@@ -109,7 +109,7 @@ public class BankAccountListPane extends JScrollPane
         int index = 0; // iterator
         for(BankAccount bank : ba.ba)
         {
-            intf = new BankAccountInterface(bank, ba);
+            intf = new BankAccountInterface(bank);
             intf.setBounds(0, ((intf.getHeight() + 1) * index++), intf.getWidth(), intf.getHeight());
             container.add(intf);
         }
@@ -122,6 +122,8 @@ public class BankAccountListPane extends JScrollPane
             if(bank.getAccountNumber() == (b.getAccountNumber()))
             {
                 bank = new BankAccount(b); 
+                restore();
+                return;
             }
         }
     }
@@ -135,7 +137,7 @@ public class BankAccountListPane extends JScrollPane
         addComponents();
         container.validate();
         validate();
-        System.out.print("restored");
+        System.out.println("restored");
         return true;
     }
     
