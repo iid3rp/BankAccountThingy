@@ -1,8 +1,8 @@
-package pp2.BankAccount;
+package BankAccountThingy.pp2.BankAccount;
 import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
-import pp2.BankAccount.Dialogs.EditBankAccount;
+import BankAccountThingy.pp2.BankAccount.Dialogs.EditBankAccount;
 
 public class BankAccountListPane extends JScrollPane
 {

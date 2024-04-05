@@ -1,4 +1,4 @@
-package pp2.BankAccount.Utils;
+package BankAccountThingy.pp2.BankAccount.Utils;
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)

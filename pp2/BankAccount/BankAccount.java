@@ -1,4 +1,4 @@
-package pp2.BankAccount; // packaging rani.. ayaw sundoga kung ang imohang java file kay same sa folder saimohang BankAccount java file
+package BankAccountThingy.pp2.BankAccount; // packaging rani.. ayaw sundoga kung ang imohang java file kay same sa folder saimohang BankAccount java file
 
 import java.awt.*;
 import javax.swing.*;

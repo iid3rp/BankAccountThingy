@@ -1,12 +1,12 @@
-package pp2.BankAccount;
+package BankAccountThingy.pp2.BankAccount;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import pp2.BankAccount.Utils.Intention;
-import pp2.BankAccount.Dialogs.EditBankAccount;
-import pp2.BankAccount.Dialogs.WithdrawDialog;
-import pp2.BankAccount.Dialogs.DepositDialog;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+import BankAccountThingy.pp2.BankAccount.Dialogs.EditBankAccount;
+import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
+import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
 
 /*
     SOME CHANGES HAVE BEEN MADE (2024, of March 31st, Around 22:20 i think)

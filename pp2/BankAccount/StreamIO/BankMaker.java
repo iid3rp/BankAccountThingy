@@ -1,4 +1,4 @@
-package pp2.BankAccount.StreamIO;
+package BankAccountThingy.pp2.BankAccount.StreamIO;
 
 import java.util.Arrays;
 import java.util.Random;

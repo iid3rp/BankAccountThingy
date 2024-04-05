@@ -1,4 +1,4 @@
-package pp2.BankAccount.Dialogs;
+package BankAccountThingy.pp2.BankAccount.Dialogs;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Random;
@@ -45,12 +45,12 @@ import javax.swing.text.PlainDocument;
 import java.io.IOException;
 import java.io.File;
 import java.net.URL;
-import pp2.BankAccount.BankAccount;
-import pp2.BankAccount.BankAccountList;
-import pp2.BankAccount.BankAccountListPane;
-import pp2.BankAccount.BankAccountInterface;
-import pp2.BankAccount.StreamIO.BankMaker;
-import pp2.BankAccount.Utils.TextFieldFilter;
+import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccountList;
+import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
+import BankAccountThingy.pp2.BankAccount.BankAccountInterface;
+import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
+import BankAccountThingy.pp2.BankAccount.Utils.TextFieldFilter;
 public class WithdrawDialog extends JDialog
 {
     private BankAccount allocation; // this will be reference of the bankaccount to be withdrawn :#

@@ -1,4 +1,4 @@
-package pp2.BankAccount.Utils;
+package BankAccountThingy.pp2.BankAccount.Utils;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.BadLocationException;

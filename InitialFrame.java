@@ -1,49 +1,30 @@
-import java.util.Arrays;
-import java.util.Random;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
+package BankAccountThingy;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
-import javax.swing.JDialog;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingConstants;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyAdapter;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.io.IOException;
-import java.io.File;
-import java.net.URL;
-import pp2.BankAccount.BankAccount;
-import pp2.BankAccount.BankAccountList;
-import pp2.BankAccount.BankAccountListPane;
-import pp2.BankAccount.BankAccountInterface;
-import pp2.BankAccount.Dialogs.AddBankAccount;
-import pp2.BankAccount.Dialogs.EditBankAccount;
-import pp2.BankAccount.Dialogs.WithdrawDialog;
-import pp2.BankAccount.Dialogs.DepositDialog;
-import pp2.BankAccount.Utils.Region;
+import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccountList;
+import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
+import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
+import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
+import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
+import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
 public class InitialFrame extends JFrame
 {
@@ -111,17 +92,14 @@ public class InitialFrame extends JFrame
     @Region("Static Thread Must go here")
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater(() ->
-        {
             new InitialFrame();
-        });
     }
     
     public void initializeComponent()
     {
         setVisible(false);
         setSize(new Dimension(1280, 720));
-        setDefaultCloseOperation(3);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE/*3*/);
         setLocationRelativeTo(null);
         setUndecorated(true);
         addKeyListener(new KeyAdapter()
@@ -203,7 +181,8 @@ public class InitialFrame extends JFrame
 
         return panel;
     }
-    
+
+    @Deprecated
     public JScrollPane createScrollPane()
     {
         JPanel panel = new JPanel();
@@ -350,8 +329,7 @@ public class InitialFrame extends JFrame
         list.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
           
         list.ba = list.sort(BankAccountList.Sort.LAST_NAME, BankAccountList.SortType.SORT_DESCENDING);       
-        BankAccountListPane bl = new BankAccountListPane(list);
-        return bl;
+        return new BankAccountListPane(list);
     }
     
     public JLabel createTitle()
@@ -562,7 +540,7 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                
+                // will be used in the future :3
             }
         });
         return label;
@@ -621,13 +599,6 @@ public class InitialFrame extends JFrame
             }
         });
         return panel;
-    }
-    
-    @Deprecated
-    public JLabel createTitlexeew() // reference of the new label
-    {
-        JLabel label = new JLabel();
-        return label;
     }
     
 }

@@ -1,4 +1,4 @@
-package pp2.BankAccount;
+package BankAccountThingy.pp2.BankAccount;
 
 public class BankAccountList
 {
