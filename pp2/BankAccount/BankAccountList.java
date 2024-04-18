@@ -39,10 +39,7 @@ public class BankAccountList
         else
         {
             BankAccount[] reference = new BankAccount[++size];
-            for(int i = 0; i < ba.length; i++)
-            {
-                reference[i] = ba[i];
-            }
+            System.arraycopy(ba, 0, reference, 0, ba.length);
             ba = reference;
         }
         ba[size - 1] = b;
@@ -57,19 +54,13 @@ public class BankAccountList
         {
             // ibutang sa ang existing inputs first sa reference
             BankAccount[] reference = new BankAccount[++size];
-            for(int i = 0; i < index; i++)
-            {
-                reference[i]  = ba[i];   
-            }
+            if(index >= 0) System.arraycopy(ba, 0, reference, 0, index);
             
             // and then add tong index based sa katong part
             reference[index] = b;
             
             // and then iterate the remaining section afterwards..
-            for(int i = index; i < size - 1; i++)
-            {
-                reference[i + 1] = ba[i];
-            }
+            if(size - 1 - index >= 0) System.arraycopy(ba, index, reference, index + 1, size - 1 - index);
             // then call the index after
             ba = reference;
             return true;
@@ -78,8 +69,7 @@ public class BankAccountList
     }
     
     // removes the part...
-    @Deprecated
-    public boolean removeBankAccount(BankAccount b)
+    public void removeBankAccount(BankAccount b)
     {
         // mangita siya sa BankAccount, one by one, in order.
         for(int i = 0; i < size; i++)
@@ -87,10 +77,10 @@ public class BankAccountList
             // pag equal siya sa iyahang target removal, call the remove(int) method...
             if(ba[i].getAccountNumber() == b.getAccountNumber())
             {
-                return removeBankAccount(i);
+                removeBankAccount(i);
+                return;
             }
         }
-        return false; // Return false if BankAccount not found    
     }
     
     // much simpler than the remove(BankAccount)
@@ -101,14 +91,11 @@ public class BankAccountList
         {
             BankAccount[] reference = new BankAccount[--size];
             // iterate the first loops of the existing ones
-            for(int i = 0; i < index; i++)
-            {
-                reference[i] = ba[i];
-            }
+            System.arraycopy(ba, 0, reference, 0, index);
             // then i-skip tong index na idelete, then iterate and add the rest
-            for(int i = index + 1; i < size + 1; i++)
+            if(size + 1 - (index + 1) >= 0)
             {
-                reference[i - 1] = ba[i];
+                System.arraycopy(ba, index + 1, reference, index + 1 - 1, size + 1 - (index + 1));
             }
             // then point it back...
             ba = reference;
@@ -191,7 +178,8 @@ public class BankAccountList
         }
         return null;
     }
-    
+
+    @Deprecated
     public void requestChange()
     {
         

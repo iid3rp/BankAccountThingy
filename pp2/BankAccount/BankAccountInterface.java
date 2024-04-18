@@ -4,9 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
-import BankAccountThingy.pp2.BankAccount.Dialogs.EditBankAccount;
-import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
-import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
 
 /*
     SOME CHANGES HAVE BEEN MADE (2024, of March 31st, Around 22:20 i think)
@@ -24,15 +21,13 @@ public class BankAccountInterface extends JPanel
 
     // @Intention will be in argument as of this timeline.
     // will remove this strip of comment if Intention is agreeable... :3
-    @Intention(isPublic = true, 
-               design = "showing the bank account's information and modify within the" + 
+    @Intention(design = "showing the bank account's information and modify within the" +
                         "extension of the BankAccount class.",
                reason = "it conflicts the finality of a certain bankaccount when" +
                         "overriding the memory referencing in outer classes")
     
     public static final int HEIGHT = 100;
     public static int WIDTH = 1030;
-    public BankAccountList lib;
     public BankAccount b;
     public JLabel image;
     
@@ -41,14 +36,7 @@ public class BankAccountInterface extends JPanel
     private JLabel number;
     private JLabel balance;
     
-    // the labels are going to be private for certain reason/s:
-    private JLabel edit;
-    private JLabel delete;
-    private JLabel deposit;
-    private JLabel withdraw;
-    //
-    
-    public BankAccountInterface(BankAccount ba)
+    public BankAccountInterface(BankAccount ba, BankAccountListPane pane)
     {
         super();
         b = ba;
@@ -58,63 +46,63 @@ public class BankAccountInterface extends JPanel
         number = createNumber();
         balance = createBalance();
         
-        //interface stuff goes here
-        edit = createEdit();
-        delete = createDelete();
-        deposit = createDeposit();
-        withdraw = createWithdraw();
-        
         image = createImage();
         
         add(image);
         add(name);
         add(number);
         add(balance);
-        add(edit);
-        add(delete);
-        add(deposit);
-        add(withdraw);
+        JLabel deleteBankAccount = createDeleteBankAccount(ba, pane);
+        add(deleteBankAccount);
         
         repaint();
         validate();
         setVisible(true);
+    }
+
+    public JLabel createDeleteBankAccount(BankAccount b, BankAccountListPane pane)
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setText("X");
+        label.setForeground(Color.RED);
+
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText().toUpperCase());
+        int height = metrics.getHeight();
+        label.setBounds(900, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                 pane.requestRemove(b);
+            }
+        });
+        return label;
     }
     
     @Deprecated // !!! take note
     public BankAccountInterface(String first, String second, String last, long num)
     {
         initializeComponent(); // for the panel itself.
-      
+
         b = new BankAccount(first, second, last, num);
         name = createName();
         number = createNumber();
         balance = createBalance();
-        
-        //interface stuff goes here
-        edit = createEdit();
-        delete = createDelete();
-        deposit = createDeposit();
-        withdraw = createWithdraw();
-        
+
         image = createImage();
-        
+
         add(image);
         add(name);
         add(number);
         add(balance);
-        add(edit);
-        add(delete);
-        add(deposit);
-        add(withdraw);
-        
+
         repaint();
         validate();
         setVisible(true);
-    }
-    
-    public void updateAccount(String first, String second, String last, long num)
-    {
-        // will be written here
     }
     
     public void initializeComponent()
@@ -195,7 +183,7 @@ public class BankAccountInterface extends JPanel
             protected void paintComponent(Graphics g) 
             {
                 super.paintComponent(g);
-                g.drawImage(b.tryImage(b.getAccountNumber() + ""), 0, 0, getWidth(), getHeight(), null);
+                g.drawImage(b.tryImage(b.getAccountNumber() + "", 70), 0, 0, getWidth(), getHeight(), null);
             }
         };
         label.setLayout(null);
@@ -203,154 +191,8 @@ public class BankAccountInterface extends JPanel
         label.setVisible(true);
         return label;
     }
-       
-    public JLabel createEdit()
-    {
-        JLabel label = new JLabel();
-        label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("edit");
-        label.setForeground(Color.BLACK);
 
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(500, (getHeight() / 2) - (height /2), width + 40, height);
-        
-        // adding an event on this one :3
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                edit.setForeground(Color.GRAY);
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                edit.setForeground(Color.BLACK);
-            }
-            
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-            
-            }
-        });
-        
-        return label;
-    }
-    
-    public JLabel createDeposit()
-    {
-        JLabel label = new JLabel();
-        label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("deposit");
-        label.setForeground(Color.BLACK);
-
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(570, (getHeight() / 2)  - (height /2), width + 40, height);
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                label.setForeground(Color.GRAY);
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                label.setForeground(Color.BLACK);
-            }
-            
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-            
-            }
-            
-        });
-        return label;
-    }
-    
-    public JLabel createWithdraw()
-    {
-        JLabel label = new JLabel();
-        label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("withdraw");
-        label.setForeground(Color.BLACK);
-
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(700, (getHeight() / 2)  - (height /2), width + 40, height);
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                label.setForeground(Color.GRAY);
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                label.setForeground(Color.BLACK);
-            }
-            
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-            
-            }
-            
-        });
-        return label;
-    }
-    
-    public JLabel createDelete()
-    {
-        JLabel label = new JLabel();
-        label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("delete");
-        label.setForeground(Color.RED);
-
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(850, (getHeight() / 2)  - (height /2), width + 40, height);
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                label.setForeground(Color.GRAY);
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                label.setForeground(Color.BLACK);
-            }
-            
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                //
-            }
-            
-        });
-
-        return label;
-    }
-    
+    @Deprecated
     public void update()
     {
         name.setText(b.getAccountName());
@@ -359,8 +201,9 @@ public class BankAccountInterface extends JPanel
         
         // add images sooner ...
     }
-    
-    // quite unecessary but ok
+
+    @Deprecated
+    // quite unnecessary but ok
     public JPanel getPanel()
     {
         return this;

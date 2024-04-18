@@ -17,6 +17,7 @@ public class TextFieldFilter extends DocumentFilter
         TYPE_STRING, TYPE_CHARACTERS_ONLY, TYPE_NUMERICAL, TYPE_CURRENCY
     }
     public String dataType; // the string equivalent of the enum
+    public int characterLimit = 0;
     
     public TextFieldFilter()
     {
@@ -27,6 +28,13 @@ public class TextFieldFilter extends DocumentFilter
     public TextFieldFilter(DataType d)
     {
         this.dataType = d.toString();
+        characterLimit = Integer.MAX_VALUE;
+    }
+
+    public TextFieldFilter(DataType d, int charLimit)
+    {
+        this.dataType = d.toString();
+        characterLimit = charLimit;
     }
     
     @Override
@@ -66,37 +74,46 @@ public class TextFieldFilter extends DocumentFilter
                 case "TYPE_NUMERICAL":
                 {
                     Long.parseLong(text);
-                    
-                    break;
+                    if(text.length() <= characterLimit)
+                        break;
+                    else return false;
                 }
                 
                 // currency based
                 case "TYPE_CURRENCY":
                 {
-                    Double.parseDouble(text);
-                    
-                    String[] parts = text.split("\\.");
-                    if (parts.length > 1) 
-                    {
-                        // Check if the fractional part has more than two digits
-                        String fractionalPart = parts[1];
-                        if (fractionalPart.length() > 2) 
+                    if(text.length() <= characterLimit) {
+                        Double.parseDouble(text);
+
+                        String[] parts = text.split("\\.");
+                        if (parts.length > 1)
                         {
-                            return false; // More than two decimal places
+                            // Check if the fractional part has more than two digits
+                            String fractionalPart = parts[1];
+                            if (fractionalPart.length() > 2)
+                            {
+                                return false; // More than two decimal places
+                            }
+                        }
+                        if(text.toLowerCase().contains("d") || text.toLowerCase().contains("f"))
+                        {
+                            return false;
                         }
                     }
-                    if(text.toLowerCase().contains("d") || text.toLowerCase().contains("f"))
-                    {
-                        return false;
-                    }
+                    else return false;
+
                     break;
                 }
                 case "TYPE_CHARACTERS_ONLY":
                 {
-                    if(!text.matches("[a-zA-Z]+")) 
+                    if(text.length() <= characterLimit)
                     {
-                        return false;
+                        if(!text.matches("[a-zA-Z]+"))
+                        {
+                            return false;
+                        }
                     }
+                    else return false;
                     break;
                 }
                 default:

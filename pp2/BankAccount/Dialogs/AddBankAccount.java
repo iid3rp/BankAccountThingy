@@ -109,8 +109,6 @@ public class AddBankAccount extends JDialog
         JLabel ok = createOk();
         panel.add(createCancel(10, "X"));
         panel.add(createCancel(getHeight() - 50, "Cancel"));
-        
-        
         panel.add(createTitle(20, 20, 10, "Add Account"));
         
         accountNumber = createCreditNumber();

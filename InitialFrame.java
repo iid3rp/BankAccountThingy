@@ -6,8 +6,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.SwingConstants;
-import java.awt.Point;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Color;
@@ -19,6 +19,7 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccountInterface;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
@@ -28,51 +29,71 @@ import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
 public class InitialFrame extends JFrame
 {
+    public static Dimension dimension = new Dimension(1280, 720);
+    private JLabel withdraw;
+    private JLabel deposit;
+    private JLabel interest;
+    private JLabel update;
+    private JLabel changeBank;
+    private JLabel title;
+    private JLabel closeBank;
+    public JPanel panel;
+    public JPanel menu;
+    public JPanel info;
+
+    public JLabel titleList;
+    public JLabel addAccount;
+    private JLabel editAccount;
+    private JLabel deleteAccount;
+    private JLabel depositMoney;
+    private JLabel withdrawMoney;
+
     public JTextField search;
+    
     public BankAccountListPane pane;
     public BankAccountList list;
     public JLabel closeApplication;
     public boolean isDragging;
     public Point offset;
+    private JLabel deleteBankAccount;
+
     public InitialFrame()
     {
         super();
-        initializeComponent();        
-        JPanel panel = createPanel();
+        initializeComponent();
+        panel = createPanel();
         add(panel);
         setContentPane(panel);
         
-        JPanel menu = createMenu();
+        menu = createMenu();
+        info = createInfo();
+
         panel.add(menu);
-        
-        JPanel info = createInfo();
         panel.add(info);
         
         //JLabels for the header
-        JLabel titleList = createTitleList();
-        /*JTextField*/ search = createSearch();
-        JLabel closeBank = createCloseBank();
-        /*JLabel*/ closeApplication = createCloseApp();
+        titleList = createTitleList();
+        search = createSearch();
+        closeBank = createCloseBank();
+        closeApplication = createCloseApp();
         
         info.add(titleList);
         info.add(search);
         info.add(closeBank);
         info.add(closeApplication);
+
                 
-        /*BankAccountListPane*/ pane = createList();
-        //JScrollPane pane = createScrollPane();
+        pane = createList();
         pane.setLocation(250, 40);
-        
         panel.add(pane);
-        
-        JLabel title = createTitle();
-        
-        JLabel addAccount = createAddAccount();
-        JLabel deposit = createDepositMoney();
-        JLabel withdraw = createWithdrawMoney();
-        JLabel interest = createInterestRate();
-        JLabel update = createUpdateAccount();
-        JLabel changeBank = createChangeBank();
+
+        title = createTitle();
+        addAccount = createAddAccount();
+        deposit = createDepositMoney();
+        withdraw = createWithdrawMoney();
+        interest = createInterestRate();
+        update = createUpdateAccount();
+        changeBank = createChangeBank();
                 
         menu.add(title);
         menu.add(addAccount);
@@ -87,7 +108,8 @@ public class InitialFrame extends JFrame
         
         setVisible(true);
     }
-    
+
+
     // STATThread   
     @Region("Static Thread Must go here")
     public static void main(String[] args)
@@ -99,7 +121,7 @@ public class InitialFrame extends JFrame
     {
         setVisible(false);
         setSize(new Dimension(1280, 720));
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE/*3*/);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true);
         addKeyListener(new KeyAdapter()
@@ -117,7 +139,162 @@ public class InitialFrame extends JFrame
         });
 
     }
-    
+
+    private JPanel addComponentsToBankAccountInterface(JPanel p)
+    {
+        editAccount = createEditAccount();
+        deleteAccount = createDeleteAccount();
+        depositMoney = createDeposit();
+        withdrawMoney = createWithdraw();
+        p.add(editAccount);
+        p.add(deleteAccount);
+        p.add(depositMoney);
+        p.add(withdrawMoney);
+        return p;
+    }
+
+    private JLabel createWithdraw()
+    {
+
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setText("withdraw");
+        label.setForeground(Color.BLACK);
+
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText());
+        int height = metrics.getHeight();
+        label.setBounds(700, (getHeight() / 2)  - (height /2), width + 40, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.GRAY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+
+            }
+
+        });
+        return label;
+    }
+
+    private JLabel createDeposit()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setText("deposit");
+        label.setForeground(Color.BLACK);
+
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText());
+        int height = metrics.getHeight();
+        label.setBounds(570, (getHeight() / 2)  - (height /2), width + 40, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.GRAY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+
+            }
+
+        });
+        return label;
+    }
+
+    private JLabel createDeleteAccount()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setText("delete");
+        label.setForeground(Color.RED);
+
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText());
+        int height = metrics.getHeight();
+        label.setBounds(850, (getHeight() / 2)  - (height /2), width + 40, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.GRAY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.BLACK);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                //hjdshfhs
+            }
+
+        });
+
+        return label;
+    }
+
+    private JLabel createEditAccount()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setText("edit");
+        label.setForeground(Color.BLACK);
+
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText());
+        int height = metrics.getHeight();
+        label.setBounds(500, (getHeight() / 2) - (height /2), width + 40, height);
+
+        // adding an event on this one :3
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.GRAY);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.BLACK);
+            }
+        });
+
+        return label;
+    }
+
     public JPanel createPanel()
     {
         JPanel panel = new JPanel();
@@ -143,7 +320,7 @@ public class InitialFrame extends JFrame
             }
             
             @Override
-            public void mousePressed(MouseEvent e) 
+            public void mousePressed(MouseEvent e)
             {
                 if (SwingUtilities.isLeftMouseButton(e)) 
                 {
@@ -321,14 +498,19 @@ public class InitialFrame extends JFrame
         });
         return label;
     }
-    
+
+
     
     public BankAccountListPane createList()
     {
         list = new BankAccountList();
-        list.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-          
-        list.ba = list.sort(BankAccountList.Sort.LAST_NAME, BankAccountList.SortType.SORT_DESCENDING);       
+        list.add(new BankAccount("FirstName", "MiddleName", "AastName", 9999999999999999L));
+        list.add(new BankAccount("AirstName", "MiddleName", "PastName", 1234567890123456L));
+        list.add(new BankAccount("FirstName", "MiddleName", "YastName", 1234567890123456L));
+        list.add(new BankAccount("BirstName", "MiddleName", "XastName", 1234567890123456L));
+        list.add(new BankAccount("ZirstName", "MiddleName", "ZastName", 1234567890123456L));
+
+        list.ba = list.sort(BankAccountList.Sort.LAST_NAME, null);
         return new BankAccountListPane(list);
     }
     

@@ -209,9 +209,9 @@ public class BankAccount
     }
     
     // optional: magkuha ug image sa bankaccount with the use of the bank account's number as the file name:
-    public BufferedImage tryImage(String s)
+    public BufferedImage tryImage(String s, int length)
     {
-        BufferedImage bf = new BufferedImage(70, 70, BufferedImage.TYPE_INT_ARGB);  
+        BufferedImage bf = new BufferedImage(length, length, BufferedImage.TYPE_INT_ARGB);
         try
         {     
             String path = this.getClass().getResource("Accounts/" + getAccountNumber() + ".png") == null? 
@@ -219,8 +219,8 @@ public class BankAccount
                           this.getClass().getResource("Accounts/" + getAccountNumber() + ".png").getPath(); // false
                           
             Image image = ImageIO.read(new File(path));
-            image = image.getScaledInstance(70, 70, Image.SCALE_SMOOTH); 
-            bf = paintImage(bf, image);
+            image = image.getScaledInstance(length, length, Image.SCALE_SMOOTH);
+            bf = paintImage(bf, image, length);
         }
         catch(NullPointerException | IOException e)
         {
@@ -230,26 +230,21 @@ public class BankAccount
         return bf;
     }
     
-    private BufferedImage paintImage(BufferedImage b, Image i)
+    private BufferedImage paintImage(BufferedImage b, Image i, int length)
     {
         Graphics2D g2d = b.createGraphics();
         g2d.setColor(Color.GREEN);
-        g2d.fillOval(0, 0, 70, 70);
+        g2d.fillOval(0, 0, length, length);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
         g2d.drawImage(i, 0, 0, null);
         g2d.dispose();
         return b;
     }
-    
+
+    @Deprecated
     public BankAccount setEmpty()
     {
         return null;
-    }
-    
-    public static void main(String[] a) 
-    {
-        BankAccount bank = new BankAccount();
-        System.out.print(bank.tryImage(""));
     }
 
 }
