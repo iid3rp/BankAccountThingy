@@ -2,7 +2,7 @@ package BankAccountThingy.pp2.BankAccount.Utils;
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD) // This annotation can be applied to class types :3
+@Target({ElementType.METHOD, ElementType.FIELD}) // This annotation can be applied to class types :3
 
 // Intention annotation - developed by Francis (iid3rp) Madanlo
 /*

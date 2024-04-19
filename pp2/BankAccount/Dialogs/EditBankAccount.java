@@ -1,16 +1,11 @@
 package BankAccountThingy.pp2.BankAccount.Dialogs;
-import java.util.Arrays;
-import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JDialog;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingConstants;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Point;
@@ -22,26 +17,14 @@ import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.io.IOException;
 import java.io.File;
-import java.net.URL;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
-import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
-import BankAccountThingy.pp2.BankAccount.BankAccountInterface;
 public class EditBankAccount extends JDialog
 {
-    private boolean result;
     
     public BankAccount reference;
     public JPanel imageEditor;
@@ -67,9 +50,7 @@ public class EditBankAccount extends JDialog
         IN, OUT
     }
     
-    public Random rand = new Random();
-    
-    public double mult = 1;
+    public double multiplier = 1;
     public double refX = .5;
     public double refY = .5;
     
@@ -77,7 +58,7 @@ public class EditBankAccount extends JDialog
     public EditBankAccount()
     {
         super();
-        setModalityType(ModalityType.APPLICATION_MODAL); // this ensures modallity of the jdialog
+        setModalityType(ModalityType.APPLICATION_MODAL); // this ensures modality of the JDialog
         setTitle("Adding a Bank Account");    
         setSize(new Dimension(550, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -141,7 +122,7 @@ public class EditBankAccount extends JDialog
         // including stuff like, adding a paint thingy here when
         // a bank account has made and has a picture in the library
         // and try-parse, image thingy and stuff xd..
-        // also im dum why did i deleted this file cmon!! :sob:
+        // also im dum why did I delete this file come on!! :sob:
         
         if(confirm)
         {
@@ -220,26 +201,26 @@ public class EditBankAccount extends JDialog
     {
         System.out.println(i.getWidth() + " "+  i.getHeight());
         
-        double ratio = Math.min(i.getWidth(), i.getHeight()) / 180;
+        double ratio = (double) Math.min(i.getWidth(), i.getHeight()) / 180;
         int width = (int) (i.getWidth() / ratio);  
         int height = (int) (i.getHeight() / ratio);
-        picWidth = (int) (width * mult);
-        picHeight = (int) (height * mult);
-        // System.out.println("" + width + " " + height + " " + ratio);
+        picWidth = (int) (width * multiplier);
+        picHeight = (int) (height * multiplier);
+        // System.out.println("" + width + " " + height + " " + ratio); // debuggers
         JLabel label = new JLabel()
         {
             @Override
             protected void paintComponent(Graphics g)
             {
                 super.paintComponent(g);
-                Image img = i.getScaledInstance((int) (width * mult),(int) (height * mult), Image.SCALE_SMOOTH); 
-                g.drawImage(i, 0, 0, (int) (width * mult),(int) (height * mult), null);
+                Image img = i.getScaledInstance((int) (width * multiplier),(int) (height * multiplier), Image.SCALE_SMOOTH);
+                g.drawImage(img, 0, 0, (int) (width * multiplier),(int) (height * multiplier), null);
             }
         };
         label.setLayout(null);
         label.setBounds((int) (imageEditor.getWidth() * refX) - (int) (width * refX),
                         (int) (imageEditor.getHeight() * refY) - (int) (height * refY), 
-                        (int) (width * mult),(int) (height * mult));
+                        (int) (width * multiplier),(int) (height * multiplier));
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()
         {   
@@ -289,13 +270,11 @@ public class EditBankAccount extends JDialog
                     int newY = mouseLocation.y - parentContainerLocation.y - offset.y;
                     
                     newX = newX > 0? 0
-                         : newX < imageEditor.getWidth() - label.getWidth()? imageEditor.getWidth() - label.getWidth()
-                         : newX;
+                         : Math.max(newX, imageEditor.getWidth() - label.getWidth());
                     newY = newY > 0? 0
-                         : newY < imageEditor.getHeight() - label.getHeight()? imageEditor.getHeight() - label.getHeight()
-                         : newY;
-                    refX = (Math.abs(newX) + (imageEditor.getWidth() / 2)) / (width * mult);
-                    refY = (Math.abs(newY) + (imageEditor.getWidth() / 2)) / (height * mult); 
+                         : Math.max(newY, imageEditor.getHeight() - label.getHeight());
+                    refX = (Math.abs(newX) + ((double) imageEditor.getWidth() / 2)) / (width * multiplier);
+                    refY = (Math.abs(newY) + ((double) imageEditor.getWidth() / 2)) / (height * multiplier);
                     System.out.println(refX + ", " + refY);
                     label.setLocation(newX, newY);
                 }
@@ -319,21 +298,21 @@ public class EditBankAccount extends JDialog
             public void mouseClicked(MouseEvent e)
             {
                 System.out.println();
-                mult = mult < 1 ? 1 
-                                : (mult > 3 ? 3 
-                                            : (z == zoom.IN ? Math.min(mult + .1, 3) 
-                                                            : Math.max(mult - .1, 1)));
+                multiplier = multiplier < 1 ? 1
+                                : (multiplier > 3 ? 3
+                                            : (z == zoom.IN ? Math.min(multiplier + .1, 3)
+                                                            : Math.max(multiplier - .1, 1)));
                 
-                // System.out.println(mult); // debug;
-                double zoomedWidth = picWidth * mult;
-                double zoomedHeight = picHeight * mult; 
+                // System.out.println(multiplier); // debug;
+                double zoomedWidth = picWidth * multiplier;
+                double zoomedHeight = picHeight * multiplier;
                 System.out.print(zoomedWidth + " " + zoomedHeight + " " + picWidth + " " + picHeight); //debug
             
                 double xOffset = (imageEditor.getWidth() - zoomedWidth) * refX;
                 double yOffset = (imageEditor.getWidth() - zoomedHeight) * refY;
                 
                 // Set new bounds for the component (replace with your library's method)
-                accountPicture.setBounds((int) xOffset, (int) yOffset, (int) (picWidth * mult), (int) (picHeight * mult));
+                accountPicture.setBounds((int) xOffset, (int) yOffset, (int) (picWidth * multiplier), (int) (picHeight * multiplier));
                 accountPicture.repaint();
                 accountPicture.validate();
                 imageEditor.repaint();
@@ -367,7 +346,7 @@ public class EditBankAccount extends JDialog
     
     private void fileChoosing()
     {
-        BufferedImage image = null;  // Initialize image to null
+        BufferedImage image;  // Initialize image to null
 
         // ... file chooser setup ...
         JFileChooser fileChooser = new JFileChooser();
@@ -465,7 +444,7 @@ public class EditBankAccount extends JDialog
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
 
-        label.setBounds(getWidth() - (int) width - 20, y, width, height);
+        label.setBounds(getWidth() - width - 20, y, width, height);
         label.setBackground(Color.RED);
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()

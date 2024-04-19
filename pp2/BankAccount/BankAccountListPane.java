@@ -1,4 +1,6 @@
 package BankAccountThingy.pp2.BankAccount;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -8,7 +10,8 @@ public class BankAccountListPane extends JScrollPane
 {
     private static final int width = BankAccountInterface.WIDTH;
     private static final int height = BankAccountInterface.HEIGHT;
-    public static BankAccountList ba;
+
+    public BankAccountList ba;
     private JPanel container;
     private int size;
     
@@ -60,6 +63,12 @@ public class BankAccountListPane extends JScrollPane
         container.setBackground(new Color(200, 200, 200));
         container.setDoubleBuffered(true);
     }
+
+    @Intention(reason = "getter of the BankAccountList: uses within deposit and withdraw...")
+    public BankAccountList getBankList()
+    {
+        return ba;
+    }
     
     // search query,, diri ang process sa hybrid searching..
     public void search(String query)
@@ -95,6 +104,31 @@ public class BankAccountListPane extends JScrollPane
         ba.add(b);
         restore();
     }
+
+    public void requestEdit(BankAccount b)
+    {
+        for(int i = 0; i < ba.ba.length; i++)
+        {
+            if(ba.ba[i].getAccountNumber() == b.getAccountNumber())
+            {
+                ba.ba[i] = b;
+            }
+        }
+        restore();
+    }
+
+    @Intention(reason = "Different method purposes")
+    public void requestDeposit(BankAccount b)
+    {
+        requestEdit(b);
+    }
+
+    @Intention(reason = "Different method purposes")
+    public void requestWithdraw(BankAccount b)
+    {
+        requestEdit(b);
+    }
+
 
     public void requestRemove(BankAccount b)
     {

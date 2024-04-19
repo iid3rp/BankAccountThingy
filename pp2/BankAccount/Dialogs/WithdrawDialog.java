@@ -1,62 +1,26 @@
 package BankAccountThingy.pp2.BankAccount.Dialogs;
-import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Random;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JDialog;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingConstants;
-import javax.swing.JFileChooser;
-import javax.swing.JCheckBox;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
-import java.io.IOException;
-import java.io.File;
-import java.net.URL;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
-import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
-import BankAccountThingy.pp2.BankAccount.BankAccountInterface;
-import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
 import BankAccountThingy.pp2.BankAccount.Utils.TextFieldFilter;
 public class WithdrawDialog extends JDialog
 {
-    private BankAccount allocation; // this will be reference of the bankaccount to be withdrawn :#
-    private boolean result;
-    
-    public JPanel imageEditor;
+    private BankAccount allocation; // this will be reference of the BankAccount to be withdrawn :#
     public JPanel panel;
      
     public JTextField accountNumber;
@@ -71,8 +35,6 @@ public class WithdrawDialog extends JDialog
     public BankAccountList lib;
     
     private boolean confirm = false;
-    
-    public Random rand = new Random();
     public double totalAmount;
     public WithdrawDialog(BankAccountList b)
     {
@@ -320,10 +282,7 @@ public class WithdrawDialog extends JDialog
         {
             num = Long.parseLong(accountNumber.getText());
         }
-        catch(NumberFormatException e)
-        {
-            num = 0;
-        }
+        catch(NumberFormatException e) { /* ignore exception */ }
         finally
         {
             BankAccount b = lib.searchByNumber(num);
@@ -354,7 +313,6 @@ public class WithdrawDialog extends JDialog
         PlainDocument doc = (PlainDocument) textField.getDocument();
         doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_CURRENCY));
 
-        
         textField.addMouseListener(new MouseAdapter() 
         {
             @Override
@@ -395,7 +353,7 @@ public class WithdrawDialog extends JDialog
     
     public void putAmount()
     {
-        if((moneyHandler.getText().equals("Enter Amount: [$]") || moneyHandler.getText().equals("")))
+        if((moneyHandler.getText().equals("Enter Amount: [$]") || moneyHandler.getText().isEmpty()))
         {
             amount.setText("$0.00");
             totalAmount = 0;
@@ -465,37 +423,17 @@ public class WithdrawDialog extends JDialog
     {
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.BOLD, 30));
-        String str  = "";
         label.setText("$0.00");
         // Get the FontMetrics object associated with the font
         FontMetrics metrics = getFontMetrics(label.getFont());
         
         // Calculate the width and height of the text
-        int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(20, 250, 400, height);
         label.setVisible(true);
 
         return label;
     }
-    
-    private String generateNumber()
-    {
-        String str  = "";
-        for(int i = 0; i < 16; i++) 
-        {
-            if(i == 0) 
-            {
-                str += "" + (rand.nextInt(9) + 1);
-            } 
-            else 
-            {
-                str += "" + rand.nextInt(10);
-            }
-        }
-        return str;
-    }
-    
     
     public static void main(String[] a)
     {

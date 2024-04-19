@@ -482,8 +482,6 @@ public class InitialFrame extends JFrame
         label.setForeground(Color.RED);
         
         FontMetrics metrics = getFontMetrics(label.getFont());
-        
-        
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
         label.setBounds(1030 - width - 20, 10, width, height);
@@ -504,12 +502,7 @@ public class InitialFrame extends JFrame
     public BankAccountListPane createList()
     {
         list = new BankAccountList();
-        list.add(new BankAccount("FirstName", "MiddleName", "AastName", 9999999999999999L));
-        list.add(new BankAccount("AirstName", "MiddleName", "PastName", 1234567890123456L));
-        list.add(new BankAccount("FirstName", "MiddleName", "YastName", 1234567890123456L));
-        list.add(new BankAccount("BirstName", "MiddleName", "XastName", 1234567890123456L));
-        list.add(new BankAccount("ZirstName", "MiddleName", "ZastName", 1234567890123456L));
-
+        list.add(new BankAccount("Almond", "Bastiano", "Salas", 1234567890123456L));
         list.ba = list.sort(BankAccountList.Sort.LAST_NAME, null);
         return new BankAccountListPane(list);
     }
