@@ -22,14 +22,6 @@ import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 */
 public class BankAccountInterface extends JPanel
 {
-
-    // @Intention will be in argument as of this timeline.
-    // will remove this strip of comment if Intention is agreeable... :3
-    @Intention(design = "showing the bank account's information and modify within the" +
-                        "extension of the BankAccount class.",
-               reason = "it conflicts the finality of a certain bankAccount when" +
-                        "overriding the memory referencing in outer classes")
-    
     public static final int HEIGHT = 100;
     public static int WIDTH = 1030;
     public BankAccount b;
