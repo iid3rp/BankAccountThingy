@@ -12,41 +12,45 @@ public class BankAccountListPane extends JScrollPane
     public BankAccountList ba;
     private JPanel container;
     private int size;
-    
+
+    /**<editor-fold desc="Description">
+     * you need to get the panel's preferred size "daw" because that's going
+     * to be the reference dimension of the JScrollPane (which is weird but whatever)
+     * xd - derp. REFER THE CONSTRUCTOR BELOW
+     *</editor-fold>
+     * */
     public BankAccountListPane(BankAccountList b)
     {
         super();
-        size = b.getLength();
-        ba = new BankAccountList(b);
-        initializeComponent();
-        container.setSize(new Dimension(width, ((height+ 1) * b.getLength()) + (2 * b.getLength()) + 1));
-        
-        // you need to get the panel's preferred size "daw" because that's going
-        // to be the reference dimension of the JScrollPane (which is weird but whatever)
-        // xd - derp
-        container.setPreferredSize(new Dimension(width, ((height + 1) * b.getLength()) + (2 * b.getLength()) + 1));
-        //
-        
-        // add components into the container here :3
-        addComponents();
-        
-        
-        setViewportView(container);   
-        setSize(new Dimension(1030, 720));
-        setDoubleBuffered(true);
-        setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        addMouseWheelListener(e ->
+        if(b != null)
         {
-            // Increase scroll sensitivity by multiplying the scroll distance
-            int unitsToScroll = e.getWheelRotation() * e.getScrollAmount() * 5; // Adjust multiplier as needed
-            JScrollBar verticalScrollBar = getVerticalScrollBar();
-            verticalScrollBar.setValue(verticalScrollBar.getValue() + unitsToScroll);
-        });
+            size = b.getLength();
+            ba = new BankAccountList(b);
+            initializeComponent();
+            container.setSize(new Dimension(width, ((height+ 1) * b.getLength()) + (2 * b.getLength()) + 1));
+            container.setPreferredSize(new Dimension(width, ((height + 1) * b.getLength()) + (2 * b.getLength()) + 1));
+            //
+
+            // add components into the container here :3
+            addComponents();
+
+
+            setViewportView(container);
+            setSize(new Dimension(1030, 720));
+            setDoubleBuffered(true);
+            setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            addMouseWheelListener(e ->
+            {
+                // Increase scroll sensitivity by multiplying the scroll distance
+                int unitsToScroll = e.getWheelRotation() * e.getScrollAmount() * 5; // Adjust multiplier as needed
+                JScrollBar verticalScrollBar = getVerticalScrollBar();
+                verticalScrollBar.setValue(verticalScrollBar.getValue() + unitsToScroll);
+            });
+        }
     }
     
      // default constructor
-    @Deprecated
     public BankAccountListPane()
     {
         size = 0;
@@ -137,11 +141,13 @@ public class BankAccountListPane extends JScrollPane
     public void addComponents()
     {
         int index = 0; // iterator
-        for(BankAccount bank : ba.ba)
+        if(ba.ba != null)
         {
-            BankAccountInterface intf = new BankAccountInterface(bank, this);
-            intf.setBounds(0, ((intf.getHeight() + 1) * index++), intf.getWidth(), intf.getHeight());
-            container.add(intf);
+            for(BankAccount bank : ba.ba) {
+                BankAccountInterface intf = new BankAccountInterface(bank, this);
+                intf.setBounds(0, ((intf.getHeight() + 1) * index++), intf.getWidth(), intf.getHeight());
+                container.add(intf);
+            }
         }
     }
     

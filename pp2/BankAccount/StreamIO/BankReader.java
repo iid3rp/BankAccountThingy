@@ -2,24 +2,20 @@ package BankAccountThingy.pp2.BankAccount.StreamIO;
 
 import javax.swing.JFileChooser;
 
-import java.io.IOException;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.FileReader;
-import java.io.BufferedReader;
+import java.io.*;
 
+import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
+import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
-@SuppressWarnings("")
 public class BankReader
 {
-    
-    public static BankAccountListPane createListFromBank(File f)
+    public BankReader() {}
+    public BankAccountListPane createListFromBank(File f)
     {
         return null;
     }
 
-    @Deprecated
     public String selectFileForEdition() {
         JFileChooser fileChooser = new JFileChooser();
         int returnValue = fileChooser.showOpenDialog(null);
@@ -32,7 +28,6 @@ public class BankReader
         return null;
     }
 
-    @Deprecated
     public void editCSVFile(String filePath) throws IOException {
         // Read the entire CSV file into a List of String arrays (rows)
         // no arraylist, remember :3
@@ -45,7 +40,7 @@ public class BankReader
         // ... your logic here to modify data in csvData ... 
     
         // Write the modified data to a new CSV file (consider using a temporary file)
-        String newFilePath = filePath + ".modified"; // Replace with temporary filename logic
+        String newFilePath = filePath; // Replace with temporary filename logic
         try (FileWriter writer = new FileWriter(newFilePath)) {
             //for() 
             //{
@@ -64,9 +59,27 @@ public class BankReader
       // Optionally, replace the original file with the modified one (after successful write)
     }
 
-    public static void main(String[] a)
+    @Region(value = "continuation goes here derp...")
+    public BankAccountList csvReading(File file)
     {
-        /*String filePath = selectFileForEdition();
+        try {
+            BufferedReader f = new BufferedReader(new FileReader(file));
+            String line = "";
+            while(line != null) {
+                line = f.readLine();
+
+            }
+            f.close();
+        }
+        catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+        return null; // for now
+    }
+
+    public void hello()
+    {
+        String filePath = selectFileForEdition();
         if (filePath != null) {
             try {
                 editCSVFile(filePath);
@@ -78,6 +91,12 @@ public class BankReader
         } 
         else {
             System.out.println("No file selected.");
-        }*/
+        }
+    }
+
+    public static void main(String[] a)
+    {
+        BankReader x = new BankReader();
+        x.hello();
     }
 }

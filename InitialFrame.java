@@ -1,29 +1,20 @@
 package BankAccountThingy;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Color;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
+import java.awt.event.*;
+
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
-import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
+import BankAccountThingy.pp2.BankAccount.BankAccountPane;
+import BankAccountThingy.pp2.BankAccount.Dialogs.AddBank;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
+import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
 import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
 public class InitialFrame extends JFrame
@@ -42,12 +33,11 @@ public class InitialFrame extends JFrame
 
     public JLabel titleList;
     public JLabel addAccount;
+    private JPanel contentPanel;
 
     public JTextField search;
-    
-    public BankAccountListPane pane;
+    BankAccountPane pane;
     public BankAccountList list;
-    public JLabel closeApplication;
     public boolean isDragging;
     public Point offset;
 
@@ -56,30 +46,13 @@ public class InitialFrame extends JFrame
         super();
         initializeComponent();
         panel = createPanel();
-        add(panel);
-        setContentPane(panel);
-        
         menu = createMenu();
-        info = createInfo();
-
+        add(panel);
         panel.add(menu);
-        panel.add(info);
-        
-        //JLabels for the header
-        titleList = createTitleList();
-        search = createSearch();
-        closeBank = createCloseBank();
-        closeApplication = createCloseApp();
-        
-        info.add(titleList);
-        info.add(search);
-        info.add(closeBank);
-        info.add(closeApplication);
 
-                
-        pane = createList();
-        pane.setLocation(250, 40);
-        panel.add(pane);
+        contentPanel = createContentPanel();
+        contentPanel.setLocation(250, 0);
+        panel.add(contentPanel);
 
         title = createTitle();
         addAccount = createAddAccount();
@@ -101,6 +74,83 @@ public class InitialFrame extends JFrame
         panel.repaint();
         
         setVisible(true);
+    }
+
+    private JPanel createMenu()
+    {
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(Color.BLACK);
+        panel.setBounds(0, 0, 250, 720);
+        panel.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                search.setFocusable(false);
+                search.setText("[/] to Search   ");
+                pane.pane.restore();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    isDragging = true;
+                    offset = e.getPoint();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    isDragging = false;
+                }
+            }
+
+        });
+        panel.addMouseMotionListener(new MouseMotionAdapter()
+        {
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                if (isDragging)
+                {
+                    Point currentMouse = e.getLocationOnScreen();
+
+                    int deltaX = currentMouse.x - offset.x;
+                    int deltaY = currentMouse.y - offset.y;
+
+                    setLocation(deltaX, deltaY);
+                }
+            }
+        });
+
+        return panel;
+    }
+
+
+    private JPanel createContentPanel()
+    {
+        JPanel panel = new JPanel();
+        panel.setLayout(null);
+        panel.setSize(new Dimension(1030, 720));
+        panel.setLocation(new Point(250, 0));
+        return panel;
+    }
+
+    public void createBankList(BankAccountList list)
+    {
+        contentPanel.removeAll();
+        pane = new BankAccountPane(this, list);
+        contentPanel.add(pane);
+        contentPanel.repaint();
+        contentPanel.validate();
+        repaint();
+        validate();
     }
 
 
@@ -138,63 +188,8 @@ public class InitialFrame extends JFrame
     {
         JPanel panel = new JPanel();
         panel.setBackground(Color.GRAY);
+        panel.setSize(new Dimension(1030, 720));
         panel.setLayout(null);
-        return panel;
-    }
-    
-    public JPanel createMenu()
-    {   
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-        panel.setBackground(Color.BLACK);
-        panel.setBounds(0, 0, 250, 720);
-        panel.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                search.setFocusable(false);
-                search.setText("[/] to Search   ");
-                pane.restore();
-            }
-            
-            @Override
-            public void mousePressed(MouseEvent e)
-            {
-                if (SwingUtilities.isLeftMouseButton(e)) 
-                {
-                    isDragging = true;
-                    offset = e.getPoint();
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) 
-            {
-                if (SwingUtilities.isLeftMouseButton(e)) 
-                {
-                    isDragging = false;
-                }
-            }
-
-        });
-        panel.addMouseMotionListener(new MouseMotionAdapter() 
-        {
-            @Override
-            public void mouseDragged(MouseEvent e) 
-            {
-                if (isDragging)
-                {
-                    Point currentMouse = e.getLocationOnScreen();
-
-                    int deltaX = currentMouse.x - offset.x;
-                    int deltaY = currentMouse.y - offset.y;
-
-                    setLocation(deltaX, deltaY);
-                }
-            }
-        });
-
         return panel;
     }
 
@@ -213,137 +208,6 @@ public class InitialFrame extends JFrame
 
         pane.setLocation(250, 0);
         return pane;
-    }
-    
-    public JLabel createTitleList()
-    {
-        JLabel label = new JLabel();
-        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        label.setLayout(null);
-        label.setText("Title of The Frame..");
-        label.setForeground(Color.BLACK);
-        
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        
-        
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(10, 10, width, height);
-        label.setVisible(true);
-        return label;
-
-    }
-     
-    public JTextField createSearch()
-    {
-        JTextField searchBar = new JTextField();
-        
-        searchBar.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        searchBar.setBounds(300, 5, 400, 30);
-        searchBar.setText("[/] to Search   ");
-        searchBar.setEditable(true);
-        searchBar.setFocusable(false);
-        searchBar.setHorizontalAlignment(SwingConstants.RIGHT);
-
-        searchBar.getDocument().addDocumentListener(new DocumentListener() 
-        {
-            @Override
-            public void insertUpdate(DocumentEvent e) 
-            {
-                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
-                {
-                    pane.search(searchBar.getText()); // Call this method whenever text is changed
-                }
-                else pane.restore();
-            }
-        
-            @Override
-            public void removeUpdate(DocumentEvent e) 
-            {
-                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
-                {
-                    pane.search(searchBar.getText()); // Call this method whenever text is changed
-                }
-                else pane.restore();
-            }
-         
-            @Override
-            public void changedUpdate(DocumentEvent e) 
-            {
-                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
-                {
-                    pane.search(searchBar.getText()); // Call this method whenever text is changed
-                }
-                else pane.restore();
-            }
-        });
-        
-        searchBar.addMouseListener(new MouseAdapter() 
-        {
-            @Override
-            public void mouseClicked(MouseEvent e) 
-            {
-                search.setEditable(true);
-                search.setFocusable(true);
-                searchBar.setText(""); // Set back 
-                search.requestFocus();
-            }
-        });
-        searchBar.setVisible(true);
-            
-        return searchBar;
-    }
-    
-    public JLabel createCloseBank()
-    {
-        JLabel label = new JLabel();
-        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        label.setLayout(null);
-        label.setText("closeBank");
-        label.setForeground(Color.BLACK);
-        
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        
-        
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(1030 - width - 30 - 100, 10, width, height);
-        label.setVisible(true);
-        return label;
-    }
-    
-    public JLabel createCloseApp()
-    {
-        JLabel label = new JLabel();
-        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        label.setLayout(null);
-        label.setText("X");
-        label.setForeground(Color.RED);
-        
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(1030 - width - 20, 10, width, height);
-        label.setVisible(true);
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                dispose();
-            }
-        });
-        return label;
-    }
-
-
-    
-    public BankAccountListPane createList()
-    {
-        list = new BankAccountList();
-        list.add(new BankAccount("Almond", "Bastiano", "Salas", 1234567890123456L));
-        list.ba = list.sort(BankAccountList.Sort.LAST_NAME, null);
-        return new BankAccountListPane(list);
     }
     
     public JLabel createTitle()
@@ -397,7 +261,7 @@ public class InitialFrame extends JFrame
                 if(b != null) // if it confirms
                 {
                     list.add(b);
-                    pane.requestAdd(b);
+                    pane.pane.requestAdd(b);
                 }
             }
             
@@ -436,7 +300,7 @@ public class InitialFrame extends JFrame
                 if(b != null) // if it confirms
                 {
                     list.replace(b);
-                    pane.replaceAccount(b);
+                    pane.pane.replaceAccount(b);
                 }
             }
             
@@ -477,7 +341,7 @@ public class InitialFrame extends JFrame
                 if(b != null) // if it confirms
                 {
                     list.replace(b);
-                    pane.replaceAccount(b);
+                    pane.pane.replaceAccount(b);
                 }
             }
             
@@ -517,7 +381,7 @@ public class InitialFrame extends JFrame
                 if(b != null) // if it confirms
                 {
                     list.replace(b);
-                    pane.replaceAccount(b);
+                    pane.pane.replaceAccount(b);
                 }
             }
             
@@ -543,76 +407,25 @@ public class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Change Bank");
+        label.setText("Open Bank");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 720 - 80 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
-        
+
         label.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                // will be used in the future :3
+                BankMaker b = new AddBank().showDialog();
+                if(b != null)
+                {
+                    list = b.createBankAccountList();
+                    createBankList(list);
+                }
             }
         });
         return label;
     }
-    
-    public JPanel createInfo()
-    {
-        JPanel panel = new JPanel();
-        panel.setLayout(null);
-        panel.setBounds(250, 0, 1030, 40);
-        panel.setBackground(Color.WHITE);
-        panel.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                search.setFocusable(false);
-                search.setText("[/] to Search   ");
-                pane.restore();
-            }
-            
-            @Override
-            public void mousePressed(MouseEvent e) 
-            {
-                if (SwingUtilities.isLeftMouseButton(e)) 
-                {
-                    isDragging = true;
-                    offset = e.getPoint();
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e) 
-            {
-                if (SwingUtilities.isLeftMouseButton(e)) 
-                {
-                    isDragging = false;
-                }
-            }
-
-        });
-        panel.addMouseMotionListener(new MouseMotionAdapter() 
-        {
-            @Override
-            public void mouseDragged(MouseEvent e) 
-            {
-                if (isDragging)
-                {
-                    Point currentMouse = e.getLocationOnScreen();
-
-                    int deltaX = currentMouse.x - offset.x - 250;
-                    int deltaY = currentMouse.y - offset.y;
-
-                    setLocation(deltaX, deltaY);
-                }
-            }
-        });
-        return panel;
-    }
-    
 }

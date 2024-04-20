@@ -18,10 +18,4 @@ public @interface Intention
     String design() default ""; // whats the design of that field, the functionality
     String reason() default ""; // the reason why is it like that..
     RiskRate risk() default RiskRate.LOW;
-    
-}
-
-enum RiskRate 
-{
-    LOW, MEDIUM, HIGH
 }
