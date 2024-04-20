@@ -40,7 +40,7 @@ public class WithdrawDialog extends JDialog
     {
         super();
         lib = b; // this creates a reference of the list of the BankAccounts when depositing/withdrawing..
-        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL); // this ensures modallity of the jdialog    
+        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL); // this ensures modality of the jDialog
         setSize(new Dimension(500, 350));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -185,7 +185,7 @@ public class WithdrawDialog extends JDialog
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
 
-        label.setBounds(getWidth() - (int) width - 20 - 90, getHeight() - 50, width, height);
+        label.setBounds(getWidth() - width - 20 - 90, getHeight() - 50, width, height);
 
         label.setBackground(Color.BLACK);
         label.setVisible(true);
@@ -194,8 +194,10 @@ public class WithdrawDialog extends JDialog
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                confirm = true;
-                dispose();
+                if(ok.isEnabled()) {
+                    confirm = true;
+                    dispose();
+                }
             }
         });
         return label;
@@ -211,7 +213,7 @@ public class WithdrawDialog extends JDialog
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
 
-        label.setBounds(getWidth() - (int) width - 20, y, width, height);
+        label.setBounds(getWidth() - width - 20, y, width, height);
         label.setBackground(Color.RED);
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()
@@ -458,9 +460,9 @@ public class WithdrawDialog extends JDialog
         bankie.add(new BankAccount("FirstName", "MiddleName", "zastName", 1234567890123456L));
         bankie.add(new BankAccount("hewwohgjhgj", "ggfhfuuyuiame", "ame", 5555555555555555L)); 
         WithdrawDialog i = new WithdrawDialog(bankie);
-        bankie.ba[17].deposit(5000); // example of what would happen to deposit smth and the withdraw
-        BankAccount b = bankie.ba[8];
-        b = i.showDialog(null);
+        bankie.ba[17].deposit(5000); // example of what would happen to deposit smth and the withdrawal
+        BankAccount b = bankie.ba[17];
+        b = i.showDialog(b);
         System.out.print(b);
     }
 }

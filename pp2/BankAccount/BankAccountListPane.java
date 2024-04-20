@@ -2,8 +2,6 @@ package BankAccountThingy.pp2.BankAccount;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 public class BankAccountListPane extends JScrollPane
@@ -149,11 +147,11 @@ public class BankAccountListPane extends JScrollPane
     
     public void replaceAccount(BankAccount b)
     {
-        for(BankAccount bank : ba.ba)
+        for(int i = 0; i < ba.ba.length; i++)
         {
-            if(bank.getAccountNumber() == b.getAccountNumber())
+            if(b.getAccountNumber() == ba.ba[i].getAccountNumber())
             {
-                bank = b;
+                ba.ba[i] = b;
             }
         }
         restore();

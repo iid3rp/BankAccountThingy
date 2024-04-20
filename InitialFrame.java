@@ -19,7 +19,6 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
-import BankAccountThingy.pp2.BankAccount.BankAccountInterface;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
@@ -43,10 +42,6 @@ public class InitialFrame extends JFrame
 
     public JLabel titleList;
     public JLabel addAccount;
-    private JLabel editAccount;
-    private JLabel deleteAccount;
-    private JLabel depositMoney;
-    private JLabel withdrawMoney;
 
     public JTextField search;
     
@@ -55,7 +50,6 @@ public class InitialFrame extends JFrame
     public JLabel closeApplication;
     public boolean isDragging;
     public Point offset;
-    private JLabel deleteBankAccount;
 
     public InitialFrame()
     {
@@ -138,161 +132,6 @@ public class InitialFrame extends JFrame
             }
         });
 
-    }
-
-    private JPanel addComponentsToBankAccountInterface(JPanel p)
-    {
-        editAccount = createEditAccount();
-        deleteAccount = createDeleteAccount();
-        depositMoney = createDeposit();
-        withdrawMoney = createWithdraw();
-        p.add(editAccount);
-        p.add(deleteAccount);
-        p.add(depositMoney);
-        p.add(withdrawMoney);
-        return p;
-    }
-
-    private JLabel createWithdraw()
-    {
-
-        JLabel label = new JLabel();
-        label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("withdraw");
-        label.setForeground(Color.BLACK);
-
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(700, (getHeight() / 2)  - (height /2), width + 40, height);
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                label.setForeground(Color.GRAY);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                label.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-
-            }
-
-        });
-        return label;
-    }
-
-    private JLabel createDeposit()
-    {
-        JLabel label = new JLabel();
-        label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("deposit");
-        label.setForeground(Color.BLACK);
-
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(570, (getHeight() / 2)  - (height /2), width + 40, height);
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                label.setForeground(Color.GRAY);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                label.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-
-            }
-
-        });
-        return label;
-    }
-
-    private JLabel createDeleteAccount()
-    {
-        JLabel label = new JLabel();
-        label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("delete");
-        label.setForeground(Color.RED);
-
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(850, (getHeight() / 2)  - (height /2), width + 40, height);
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                label.setForeground(Color.GRAY);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                label.setForeground(Color.BLACK);
-            }
-
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                //hjdshfhs
-            }
-
-        });
-
-        return label;
-    }
-
-    private JLabel createEditAccount()
-    {
-        JLabel label = new JLabel();
-        label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("edit");
-        label.setForeground(Color.BLACK);
-
-        FontMetrics metrics = getFontMetrics(label.getFont());
-        int width = metrics.stringWidth(label.getText());
-        int height = metrics.getHeight();
-        label.setBounds(500, (getHeight() / 2) - (height /2), width + 40, height);
-
-        // adding an event on this one :3
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                label.setForeground(Color.GRAY);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                label.setForeground(Color.BLACK);
-            }
-        });
-
-        return label;
     }
 
     public JPanel createPanel()

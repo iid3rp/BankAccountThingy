@@ -7,7 +7,6 @@ import java.awt.event.*;
 import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.EditBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
-import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 /*
     SOME CHANGES HAVE BEEN MADE (2024, of March 31st, Around 22:20 i think)
@@ -81,7 +80,7 @@ public class BankAccountInterface extends JPanel
             {
                 BankAccount edit = new DepositDialog(pane.getBankList()).showDialog(ba);
                 edit = edit == null? ba : edit;
-                pane.requestEdit(edit);
+                pane.requestDeposit(edit);
             }
 
             @Override
@@ -118,7 +117,7 @@ public class BankAccountInterface extends JPanel
             {
                 BankAccount edit = new WithdrawDialog(pane.getBankList()).showDialog(ba);
                 edit = edit == null? ba : edit;
-                pane.requestEdit(edit);
+                pane.requestWithdraw(edit);
             }
 
             @Override
@@ -266,7 +265,7 @@ public class BankAccountInterface extends JPanel
         label.setBounds(100, 8, 400, height);
         return label;
     }
-    
+
     public JLabel createNumber()
     {
         JLabel label = createText("Account Number: " + b.getAccountNumber());

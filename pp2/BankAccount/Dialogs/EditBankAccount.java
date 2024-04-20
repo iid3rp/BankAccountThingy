@@ -54,7 +54,7 @@ public class EditBankAccount extends JDialog
     public double refX = .5;
     public double refY = .5;
     
-    private int picWidth, picHeight, picX, picY;
+    private int picWidth, picHeight;
     public EditBankAccount()
     {
         super();
@@ -229,6 +229,12 @@ public class EditBankAccount extends JDialog
             {
                 label.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            }
         
             @Override
             public void mouseClicked(MouseEvent e)
@@ -381,7 +387,6 @@ public class EditBankAccount extends JDialog
             } 
             catch (IOException err) 
             {
-                err.printStackTrace();
                 System.out.println("Error loading image: " + err.getMessage());
             }
         }
@@ -418,7 +423,7 @@ public class EditBankAccount extends JDialog
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
 
-        label.setBounds(getWidth() - (int) width - 20 - 90, getHeight() - 50, width, height);
+        label.setBounds(getWidth() - width - 20 - 90, getHeight() - 50, width, height);
 
         label.setBackground(Color.BLACK);
         label.setVisible(true);
