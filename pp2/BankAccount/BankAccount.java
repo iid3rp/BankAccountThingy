@@ -1,18 +1,16 @@
-package BankAccountThingy.pp2.BankAccount; // packaging rani.. ayaw sundoga kung ang imohang java file kay same sa folder saimohang BankAccount java file
+package BankAccountThingy.pp2.BankAccount;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
 import java.awt.*;
-import javax.swing.*;
 import java.awt.image.*;
-import java.util.*;
 import java.io.File;
-import javax.swing.JFileChooser;
 import java.io.IOException;
+import java.util.Objects;
 import javax.imageio.ImageIO;
-import java.net.URL;
 
 public class BankAccount
 {
-    // self-explanatory na mga variables
     private String accountName;
     private String firstName;
     private String middleName;
@@ -34,15 +32,15 @@ public class BankAccount
     }
     
     // constructor with parameters
-    @Deprecated // @Deprecated means dili na ni siya magamit... for read-only purposes rani
+    @Deprecated
     public BankAccount(String name, long num, double balance)
     {
         accountName = name;
         accountNumber = num;
-        balance = balance;
+        this.balance = balance;
     }
     
-    @Deprecated // reason: no one uses this kinda constructor...
+    @Intention(design = "reading a BankAccount to it's .csv file.")
     public BankAccount(String first, String second, String last, long num, double b)
     {
         firstName = first;
@@ -53,7 +51,8 @@ public class BankAccount
         accountNumber = num;
         balance = b;
     }
-    
+
+    @Region(value = "prior constructor.")
     public BankAccount(String first, String second, String last, long num)
     {
         firstName = first;
@@ -161,7 +160,7 @@ public class BankAccount
         interestRate = rate;
     }
     
-    // mag get sa interes
+    // mag get sa interest
     public static double getInterestRate()
     {
         return interestRate;
@@ -172,19 +171,15 @@ public class BankAccount
     {
         balance += balance * interestRate;
     }
-    
-    // kani ang katong withdrawing process
+
+    // withdrawing process
     public boolean withdraw(double money)
     {
-        if(balance >= money) // katong pag ang imohang gusto na iwithdraw kay dili dako na insufficient funds
-        {
-            balance -= money; // i-minus siya sa imohang balance
-            return true; // ibalik ang true value
-        }
-        else return false; // ibalik ang false value pag insufficient funds
+        balance = balance >= money? balance - money : balance;
+        return balance >= money;
     }
     
-    // kanang String equivalent sa imohang account
+    // String equivalent sa imohang account
     public String toString()
     {
         return "Account Name: " + getAccountName() + "\n" +
@@ -192,7 +187,7 @@ public class BankAccount
                "Account Balance: " + balance;
     }
     
-    // optional: pagkuha aning class as shallow copy
+    // optional: shallow copy
     public BankAccount getCopy()
     {
         return this;
@@ -201,11 +196,7 @@ public class BankAccount
     // optional: pag identify kung ang duha ka BankAccount class kay equal sila...
     public boolean equals(BankAccount ba)
     {
-        if(this == ba)
-        {
-            return true;
-        }
-        else return false;
+        return this == ba;
     }
     
     // optional: magkuha ug image sa bankaccount with the use of the bank account's number as the file name:
@@ -215,22 +206,21 @@ public class BankAccount
         try
         {     
             String path = this.getClass().getResource("Accounts/" + getAccountNumber() + ".png") == null? 
-                          this.getClass().getResource("Resources/default-image.jpg").getPath() :  // true
-                          this.getClass().getResource("Accounts/" + getAccountNumber() + ".png").getPath(); // false
+                          Objects.requireNonNull(this.getClass().getResource("Resources/default-image.jpg")).getPath() :  // true
+                          Objects.requireNonNull(this.getClass().getResource("Accounts/" + getAccountNumber() + ".png")).getPath(); // false
                           
             Image image = ImageIO.read(new File(path));
             image = image.getScaledInstance(length, length, Image.SCALE_SMOOTH);
-            bf = paintImage(bf, image, length);
+            paintImage(bf, image, length);
         }
         catch(NullPointerException | IOException e)
         {
-            e.printStackTrace();
-            System.out.print("hello WOrld!");
+            throw new RuntimeException();
         }  
         return bf;
     }
     
-    private BufferedImage paintImage(BufferedImage b, Image i, int length)
+    private void paintImage(BufferedImage b, Image i, int length)
     {
         Graphics2D g2d = b.createGraphics();
         g2d.setColor(Color.GREEN);
@@ -238,7 +228,6 @@ public class BankAccount
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
         g2d.drawImage(i, 0, 0, null);
         g2d.dispose();
-        return b;
     }
 
     @Deprecated

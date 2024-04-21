@@ -10,11 +10,12 @@ import java.io.File;
 
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
-import BankAccountThingy.pp2.BankAccount.Dialogs.AddBank;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
+import BankAccountThingy.pp2.BankAccount.StreamIO.BankChooser;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
+import BankAccountThingy.pp2.BankAccount.StreamIO.BankReader;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
@@ -409,7 +410,12 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankMaker b = new AddBank().showDialog();
+                /*BankMaker b = new AddBank().showDialog();
+                if(b != null)
+                {
+                    createPane(b);
+                }*/
+                File b = BankChooser.showDialog();
                 if(b != null)
                 {
                     createPane(b);
@@ -431,10 +437,19 @@ public class InitialFrame extends JFrame
         return label;
     }
 
-    @Intention(isPublic = false, design = "getting the `this` keyword for the InitialFrame instead of the anonymous MouseAdapter.")
-    private void createPane(BankMaker b)
+    /**
+     * 2 @Intention voids in action with 2 different purposes: one that returns BankAccountPane from creating a new Bank,
+     * and the other one from a .csv file. They return the same data type but different options...
+     */
+    private @Intention void createPane(BankMaker b)
     {
         pane = b.createBankAccountList(this, new File(b.fileTitle));
+        createBankList(); // this will automatically create a bank list for u
+    }
+
+    private @Intention void createPane(File file)
+    {
+        pane = new BankReader().createListFromBank(this, file);
         createBankList(); // this will automatically create a bank list for u
     }
 }

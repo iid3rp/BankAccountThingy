@@ -2,7 +2,7 @@ package BankAccountThingy.pp2.BankAccount.Utils;
 import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.METHOD, ElementType.FIELD}) // This annotation can be applied to class types :3
+@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD}) // This annotation can be applied to class types :3
 
 // Intention annotation - developed by Francis (iid3rp) Madanlo
 /*
@@ -15,7 +15,7 @@ import java.lang.annotation.*;
 public @interface Intention 
 {
     boolean isPublic() default true; // stating the publicity of the field / method
-    String design() default ""; // whats the design of that field, the functionality
+    String design() default ""; // what's the design of that field, the functionality
     String reason() default ""; // the reason why is it like that..
     RiskRate risk() default RiskRate.LOW;
 }

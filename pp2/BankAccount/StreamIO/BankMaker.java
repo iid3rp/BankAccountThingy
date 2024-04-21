@@ -23,7 +23,7 @@ public class BankMaker
 
         // the file title
         fileTitle = title.replaceAll(" ", "_") // Replace spaces with underscores
-                                .replaceAll("[^a-zA-Z0-9_.-]", ""); // Remove remaining special characters
+                         .replaceAll("[^a-zA-Z0-9_.-]", ""); // Remove remaining special characters
 
         // contents of every bank account csv in order:
         String[] bankInfo = {"Title ->", title, "Serial UID ->", serial + ""};

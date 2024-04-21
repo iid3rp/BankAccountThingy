@@ -16,10 +16,10 @@ public class BankAccountPane extends JPanel
     public BankAccountListPane pane;
 
     @Intention(isPublic = false, design = "reference pointing...")
-    InitialFrame reference;
+    private InitialFrame reference;
 
-    @Intention(isPublic = true, reason = "accessing to the initialFrame and add listeners afterward.")
-    public JPanel info;
+    @Intention(reason = "accessing to the initialFrame and add listeners afterward.")
+    private JPanel info;
     public @Intention JLabel titleList;
     public @Intention JTextField search;
     public @Intention JLabel closeBank;
@@ -35,7 +35,7 @@ public class BankAccountPane extends JPanel
         info = createInfo();
 
         //JLabels for the header
-        titleList = createTitleList();
+        titleList = createTitleList(list.getTitle());
         search = createSearch();
         closeBank = createCloseBank();
         closeApplication = createCloseApp();
@@ -109,12 +109,12 @@ public class BankAccountPane extends JPanel
         return panel;
     }
 
-    public JLabel createTitleList()
+    public JLabel createTitleList(String title)
     {
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         label.setLayout(null);
-        label.setText("Title of The Frame..");
+        label.setText(title);
         label.setForeground(Color.BLACK);
 
         FontMetrics metrics = getFontMetrics(label.getFont());

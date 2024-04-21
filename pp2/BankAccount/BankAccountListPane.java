@@ -36,6 +36,7 @@ public class BankAccountListPane extends JScrollPane
 
 
             setViewportView(container);
+            getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
             setSize(new Dimension(1030, 720));
             setDoubleBuffered(true);
             setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -43,9 +44,9 @@ public class BankAccountListPane extends JScrollPane
             addMouseWheelListener(e ->
             {
                 // Increase scroll sensitivity by multiplying the scroll distance
-                int unitsToScroll = e.getWheelRotation() * e.getScrollAmount() * 5; // Adjust multiplier as needed
+                double unitsToScroll = e.getWheelRotation() * e.getScrollAmount() * 5; // Adjust multiplier as needed
                 JScrollBar verticalScrollBar = getVerticalScrollBar();
-                verticalScrollBar.setValue(verticalScrollBar.getValue() + unitsToScroll);
+                verticalScrollBar.setValue((int) (verticalScrollBar.getValue() + unitsToScroll));
             });
         }
     }
@@ -170,7 +171,9 @@ public class BankAccountListPane extends JScrollPane
         container.setPreferredSize(new Dimension(width, ((height + 1) * ba.getLength()) + (2 * ba.getLength()) + 1));
         // add the components to the panel to be put into the scrollPane...
         addComponents();
+        container.repaint();
         container.validate();
+        repaint();
         validate();
         System.out.println("restored");
 
