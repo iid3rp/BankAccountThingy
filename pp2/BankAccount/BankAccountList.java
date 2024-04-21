@@ -52,7 +52,7 @@ public class BankAccountList
     public BankAccountList(BankAccountList b)
     {
         size = b.getLength();
-        ba = b.getList();
+        ba = b.ba;
         serial = b.getSerial();
         title = b.getTitle();
     }
@@ -71,7 +71,7 @@ public class BankAccountList
             ba = reference;
         }
         ba[size - 1] = b;
-        return true;    
+        return true;
     }
     
     // addition sa bank account sa array (but including index to specifically put it)
@@ -252,6 +252,7 @@ public class BankAccountList
     }
     
     // getting the ArrayList<BankAccount>
+    @Deprecated // reason: intentionally making the list be public..
     public BankAccount[] getList()
     {
         return this.ba;

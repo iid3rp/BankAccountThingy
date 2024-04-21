@@ -48,7 +48,7 @@ public class BankMaker
         // try-with-resources method btw :3
         try(FileWriter writer = new FileWriter(file))
         {
-            writer.write("Title," + ba.getTitle() + "Serial UID," + ba.getSerial() + "\n");
+            writer.write("Title," + ba.getTitle() + ",Serial UID," + ba.getSerial() + "\n");
             writer.write(String.join(",", header) + "\n");
 
             for(BankAccount b : ba.ba)

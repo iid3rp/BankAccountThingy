@@ -1,9 +1,6 @@
 package BankAccountThingy.pp2.BankAccount.StreamIO;
 
-import javax.swing.JFileChooser;
-
 import java.io.*;
-
 import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
@@ -42,25 +39,6 @@ public class BankReader
         catch(IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    @Region(value = "continuation goes here derp...")
-    public BankAccountList csvReading(File file)
-    {
-        try {
-            BufferedReader f = new BufferedReader(new FileReader(file));
-            String line = "";
-            while(line != null) {
-                line = f.readLine();
-
-            }
-            f.close();
-        }
-        catch(IOException e) {
-            throw new RuntimeException(e);
-        }
-        return null; // for now
     }
 
     public static void main(String[] a)

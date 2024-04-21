@@ -1,6 +1,7 @@
 package BankAccountThingy.pp2.BankAccount;
 
 import BankAccountThingy.InitialFrame;
+import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 import javax.swing.*;
@@ -18,19 +19,18 @@ public class BankAccountPane extends JPanel
     @Intention(isPublic = false, design = "reference pointing...")
     private InitialFrame reference;
 
-    @Intention(reason = "accessing to the initialFrame and add listeners afterward.")
     private JPanel info;
-    public @Intention JLabel titleList;
-    public @Intention JTextField search;
-    public @Intention JLabel closeBank;
-    public @Intention JLabel closeApplication;
+    private JLabel titleList;
+    private JTextField search;
+    private JLabel closeBank;
+    private JLabel closeApplication;
 
     public BankAccountPane(InitialFrame frame, BankAccountList list)
     {
         super();
-        initializeComponent();
+        initializeComponent(frame);
         reference = frame;
-        pane = createPane(list);
+        pane = createPane(list, frame);
         pane.setLocation(0, 40);
         info = createInfo();
 
@@ -49,23 +49,68 @@ public class BankAccountPane extends JPanel
         add(pane);
     }
 
-    private BankAccountListPane createPane(BankAccountList b)
+    private BankAccountListPane createPane(BankAccountList b, InitialFrame frame)
     {
         if(b != null)
         {
             b.ba = b.sort(BankAccountList.Sort.LAST_NAME, null);
-            return new BankAccountListPane(b);
+            return new BankAccountListPane(b, frame);
         }
         else return new BankAccountListPane();
     }
 
-    private void initializeComponent()
+    private void initializeComponent(InitialFrame frame)
     {
         setLayout(null);
         setBounds(0, 0, 1030, 720);
         setDoubleBuffered(true);
         setBackground(new Color(200, 200, 200));
+        addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                frame.search.setFocusable(false);
+                frame.search.setText("[/] to Search   ");
+                pane.restore();
+            }
 
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    frame.isDragging = true;
+                    frame.offset = e.getPoint();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    frame.isDragging = false;
+                }
+            }
+
+        });
+        addMouseMotionListener(new MouseMotionAdapter()
+        {
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                if (frame.isDragging)
+                {
+                    Point currentMouse = e.getLocationOnScreen();
+
+                    int deltaX = currentMouse.x - frame.offset.x - 250;
+                    int deltaY = currentMouse.y - frame.offset.y;
+
+                    setLocation(deltaX, deltaY);
+                }
+            }
+        });
     }
 
     public JPanel createInfo()
@@ -144,7 +189,7 @@ public class BankAccountPane extends JPanel
             @Override
             public void insertUpdate(DocumentEvent e)
             {
-                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
+                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && searchBar.getText().isEmpty()))
                 {
                     pane.search(searchBar.getText()); // Call this method whenever text is changed
                 }
@@ -154,7 +199,7 @@ public class BankAccountPane extends JPanel
             @Override
             public void removeUpdate(DocumentEvent e)
             {
-                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
+                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && searchBar.getText().isEmpty()))
                 {
                     pane.search(searchBar.getText()); // Call this method whenever text is changed
                 }
@@ -164,7 +209,7 @@ public class BankAccountPane extends JPanel
             @Override
             public void changedUpdate(DocumentEvent e)
             {
-                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && !searchBar.getText().isEmpty()))
+                if(!(searchBar.getText().equals("[/] to Search   ") && searchBar.getText().isBlank() && searchBar.getText().isEmpty()))
                 {
                     pane.search(searchBar.getText()); // Call this method whenever text is changed
                 }
@@ -181,6 +226,7 @@ public class BankAccountPane extends JPanel
                 search.setFocusable(true);
                 searchBar.setText(""); // Set back
                 search.requestFocus();
+                pane.restore();
             }
         });
         searchBar.setVisible(true);
@@ -226,7 +272,11 @@ public class BankAccountPane extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                reference.dispose();
+                if(reference.confirmClose())
+                {
+                    BankMaker.rewriteFile(reference.getReferenceFile(), pane.ba);
+                    reference.dispose();
+                }
             }
         });
         return label;

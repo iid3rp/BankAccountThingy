@@ -137,6 +137,52 @@ public class InitialFrame extends JFrame
         panel.setLayout(null);
         panel.setSize(new Dimension(1030, 720));
         panel.setLocation(new Point(250, 0));
+        panel.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                search.setFocusable(false);
+                search.setText("[/] to Search   ");
+                pane.pane.restore();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    isDragging = true;
+                    offset = e.getPoint();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    isDragging = false;
+                }
+            }
+
+        });
+        panel.addMouseMotionListener(new MouseMotionAdapter()
+        {
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                if (isDragging)
+                {
+                    Point currentMouse = e.getLocationOnScreen();
+
+                    int deltaX = currentMouse.x - offset.x;
+                    int deltaY = currentMouse.y - offset.y;
+
+                    setLocation(deltaX, deltaY);
+                }
+            }
+        });
         return panel;
     }
 
@@ -150,8 +196,12 @@ public class InitialFrame extends JFrame
         validate();
     }
 
+    public File getReferenceFile()
+    {
+        return referenceFile;
+    }
 
-    // STATThread   
+    // STATThread
     @Region("Static Thread Must go here")
     public static void main(String[] args)
     {
@@ -193,7 +243,7 @@ public class InitialFrame extends JFrame
 
     }
 
-    private boolean confirmClose() {
+    public boolean confirmClose() {
         int result = JOptionPane.showConfirmDialog(
                 this,
                 "Are you sure you want to close?",

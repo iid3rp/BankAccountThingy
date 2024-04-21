@@ -1,7 +1,11 @@
 package BankAccountThingy.pp2.BankAccount;
+import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import javax.swing.*;
 
 public class BankAccountListPane extends JScrollPane
@@ -19,18 +23,16 @@ public class BankAccountListPane extends JScrollPane
      * xd - derp. REFER THE CONSTRUCTOR BELOW
      *</editor-fold>
      * */
-    public BankAccountListPane(BankAccountList b)
+    public BankAccountListPane(BankAccountList b, InitialFrame frame)
     {
         super();
         if(b != null)
         {
             size = b.getLength();
             ba = new BankAccountList(b);
-            initializeComponent();
-            container.setSize(new Dimension(width, ((height+ 1) * b.getLength()) + (2 * b.getLength()) + 1));
-            container.setPreferredSize(new Dimension(width, ((height + 1) * b.getLength()) + (2 * b.getLength()) + 1));
-            //
-
+            initializeComponent(frame);
+            container.setSize(new Dimension(width, ((height + 1) * b.getLength()) + (3 * b.getLength()) + 2));
+            container.setPreferredSize(new Dimension(width, ((height + 1) * b.getLength()) + (3 * b.getLength()) + 2));
             // add components into the container here :3
             addComponents();
 
@@ -57,7 +59,7 @@ public class BankAccountListPane extends JScrollPane
         size = 0;
     }
     
-    public void initializeComponent()
+    public void initializeComponent(InitialFrame frame)
     {
         // add a container to put stuff :3
         container = new JPanel();
@@ -65,6 +67,52 @@ public class BankAccountListPane extends JScrollPane
         container.setLocation(0, 0);
         container.setBackground(new Color(200, 200, 200));
         container.setDoubleBuffered(true);
+        container.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                frame.search.setFocusable(false);
+                frame.search.setText("[/] to Search   ");
+                restore();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    frame.isDragging = true;
+                    frame.offset = e.getPoint();
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (SwingUtilities.isLeftMouseButton(e))
+                {
+                    frame.isDragging = false;
+                }
+            }
+
+        });
+        container.addMouseMotionListener(new MouseMotionAdapter()
+        {
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+                if (frame.isDragging)
+                {
+                    Point currentMouse = e.getLocationOnScreen();
+
+                    int deltaX = currentMouse.x - frame.offset.x - 250;
+                    int deltaY = currentMouse.y - frame.offset.y;
+
+                    setLocation(deltaX, deltaY);
+                }
+            }
+        });
     }
 
     @Intention(reason = "getter of the BankAccountList: uses within deposit and withdraw...")
@@ -78,28 +126,25 @@ public class BankAccountListPane extends JScrollPane
     {
         container.removeAll();
         int index = 0; 
-        for(BankAccount bank : ba.getList())
+        for(BankAccount bank : ba.ba)
         {
             if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getFirstName().toLowerCase().trim())) || 
                (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getMiddleName().toLowerCase().trim())) ||
                (bank.getLastName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getLastName().toLowerCase().trim())) ||
                ((bank.getAccountNumber() + "").contains(query))) 
             {
-                container.setPreferredSize(new Dimension(1030, 104 * index + 1));
+                // making sure the size will accurately affect the whole list each search, and not crop one BankAccountInterface...
+                container.setSize(new Dimension(1030, 104 * (index + 1) + 1));
+                container.setPreferredSize(new Dimension(1030, 104 * (index + 1) + 1));
                 BankAccountInterface bankInterface = new BankAccountInterface(bank, this);
-                bankInterface.setBounds(0, (101 * index), 1030, 100);
-                bankInterface.repaint();
-                bankInterface.validate();
-                container.add(bankInterface);  
-                index++;
+                bankInterface.setBounds(0, ((bankInterface.getHeight() + 1) * index++), bankInterface.getWidth(), bankInterface.getHeight());
+                container.add(bankInterface);
             }
         }
         container.repaint();
         container.validate();
         repaint();
         validate();
-
-
     }
 
     public void requestAdd(BankAccount b)
@@ -144,10 +189,11 @@ public class BankAccountListPane extends JScrollPane
         int index = 0; // iterator
         if(ba.ba != null)
         {
-            for(BankAccount bank : ba.ba) {
-                BankAccountInterface intf = new BankAccountInterface(bank, this);
-                intf.setBounds(0, ((intf.getHeight() + 1) * index++), intf.getWidth(), intf.getHeight());
-                container.add(intf);
+            for(BankAccount bank : ba.ba)
+            {
+                BankAccountInterface bankInterface = new BankAccountInterface(bank, this);
+                bankInterface.setBounds(0, ((bankInterface.getHeight() + 1) * index++), bankInterface.getWidth(), bankInterface.getHeight());
+                container.add(bankInterface);
             }
         }
     }
@@ -167,15 +213,15 @@ public class BankAccountListPane extends JScrollPane
     public void restore()
     {
         container.removeAll();
-        container.setSize(new Dimension(width, ((height + 1) * ba.getLength()) + (2 * ba.getLength()) + 1));
-        container.setPreferredSize(new Dimension(width, ((height + 1) * ba.getLength()) + (2 * ba.getLength()) + 1));
+        container.setSize(new Dimension(width, ((height + 1) * ba.getLength()) + (3 * ba.getLength()) + 1));
+        container.setPreferredSize(new Dimension(width, ((height + 1) * ba.getLength()) + (3 * ba.getLength()) + 1));
         // add the components to the panel to be put into the scrollPane...
         addComponents();
         container.repaint();
         container.validate();
         repaint();
         validate();
-        System.out.println("restored");
+        System.out.println("restored " + ba.getLength());
 
     }
 
