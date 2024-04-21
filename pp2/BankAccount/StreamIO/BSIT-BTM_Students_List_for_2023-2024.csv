@@ -1,21 +1,20 @@
-Title,BSIT-BTM Students' List for 2023-2024,Serial UID,1234567890123456,reference
+Title,BSIT-BTM Students' List for 2023-2024Serial UID,1234567890123456
 First Name,Middle Name,Last Name,Account Number,Balance
-Francis,Lorilla,Madanlo,12345567890123456,200
-SFSf,sdffsd,sdfsfs,1233123,234
-Francis,Lorilla,Madanlo,123455678901223456,200
-SFSf,sdffsd,sdfsfs,1233123,234
-Francis,Lorilla,Madanlo,12345567890122356,200
-SFSf,sdffsd,sdfsfs,1231423,234
-Francis,Lorilla,Madanlo,1234556789012456,200
-SFSf,sdffsd,sdfsfs,1231263,234
-Francis,Lorilla,Madanlo,1234556789015356,200
-SFSf,sdffsd,sdfsfs,1231123,234
-Francis,Lorilla,Madanlo,12345567890233456,200
-SFSf,sdffsd,sdfsfs,1231323,234
-Francis,Lorilla,Madanlo,1234556789453456,200
-SFSf,sdffsd,sdfsfs,1231213,234
-Francis,Lorilla,Madanlo,1234556789023423456,200
-SFSf,sdffsd,sdfsfs,1231230,234
-Francis,Lorilla,Madanlo,123455678901222456,200
-SFSf,sdffsd,sdfsfs,1231293,234
-
+SFSf,sdffsd,sdfsfs,1233123,234.0
+SFSf,sdffsd,sdfsfs,1233123,234.0
+SFSf,sdffsd,sdfsfs,1231423,12579.0
+SFSf,sdffsd,sdfsfs,1231263,234.0
+SFSf,sdffsd,sdfsfs,1231123,234.0
+SFSf,sdffsd,sdfsfs,1231323,234.0
+SFSf,sdffsd,sdfsfs,1231213,234.0
+SFSf,sdffsd,sdfsfs,1231230,234.0
+SFSf,sdffsd,sdfsfs,1231293,234.0
+Francis,Lorilla,Madanlo,12345567890123456,0.0
+Francis,Lorilla,Madanlo,123455678901223456,200.0
+Francis,Lorilla,Madanlo,12345567890122356,200.0
+Francis,Lorilla,Madanlo,1234556789012456,200.0
+Francis,Lorilla,Madanlo,1234556789015356,200.0
+Francis,Lorilla,Madanlo,12345567890233456,200.0
+Francis,Lorilla,Madanlo,1234556789453456,200.0
+Francis,Lorilla,Madanlo,1234556789023423456,200.0
+Francis,Lorilla,Madanlo,123455678901222456,200.0

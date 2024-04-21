@@ -40,7 +40,7 @@ public class BankAccountList
         SORT_ASCENDING, SORT_DESCENDING
     }
     
-    // default construtor
+    // default constructor
     public BankAccountList()
     {
         size = 0;
@@ -53,6 +53,8 @@ public class BankAccountList
     {
         size = b.getLength();
         ba = b.getList();
+        serial = b.getSerial();
+        title = b.getTitle();
     }
     
     // addition sa bank account sa array
@@ -85,7 +87,7 @@ public class BankAccountList
             // and then add tong index based sa katong part
             reference[index] = b;
             
-            // and then iterate the remaining section afterwards..
+            // and then iterate the remaining section afterward..
             if(size - 1 - index >= 0) System.arraycopy(ba, index, reference, index + 1, size - 1 - index);
             // then call the index after
             ba = reference;
@@ -110,24 +112,21 @@ public class BankAccountList
     }
     
     // much simpler than the remove(BankAccount)
-    @Deprecated
-    public boolean removeBankAccount(int index)
+    private void removeBankAccount(int index)
     {
         if(index >= 0 && index < size)
         {
             BankAccount[] reference = new BankAccount[--size];
             // iterate the first loops of the existing ones
             System.arraycopy(ba, 0, reference, 0, index);
-            // then i-skip tong index na idelete, then iterate and add the rest
+            // then i-skip tong index na i-delete, then iterate and add the rest
             if(size + 1 - (index + 1) >= 0)
             {
                 System.arraycopy(ba, index + 1, reference, index + 1 - 1, size + 1 - (index + 1));
             }
             // then point it back...
             ba = reference;
-            return true;
         }
-        else return false;
     }
     
     // sorting the whole stuff based on the enum Sort
@@ -173,14 +172,15 @@ public class BankAccountList
         }
         return ref;
     }
-    
+
+    @Deprecated
     public void replace(BankAccount b)
     {
-        for(BankAccount bank : ba)
+        for(int i = 0; i < ba.length; i++)
         {
-            if(bank.getAccountNumber() == b.getAccountNumber())
+            if(ba[i].getAccountNumber() == b.getAccountNumber())
             {
-                bank = b;
+                ba[i] = b;
             }
         }
     }
@@ -233,7 +233,7 @@ public class BankAccountList
         {
             if(b != null) // pag dili null ang array (para dili mag error)
             {
-                // para ma search imohang pangalan na mas better (dili case-sensitive, ug masearch ug dali)
+                // para ma search imohang pangalan na mas better (dili case-sensitive, ug ma-search ug dali)
                 if(b.getAccountName().toLowerCase().contains(name.toLowerCase()) || name.toLowerCase().contains(b.getAccountName().toLowerCase()))
                 {
                     return b;

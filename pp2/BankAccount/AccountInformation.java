@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+@Deprecated
 public class AccountInformation extends JPanel
 {
     private final JTextField interestField;
@@ -221,7 +222,8 @@ public class AccountInformation extends JPanel
         j.setText("Enter Amount: [$]");
         PlainDocument doc = (PlainDocument) j.getDocument();
         doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_CURRENCY, 5));
-        j.addMouseListener(new MouseAdapter()
+        j.addMouseListener(
+                new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)

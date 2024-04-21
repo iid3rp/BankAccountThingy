@@ -37,6 +37,7 @@ public class InitialFrame extends JFrame
     BankAccountPane pane;
     public boolean isDragging;
     public Point offset;
+    private File referenceFile;
 
     public InitialFrame()
     {
@@ -177,7 +178,29 @@ public class InitialFrame extends JFrame
                 }
             }
         });
+        addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosing(WindowEvent e)
+            {
+                if(confirmClose())
+                {
+                    BankMaker.rewriteFile(referenceFile, pane.pane.ba);
+                    e.getWindow().dispose();
+                }
+            }
+        });
 
+    }
+
+    private boolean confirmClose() {
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                "Are you sure you want to close?",
+                "Confirmation",
+                JOptionPane.YES_NO_OPTION
+        );
+        return result == JOptionPane.YES_OPTION;
     }
 
     public JPanel createPanel()
@@ -419,6 +442,7 @@ public class InitialFrame extends JFrame
                 if(b != null)
                 {
                     createPane(b);
+                    referenceFile = b;
                 }
             }
 

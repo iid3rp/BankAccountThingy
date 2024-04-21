@@ -29,7 +29,7 @@ public class BankReader
 
             // for loop for the iteration of other bank account list
             String line = reader.readLine();
-            while(!line.isBlank())
+            while(line != null)
             {
                 String[] items = line.split(",");
                 long number = Long.parseLong(items[3]);
