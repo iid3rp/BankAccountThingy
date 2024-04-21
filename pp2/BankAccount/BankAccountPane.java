@@ -3,7 +3,8 @@ package BankAccountThingy.pp2.BankAccount;
 import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
-
+import BankAccountThingy.pp2.BankAccount.Utils.SortType;
+import BankAccountThingy.pp2.BankAccount.Utils.Sort;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -53,8 +54,7 @@ public class BankAccountPane extends JPanel
     {
         if(b != null)
         {
-            b.ba = b.sort(BankAccountList.Sort.LAST_NAME, null);
-            return new BankAccountListPane(b, frame);
+            return new BankAccountListPane(b, frame, Sort.LAST_NAME, SortType.SORT_ASCENDING);
         }
         else return new BankAccountListPane();
     }

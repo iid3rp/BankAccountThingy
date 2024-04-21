@@ -1,5 +1,7 @@
 package BankAccountThingy.pp2.BankAccount;
 import BankAccountThingy.InitialFrame;
+import BankAccountThingy.pp2.BankAccount.Utils.Sort;
+import BankAccountThingy.pp2.BankAccount.Utils.SortType;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 import java.awt.*;
@@ -8,10 +10,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import javax.swing.*;
 
+
 public class BankAccountListPane extends JScrollPane
 {
     private static final int width = BankAccountInterface.WIDTH;
     private static final int height = BankAccountInterface.HEIGHT;
+
+    private Sort currentSort = Sort.LAST_NAME;
+    private SortType currentSortType = SortType.SORT_ASCENDING;
 
     public BankAccountList ba;
     private JPanel container;
@@ -23,13 +29,15 @@ public class BankAccountListPane extends JScrollPane
      * xd - derp. REFER THE CONSTRUCTOR BELOW
      *</editor-fold>
      * */
-    public BankAccountListPane(BankAccountList b, InitialFrame frame)
+    public BankAccountListPane(BankAccountList b, InitialFrame frame, Sort sort, SortType type)
     {
         super();
         if(b != null)
         {
             size = b.getLength();
             ba = new BankAccountList(b);
+            currentSort = sort;
+            currentSortType = type;
             initializeComponent(frame);
             container.setSize(new Dimension(width, ((height + 1) * b.getLength()) + (3 * b.getLength()) + 2));
             container.setPreferredSize(new Dimension(width, ((height + 1) * b.getLength()) + (3 * b.getLength()) + 2));
@@ -189,7 +197,7 @@ public class BankAccountListPane extends JScrollPane
         int index = 0; // iterator
         if(ba.ba != null)
         {
-            for(BankAccount bank : ba.ba)
+            for(BankAccount bank : ba.sort(currentSort, currentSortType))
             {
                 BankAccountInterface bankInterface = new BankAccountInterface(bank, this);
                 bankInterface.setBounds(0, ((bankInterface.getHeight() + 1) * index++), bankInterface.getWidth(), bankInterface.getHeight());

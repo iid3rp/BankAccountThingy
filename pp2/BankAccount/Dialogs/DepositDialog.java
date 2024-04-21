@@ -1,59 +1,29 @@
 package BankAccountThingy.pp2.BankAccount.Dialogs;
-import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Random;
-import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JDialog;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingConstants;
-import javax.swing.JFileChooser;
 import javax.swing.JCheckBox;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Point;
-import java.awt.image.BufferedImage;
-import java.awt.Image;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.ItemListener;
-import java.awt.event.ItemEvent;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.AttributeSet;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.DocumentFilter;
 import javax.swing.text.PlainDocument;
-import java.io.IOException;
-import java.io.File;
-import java.net.URL;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
-import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
-import BankAccountThingy.pp2.BankAccount.BankAccountInterface;
-import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
+import BankAccountThingy.pp2.BankAccount.Utils.DataType;
 import BankAccountThingy.pp2.BankAccount.Utils.TextFieldFilter;
 public class DepositDialog extends JDialog
 {
-    private BankAccount allocation; // this will be reference of the bankaccount to be withdrawn :#
+    private BankAccount allocation; // this will be reference of the bankAccount to be withdrawn :#
     private boolean result;
     
     public JPanel imageEditor;
@@ -79,7 +49,7 @@ public class DepositDialog extends JDialog
     {
         super();
         lib = b; // this creates a reference of the list of the BankAccounts when depositing/withdrawing..
-        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL); // this ensures modallity of the jdialog    
+        setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL); // this ensures modality of the JDialog
         setSize(new Dimension(500, 350));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -224,7 +194,7 @@ public class DepositDialog extends JDialog
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
 
-        label.setBounds(getWidth() - (int) width - 20 - 90, getHeight() - 50, width, height);
+        label.setBounds(getWidth() - width - 20 - 90, getHeight() - 50, width, height);
 
         label.setBackground(Color.BLACK);
         label.setVisible(true);
@@ -250,7 +220,7 @@ public class DepositDialog extends JDialog
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
 
-        label.setBounds(getWidth() - (int) width - 20, y, width, height);
+        label.setBounds(getWidth() - width - 20, y, width, height);
         label.setBackground(Color.RED);
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()
@@ -273,14 +243,7 @@ public class DepositDialog extends JDialog
         checkBox.setText("Add Interest rate on deposit (" + (1 + BankAccount.getInterestRate()) + ")");
         Dimension d = checkBox.getPreferredSize();
         checkBox.setBounds(20, 200, (int) d.getWidth() + 20, (int) d.getHeight());
-        checkBox.addItemListener(new ItemListener()
-        {
-            @Override
-            public void itemStateChanged(ItemEvent e) 
-            {
-                putAmount();
-            }
-        });
+        checkBox.addItemListener(e -> putAmount());
         return checkBox;
     }
        
@@ -292,7 +255,7 @@ public class DepositDialog extends JDialog
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         textField.setText("Enter Bank Account Number:");
         PlainDocument doc = (PlainDocument) textField.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_NUMERICAL));
+        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_NUMERICAL));
         
         textField.addMouseListener(new MouseAdapter() 
         {
@@ -336,15 +299,12 @@ public class DepositDialog extends JDialog
     
     private void searchQuery()
     {
-        long num = 0L;
+        long num = 0;
         try
         {
             num = Long.parseLong(accountNumber.getText());
         }
-        catch(NumberFormatException e)
-        {
-            num = 0;
-        }
+        catch(NumberFormatException e) { /* ignore the exception */ }
         finally
         {
            BankAccount b = lib.searchByNumber(num);
@@ -372,7 +332,7 @@ public class DepositDialog extends JDialog
         textField.setText("Enter Amount: [$]");
         textField.setEnabled(false);
         PlainDocument doc = (PlainDocument) textField.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_CURRENCY));
+        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_CURRENCY));
 
         
         textField.addMouseListener(new MouseAdapter() 
@@ -415,14 +375,9 @@ public class DepositDialog extends JDialog
     
     public void putAmount()
     {
-        if((moneyHandler.getText().equals("Enter Amount: [$]") || moneyHandler.getText().equals("")))
+        if((moneyHandler.getText().equals("Enter Amount: [$]") || moneyHandler.getText().isEmpty()))
         {
             amount.setText("$0.00");
-            totalAmount = 0;
-            if(allocation != null)
-            {
-                ok.setEnabled(totalAmount > 0);
-            }
         }
         else
         {
@@ -431,7 +386,7 @@ public class DepositDialog extends JDialog
             // Format the total amount like currency
             String formattedAmount = String.format("$%.2f", totalAmount);
             amount.setText(formattedAmount);
-            
+
             if(allocation != null)
             {
                 ok.setEnabled(totalAmount > 0);
@@ -444,7 +399,7 @@ public class DepositDialog extends JDialog
     {
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        label.setText("<html>The Bank Acoount will be indentified <b>here.</b></html>");
+        label.setText("<html>The Bank Account will be identified <b>here.</b></html>");
         Dimension d = label.getPreferredSize();
         label.setBounds(20, 100, (int) d.getWidth() +30, (int)d.getHeight());
         label.setVisible(true);
@@ -490,47 +445,18 @@ public class DepositDialog extends JDialog
     
     private String generateNumber()
     {
-        String str  = "";
+        StringBuilder str  = new StringBuilder();
         for(int i = 0; i < 16; i++) 
         {
             if(i == 0) 
             {
-                str += "" + (rand.nextInt(9) + 1);
+                str.append(rand.nextInt(9) + 1);
             } 
             else 
             {
-                str += "" + rand.nextInt(10);
+                str.append(rand.nextInt(10));
             }
         }
-        return str;
-    }
-    
-    
-    public static void main(String[] a)
-    {
-        // Bank account list for reference/testing
-        BankAccountList bankie = new BankAccountList();
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("airstName", "MiddleName", "dastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("birstName", "MiddleName", "castName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
-        bankie.add(new BankAccount("cirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "bastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1111111111111111L));
-        bankie.add(new BankAccount("dirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "aastName", 1234567890123456L));
-        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("virstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "rastName", 1234567890123456L));
-        bankie.add(new BankAccount("wirstName", "MiddleName", "LtastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "zastName", 1234567890123456L));
-        bankie.add(new BankAccount("hewwohgjhgj", "ggfhfuuyuiame", "ame", 5555555555555555L)); 
-        DepositDialog i = new DepositDialog(bankie);
-        BankAccount b = bankie.ba[8];
-        b = i.showDialog(null);
-        System.out.print(b);
+        return str.toString();
     }
 }

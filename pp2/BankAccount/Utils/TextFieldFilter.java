@@ -3,19 +3,19 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-
+import BankAccountThingy.pp2.BankAccount.Utils.DataType;
+/**
+ * <p>This section creates a {@code DocumentFilter} to filter the text and use it in either JTextFields
+ * or JTextArea for the purpose of filtering character sequence.</p><p></p>
+ *
+ * @see javax.swing.text.DocumentFilter
+ *
+ * @Citation:  <a href="https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-integers">Restricting JTextField input to Integers [duplicate] | Stack Overflow</a>
+ * @User: <a href="https://stackoverflow.com/users/522444/hovercraft-full-of-eels">Hovercraft Full Of Eels | Stack Overflow</a>
+ * @Modifier: <a href="https://github.com/iid3rp">derp :3 | GitHub</a>
+ */
 public class TextFieldFilter extends DocumentFilter 
 {
-    // thank you Stack Overflow with this one!!!
-    // citation: https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-integers
-    // user: https://stackoverflow.com/users/522444/hovercraft-full-of-eels :3 :3 :3
-    // index modifiers will be stated here below xd
-    //
-    // modified by iid3rp :3
-    public enum DataType
-    {
-        TYPE_STRING, TYPE_CHARACTERS_ONLY, TYPE_NUMERICAL, TYPE_CURRENCY
-    }
     public String dataType; // the string equivalent of the enum
     public int characterLimit = 0;
     
@@ -48,10 +48,6 @@ public class TextFieldFilter extends DocumentFilter
         if (test(sb.toString())) 
         {
             super.insertString(fb, offset, string, attr);
-        } 
-        else 
-        {
-            // warn the user and don't allow the insert
         }
     }
 
@@ -82,7 +78,8 @@ public class TextFieldFilter extends DocumentFilter
                 // currency based
                 case "TYPE_CURRENCY":
                 {
-                    if(text.length() <= characterLimit) {
+                    if(text.length() <= characterLimit)
+                    {
                         Double.parseDouble(text);
 
                         String[] parts = text.split("\\.");
@@ -141,12 +138,7 @@ public class TextFieldFilter extends DocumentFilter
         if(test(sb.toString())) 
         {
             super.replace(fb, offset, length, text, attrs);
-        } 
-        else 
-        {
-            // warn the user and don't allow the insert
         }
- 
     }
 
     @Override
@@ -160,10 +152,6 @@ public class TextFieldFilter extends DocumentFilter
         if (test(sb.toString())) 
         {
            super.remove(fb, offset, length);
-        } 
-        else 
-        {
-           // warn the user and don't allow the insert
         }
     }
 }

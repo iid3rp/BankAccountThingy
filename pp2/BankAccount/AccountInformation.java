@@ -1,6 +1,7 @@
 package BankAccountThingy.pp2.BankAccount;
 
 import BankAccountThingy.InitialFrame;
+import BankAccountThingy.pp2.BankAccount.Utils.DataType;
 import BankAccountThingy.pp2.BankAccount.Utils.TextFieldFilter;
 
 import javax.swing.*;
@@ -126,7 +127,7 @@ public class AccountInformation extends JPanel
         j.setSize(new Dimension(50, 30));
         j.setText("15");
         PlainDocument doc = (PlainDocument) j.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_NUMERICAL, 2));
+        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_NUMERICAL, 2));
         j.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -175,7 +176,7 @@ public class AccountInformation extends JPanel
         j.setSize(new Dimension(200, 30));
         j.setText("Enter Amount: [$]");
         PlainDocument doc = (PlainDocument) j.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_CURRENCY));
+        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_CURRENCY));
         j.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -221,7 +222,7 @@ public class AccountInformation extends JPanel
         j.setSize(new Dimension(200, 30));
         j.setText("Enter Amount: [$]");
         PlainDocument doc = (PlainDocument) j.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_CURRENCY, 5));
+        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_CURRENCY, 5));
         j.addMouseListener(
                 new MouseAdapter()
         {

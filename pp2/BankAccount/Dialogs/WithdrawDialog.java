@@ -17,6 +17,7 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
+import BankAccountThingy.pp2.BankAccount.Utils.DataType;
 import BankAccountThingy.pp2.BankAccount.Utils.TextFieldFilter;
 public class WithdrawDialog extends JDialog
 {
@@ -235,7 +236,7 @@ public class WithdrawDialog extends JDialog
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         textField.setText("Enter Bank Account Number:");
         PlainDocument doc = (PlainDocument) textField.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_NUMERICAL));
+        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_NUMERICAL));
         
         textField.addMouseListener(new MouseAdapter() 
         {
@@ -313,7 +314,7 @@ public class WithdrawDialog extends JDialog
         textField.setText("Enter Amount: [$]");
         textField.setEnabled(false);
         PlainDocument doc = (PlainDocument) textField.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(TextFieldFilter.DataType.TYPE_CURRENCY));
+        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_CURRENCY));
 
         textField.addMouseListener(new MouseAdapter() 
         {

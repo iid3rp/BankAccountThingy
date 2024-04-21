@@ -1,6 +1,8 @@
 package BankAccountThingy.pp2.BankAccount;
 
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+import BankAccountThingy.pp2.BankAccount.Utils.Sort;
+import BankAccountThingy.pp2.BankAccount.Utils.SortType;
 
 public class BankAccountList
 {
@@ -27,17 +29,6 @@ public class BankAccountList
     public @Intention long getSerial()
     {
         return serial;
-    }
-    
-    // sorting enum kay pangit mugamit ug int lol
-    public enum Sort
-    {
-        FIRST_NAME, MIDDLE_NAME, LAST_NAME, ACCOUNT_NUMBER
-    }
-    
-    public enum SortType
-    {
-        SORT_ASCENDING, SORT_DESCENDING
     }
     
     // default constructor
