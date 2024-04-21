@@ -1,8 +1,9 @@
 package BankAccountThingy.pp2.BankAccount.StreamIO;
 
-import BankAccountThingy.pp2.BankAccount.BankAccountList;
-import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
+import BankAccountThingy.InitialFrame;
+import BankAccountThingy.pp2.BankAccount.BankAccountPane;
 
+import java.awt.event.MouseAdapter;
 import java.io.IOException;
 import java.io.File;
 import java.io.FileWriter;
@@ -14,14 +15,14 @@ public class BankMaker
     public BankMaker(String title, long serial)
     {   
         // theres difference between the title of the bank and the file name of the bank, bc there are
-        // such limitations to the the file naming than the title of the bank in the interface of the
+        // such limitations to the file naming than the title of the bank in the interface of the
         // BankAccount's InitialFrame.
 
         // and the title of the bank
         this.title = title;
 
         // the file title
-        String fileTitle = title.replaceAll(" ", "_") // Replace spaces with underscores
+        fileTitle = title.replaceAll(" ", "_") // Replace spaces with underscores
                                 .replaceAll("[^a-zA-Z0-9_.-]", ""); // Remove remaining special characters
 
         // contents of every bank account csv in order:
@@ -32,9 +33,9 @@ public class BankMaker
 
 
         String fileName = System.getProperty("user.home") + File.separator + "Documents" + File.separator + fileTitle +".csv";
-        String fileName2 = System.getProperty("user.home") + File.separator + "\\Documents\\jGRASP\\BankAccountThingy\\pp2\\BankAccount\\StreamIO\\" + fileTitle + ".csv";
+        fileTitle = System.getProperty("user.home") + File.separator + "\\Documents\\jGRASP\\BankAccountThingy\\pp2\\BankAccount\\StreamIO\\" + fileTitle + ".csv";
         try {
-            createCSV(fileName2, bankInfo, header);
+            createCSV(fileTitle, bankInfo, header);
         } catch (IOException e) { /* ignore the exception */ }
     }
 
@@ -50,8 +51,8 @@ public class BankMaker
         }
     }
 
-    public BankAccountList createBankAccountList()
+    public BankAccountPane createBankAccountList(InitialFrame frame, File file)
     {
-        return new BankAccountList();
+        return new BankReader().createListFromBank(frame, file);
     }
 }

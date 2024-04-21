@@ -6,15 +6,16 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Color;
 import java.awt.event.*;
+import java.io.File;
 
 import BankAccountThingy.pp2.BankAccount.BankAccount;
-import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBank;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
 public class InitialFrame extends JFrame
@@ -26,18 +27,13 @@ public class InitialFrame extends JFrame
     private JLabel update;
     private JLabel changeBank;
     private JLabel title;
-    private JLabel closeBank;
     public JPanel panel;
     public JPanel menu;
-    public JPanel info;
-
-    public JLabel titleList;
     public JLabel addAccount;
     private JPanel contentPanel;
 
     public JTextField search;
     BankAccountPane pane;
-    public BankAccountList list;
     public boolean isDragging;
     public Point offset;
 
@@ -142,10 +138,9 @@ public class InitialFrame extends JFrame
         return panel;
     }
 
-    public void createBankList(BankAccountList list)
+    public void createBankList()
     {
         contentPanel.removeAll();
-        pane = new BankAccountPane(this, list);
         contentPanel.add(pane);
         contentPanel.repaint();
         contentPanel.validate();
@@ -260,7 +255,6 @@ public class InitialFrame extends JFrame
                 BankAccount b = new AddBankAccount().showDialog();
                 if(b != null) // if it confirms
                 {
-                    list.add(b);
                     pane.pane.requestAdd(b);
                 }
             }
@@ -296,10 +290,9 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount b = new DepositDialog(list).showDialog(null);
+                BankAccount b = new DepositDialog(pane.pane.getBankList()).showDialog(null);
                 if(b != null) // if it confirms
                 {
-                    list.replace(b);
                     pane.pane.replaceAccount(b);
                 }
             }
@@ -337,10 +330,9 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount b = new WithdrawDialog(list).showDialog(null);
+                BankAccount b = new WithdrawDialog(pane.pane.getBankList()).showDialog(null);
                 if(b != null) // if it confirms
                 {
-                    list.replace(b);
                     pane.pane.replaceAccount(b);
                 }
             }
@@ -380,7 +372,6 @@ public class InitialFrame extends JFrame
                 BankAccount b = new AddBankAccount().showDialog();
                 if(b != null) // if it confirms
                 {
-                    list.replace(b);
                     pane.pane.replaceAccount(b);
                 }
             }
@@ -421,11 +412,29 @@ public class InitialFrame extends JFrame
                 BankMaker b = new AddBank().showDialog();
                 if(b != null)
                 {
-                    list = b.createBankAccountList();
-                    createBankList(list);
+                    createPane(b);
                 }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.BLUE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.WHITE);
             }
         });
         return label;
+    }
+
+    @Intention(isPublic = false, design = "getting the `this` keyword for the InitialFrame instead of the anonymous MouseAdapter.")
+    private void createPane(BankMaker b)
+    {
+        pane = b.createBankAccountList(this, new File(b.fileTitle));
+        createBankList(); // this will automatically create a bank list for u
     }
 }

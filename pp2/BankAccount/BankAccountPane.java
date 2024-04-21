@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
-import java.awt.event.MouseMotionListener;
 
 public class BankAccountPane extends JPanel
 {
@@ -32,6 +31,7 @@ public class BankAccountPane extends JPanel
         initializeComponent();
         reference = frame;
         pane = createPane(list);
+        pane.setLocation(0, 40);
         info = createInfo();
 
         //JLabels for the header

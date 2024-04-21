@@ -1,9 +1,33 @@
 package BankAccountThingy.pp2.BankAccount;
 
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+
 public class BankAccountList
 {
     private int size;
     public BankAccount[] ba; // this is public for certain reasons...
+    private @Intention String title; // this will be the reference of the title of the list...
+    private @Intention long serial; // the serial code to be used within the bank list itself...
+
+    public @Intention void setTitle(String title)
+    {
+        this.title = title;
+    }
+
+    public @Intention void setSerial(long serial)
+    {
+        this.serial = serial;
+    }
+
+    public @Intention String getTitle()
+    {
+        return title;
+    }
+
+    public @Intention long getSerial()
+    {
+        return serial;
+    }
     
     // sorting enum kay pangit mugamit ug int lol
     public enum Sort
@@ -20,6 +44,8 @@ public class BankAccountList
     public BankAccountList()
     {
         size = 0;
+        title = "";
+        serial = 0;
     }
 
     // constructor with @param

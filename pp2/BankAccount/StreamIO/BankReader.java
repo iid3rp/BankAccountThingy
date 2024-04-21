@@ -4,16 +4,36 @@ import javax.swing.JFileChooser;
 
 import java.io.*;
 
+import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
-import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
+import BankAccountThingy.pp2.BankAccount.BankAccountPane;
 import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
 public class BankReader
 {
     public BankReader() {}
-    public BankAccountListPane createListFromBank(File f)
+    public BankAccountPane createListFromBank(InitialFrame frame, File f)
     {
-        return null;
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(f));
+            String[] stuff = reader.readLine().split(",");
+
+            String title = stuff[1];
+            long serial = Long.parseLong(stuff[3]);
+
+            BankAccountList list = new BankAccountList();
+            list.setSerial(serial);
+            list.setTitle(title);
+
+            //
+            // for loop for the iteration of other bank account list in the next commits :3
+            //
+
+            return new BankAccountPane(frame, list);
+        }
+        catch(IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public String selectFileForEdition() {
@@ -40,21 +60,17 @@ public class BankReader
         // ... your logic here to modify data in csvData ... 
     
         // Write the modified data to a new CSV file (consider using a temporary file)
-        String newFilePath = filePath; // Replace with temporary filename logic
-        try (FileWriter writer = new FileWriter(newFilePath)) {
-            //for() 
-            //{
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < 0; i++) 
+        try (FileWriter writer = new FileWriter(filePath))
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 0; i++)
+            {
+                if (i < 1)
                 {
-                    sb.append("");
-                    if (i < 1) 
-                    {
-                        sb.append(",");
-                    }
+                    sb.append(",");
                 }
-                writer.write(sb.toString() + "\n");
-            //}
+            }
+            writer.write(sb.toString() + "\n");
         }
       // Optionally, replace the original file with the modified one (after successful write)
     }
