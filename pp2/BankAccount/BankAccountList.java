@@ -1,6 +1,4 @@
 package BankAccountThingy.pp2.BankAccount;
-
-import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Sort;
 import BankAccountThingy.pp2.BankAccount.Utils.SortType;
 
@@ -8,28 +6,8 @@ public class BankAccountList
 {
     private int size;
     public BankAccount[] ba; // this is public for certain reasons...
-    private @Intention String title; // this will be the reference of the title of the list...
-    private @Intention long serial; // the serial code to be used within the bank list itself...
-
-    public @Intention void setTitle(String title)
-    {
-        this.title = title;
-    }
-
-    public @Intention void setSerial(long serial)
-    {
-        this.serial = serial;
-    }
-
-    public @Intention String getTitle()
-    {
-        return title;
-    }
-
-    public @Intention long getSerial()
-    {
-        return serial;
-    }
+    private String title; // this will be the reference of the title of the list...
+    private long serial; // the serial code to be used within the bank list itself...
     
     // default constructor
     public BankAccountList()
@@ -199,10 +177,24 @@ public class BankAccountList
         return null;
     }
 
-    @Deprecated
-    public void requestChange()
+    public void setTitle(String title)
     {
-        
+        this.title = title;
+    }
+
+    public void setSerial(long serial)
+    {
+        this.serial = serial;
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public long getSerial()
+    {
+        return serial;
     }
     
     // search sa index

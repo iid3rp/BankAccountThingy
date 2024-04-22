@@ -18,6 +18,7 @@ import javax.swing.text.PlainDocument;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.Utils.DataType;
+import BankAccountThingy.pp2.BankAccount.Utils.Region;
 import BankAccountThingy.pp2.BankAccount.Utils.TextFieldFilter;
 public class WithdrawDialog extends JDialog
 {
@@ -384,7 +385,7 @@ public class WithdrawDialog extends JDialog
     {
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        label.setText("<html>The Bank Acoount will be indentified <b>here.</b></html>");
+        label.setText("<html>The Bank Account will be identified <b>here.</b></html>");
         Dimension d = label.getPreferredSize();
         label.setBounds(20, 100, (int) d.getWidth() +30, (int)d.getHeight());
         label.setVisible(true);
@@ -437,32 +438,16 @@ public class WithdrawDialog extends JDialog
 
         return label;
     }
-    
+
+    @Region(value = "Static thread for reference..")
     public static void main(String[] a)
     {
         // Bank account list for reference/testing
-        BankAccountList bankie = new BankAccountList();
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("airstName", "MiddleName", "dastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("birstName", "MiddleName", "castName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
-        bankie.add(new BankAccount("cirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "bastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1111111111111111L));
-        bankie.add(new BankAccount("dirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "aastName", 1234567890123456L));
-        bankie.add(new BankAccount("hewwo", "ame", "ame", 1234567890123456L)); 
-        bankie.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("virstName", "MiddleName", "LastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "rastName", 1234567890123456L));
-        bankie.add(new BankAccount("wirstName", "MiddleName", "LtastName", 1234567890123456L));
-        bankie.add(new BankAccount("FirstName", "MiddleName", "zastName", 1234567890123456L));
-        bankie.add(new BankAccount("hewwohgjhgj", "ggfhfuuyuiame", "ame", 5555555555555555L)); 
-        WithdrawDialog i = new WithdrawDialog(bankie);
-        bankie.ba[17].deposit(5000); // example of what would happen to deposit smth and the withdrawal
-        BankAccount b = bankie.ba[17];
+        BankAccountList banking = new BankAccountList();
+        banking.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        WithdrawDialog i = new WithdrawDialog(banking);
+        banking.ba[0].deposit(5000); // example of what would happen to deposit smth and the withdrawal
+        BankAccount b = banking.ba[0];
         b = i.showDialog(b);
         System.out.print(b);
     }

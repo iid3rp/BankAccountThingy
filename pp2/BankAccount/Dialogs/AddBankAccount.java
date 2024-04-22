@@ -1,16 +1,12 @@
 package BankAccountThingy.pp2.BankAccount.Dialogs;
-import java.util.Arrays;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JDialog;
-import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.SwingConstants;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.Point;
@@ -22,23 +18,14 @@ import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.event.KeyListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.io.IOException;
 import java.io.File;
-import java.net.URL;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
-import BankAccountThingy.pp2.BankAccount.BankAccountListPane;
-import BankAccountThingy.pp2.BankAccount.BankAccountInterface;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+
 public class AddBankAccount extends JDialog
 {
     private boolean result;
@@ -206,7 +193,7 @@ public class AddBankAccount extends JDialog
     {
         System.out.println(i.getWidth() + " "+  i.getHeight());
         
-        double ratio = Math.min(i.getWidth(), i.getHeight()) / 180;
+        double ratio = (double) Math.min(i.getWidth(), i.getHeight()) / 180;
         int width = (int) (i.getWidth() / ratio);  
         int height = (int) (i.getHeight() / ratio);
         picWidth = (int) (width * mult);
@@ -275,13 +262,11 @@ public class AddBankAccount extends JDialog
                     int newY = mouseLocation.y - parentContainerLocation.y - offset.y;
                     
                     newX = newX > 0? 0
-                         : newX < imageEditor.getWidth() - label.getWidth()? imageEditor.getWidth() - label.getWidth()
-                         : newX;
+                         : Math.max(newX, imageEditor.getWidth() - label.getWidth());
                     newY = newY > 0? 0
-                         : newY < imageEditor.getHeight() - label.getHeight()? imageEditor.getHeight() - label.getHeight()
-                         : newY;
-                    refX = (Math.abs(newX) + (imageEditor.getWidth() / 2)) / (width * mult);
-                    refY = (Math.abs(newY) + (imageEditor.getWidth() / 2)) / (height * mult); 
+                         : Math.max(newY, imageEditor.getHeight() - label.getHeight());
+                    refX = (Math.abs(newX) + ((double) imageEditor.getWidth() / 2)) / (width * mult);
+                    refY = (Math.abs(newY) + ((double) imageEditor.getWidth() / 2)) / (height * mult);
                     System.out.println(refX + ", " + refY);
                     label.setLocation(newX, newY);
                 }
@@ -353,7 +338,7 @@ public class AddBankAccount extends JDialog
     
     private void fileChoosing()
     {
-        BufferedImage image = null;  // Initialize image to null
+        BufferedImage image;
 
         // ... file chooser setup ...
         JFileChooser fileChooser = new JFileChooser();
@@ -388,7 +373,6 @@ public class AddBankAccount extends JDialog
             } 
             catch (IOException err) 
             {
-                err.printStackTrace();
                 System.out.println("Error loading image: " + err.getMessage());
             }
         }
@@ -425,7 +409,7 @@ public class AddBankAccount extends JDialog
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
 
-        label.setBounds(getWidth() - (int) width - 20 - 90, getHeight() - 50, width, height);
+        label.setBounds(getWidth() - width - 20 - 90, getHeight() - 50, width, height);
 
         label.setBackground(Color.BLACK);
         label.setVisible(true);
@@ -451,7 +435,7 @@ public class AddBankAccount extends JDialog
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
 
-        label.setBounds(getWidth() - (int) width - 20, y, width, height);
+        label.setBounds(getWidth() - width - 20, y, width, height);
         label.setBackground(Color.RED);
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()
@@ -556,23 +540,7 @@ public class AddBankAccount extends JDialog
     {
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.BOLD, 30));
-        String str  = "";
-        for(int i = 0; i < 16; i++) 
-        {
-            if(i == 0) 
-            {
-                str += "" + (rand.nextInt(9) + 1);
-            } 
-            else 
-            {
-                str += "" + rand.nextInt(10);
-                if((i + 1) % 4 == 0 && (i + 1) != 16) 
-                {
-                    str += " ";
-                }
-            }
-        }
-        label.setText(str);
+        label.setText(generateNumber());
         // Get the FontMetrics object associated with the font
         FontMetrics metrics = getFontMetrics(label.getFont());
         
@@ -583,6 +551,55 @@ public class AddBankAccount extends JDialog
         label.setVisible(true);
 
         return label;
+    }
+
+    private String generateNumber()
+    {
+        StringBuilder str  = new StringBuilder("1234 ");
+        do {
+            for(int i = 0; i < 12; i++)
+            {
+                if(i == 0)
+                {
+                    str.append(rand.nextInt(9) + 1);
+                }
+                else
+                {
+                    str.append(rand.nextInt(10));
+                    if((i + 1) % 4 == 0 && (i + 1) != 12)
+                    {
+                        str.append(" ");
+                    }
+                }
+            }
+        } while(isValidCreditCardNumber(str.toString()));
+        return str.toString();
+    }
+
+    @Intention(design = "generates a credit card number using Luhn's algorithm:" +
+            "checks every time if the number is valid until it" +
+            "generates a valid number..")
+    private boolean isValidCreditCardNumber(String number) {
+
+        if (number == null || number.isEmpty() || !number.matches("\\d+")) {
+            return false;
+        }
+        int sum = 0;
+        boolean isSecondDigit = false;
+        for (int i = number.length() - 1; i >= 0; i--)
+        {
+            int digit = Character.getNumericValue(number.charAt(i));
+
+            if (isSecondDigit) {
+                digit = digit * 2;
+                if (digit > 9) {
+                    digit = digit - 10 + 1;
+                }
+            }
+            sum += digit;
+            isSecondDigit = !isSecondDigit;
+        }
+        return (sum % 10 == 0);
     }
     
     public static void main(String[] a)

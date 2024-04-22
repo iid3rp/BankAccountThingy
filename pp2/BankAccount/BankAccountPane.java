@@ -19,7 +19,6 @@ public class BankAccountPane extends JPanel
 
     @Intention(isPublic = false, design = "reference pointing...")
     private InitialFrame reference;
-
     private JPanel info;
     private JLabel titleList;
     private JTextField search;
