@@ -17,10 +17,12 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
+
+import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.Utils.DataType;
-import BankAccountThingy.pp2.BankAccount.Utils.TextFieldFilter;
+import BankAccountThingy.pp2.BankAccount.Utils.TextFilter;
 public class DepositDialog extends JDialog
 {
     private BankAccount allocation; // this will be reference of the bankAccount to be withdrawn :#
@@ -45,14 +47,14 @@ public class DepositDialog extends JDialog
     
     public Random rand = new Random();
     public double totalAmount;
-    public DepositDialog(BankAccountList b)
+    public DepositDialog(InitialFrame frame, BankAccountList b)
     {
         super();
         lib = b; // this creates a reference of the list of the BankAccounts when depositing/withdrawing..
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL); // this ensures modality of the JDialog
         setSize(new Dimension(500, 350));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(frame);
         setUndecorated(true);
         
         panel = createPanel();
@@ -67,7 +69,7 @@ public class DepositDialog extends JDialog
         panel.add(createCancel(10, "X"));
         panel.add(createCancel(getHeight() - 50, "Cancel"));
         
-        addInterest = createCheckBox();
+        addInterest = createAddInterest();
         panel.add(createTitle(20, 20, 10, "Deposit Money"));
         
         panel.add(createText("<html><b>Account Number", 50));
@@ -235,12 +237,12 @@ public class DepositDialog extends JDialog
     }
     
     // Method to create a checkbox with listener
-    private JCheckBox createCheckBox() 
+    private JCheckBox createAddInterest()
     {
         JCheckBox checkBox = new JCheckBox();
         checkBox.setLayout(null);
         checkBox.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        checkBox.setText("Add Interest rate on deposit (" + (1 + BankAccount.getInterestRate()) + ")");
+        checkBox.setText("Add Interest rate on deposit [" + ((int)(100 * BankAccount.getInterestRate())) + "%]");
         Dimension d = checkBox.getPreferredSize();
         checkBox.setBounds(20, 200, (int) d.getWidth() + 20, (int) d.getHeight());
         checkBox.addItemListener(e -> putAmount());
@@ -255,7 +257,7 @@ public class DepositDialog extends JDialog
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         textField.setText("Enter Bank Account Number:");
         PlainDocument doc = (PlainDocument) textField.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_NUMERICAL));
+        doc.setDocumentFilter(new TextFilter(DataType.TYPE_NUMERICAL));
         
         textField.addMouseListener(new MouseAdapter() 
         {
@@ -332,7 +334,7 @@ public class DepositDialog extends JDialog
         textField.setText("Enter Amount: [$]");
         textField.setEnabled(false);
         PlainDocument doc = (PlainDocument) textField.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_CURRENCY));
+        doc.setDocumentFilter(new TextFilter(DataType.TYPE_CURRENCY));
 
         
         textField.addMouseListener(new MouseAdapter() 
@@ -441,22 +443,5 @@ public class DepositDialog extends JDialog
         label.setVisible(true);
 
         return label;
-    }
-    
-    private String generateNumber()
-    {
-        StringBuilder str  = new StringBuilder();
-        for(int i = 0; i < 16; i++) 
-        {
-            if(i == 0) 
-            {
-                str.append(rand.nextInt(9) + 1);
-            } 
-            else 
-            {
-                str.append(rand.nextInt(10));
-            }
-        }
-        return str.toString();
     }
 }

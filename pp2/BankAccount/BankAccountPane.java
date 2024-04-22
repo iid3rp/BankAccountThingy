@@ -21,7 +21,7 @@ public class BankAccountPane extends JPanel
     private InitialFrame reference;
     private JPanel info;
     private JLabel titleList;
-    private JTextField search;
+    public JTextField search;
     private JLabel closeBank;
     private JLabel closeApplication;
 
@@ -53,7 +53,7 @@ public class BankAccountPane extends JPanel
     {
         if(b != null)
         {
-            return new BankAccountListPane(b, frame, Sort.LAST_NAME, SortType.SORT_ASCENDING);
+            return new BankAccountListPane(this, b, frame, Sort.LAST_NAME, SortType.SORT_ASCENDING);
         }
         else return new BankAccountListPane();
     }
@@ -69,8 +69,8 @@ public class BankAccountPane extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                frame.search.setFocusable(false);
-                frame.search.setText("[/] to Search   ");
+                search.setFocusable(false);
+                search.setText("[/] to Search   ");
                 pane.restore();
             }
 

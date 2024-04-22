@@ -18,7 +18,7 @@ public class BankAccount
     private String givenName;
     private long accountNumber;
     private double balance;
-    private static double interestRate = .5; 
+    private static double interestRate = .15;
     
     // default constructor
     public BankAccount()
@@ -75,7 +75,7 @@ public class BankAccount
     }
     
     // citation: Mrs. Kim Vera Tequin (from her `makeCopy()` method)
-    // i didnt realized i kinda needed this method now qwq
+    // i didn't realize i kinda needed this method now qwq
     public void referenceFromBank(BankAccount bank)
     {
         firstName = bank.getFirstName();
@@ -102,20 +102,20 @@ public class BankAccount
         return lastName;
     }
     
-    // magkuha ug account number:
-    // ayaw ka confuse.. pede man ug int, base sa inyoha
+    // mag-kuha ug account number:
+    // ayaw ka confuse.. pwede man ug int, base sa inyoha
     public long getAccountNumber()
     {
         return accountNumber;
     }
     
-    // magkuha ug account name
+    // mag-kuha ug account name
     public String getAccountName()
     {
         return accountName;
     }
     
-    // kuhaon ang balance sa imohang account
+    // kuha-on ang balance sa imohang account
     public double getBalance()
     {
         return balance;
@@ -154,7 +154,7 @@ public class BankAccount
         balance += money; 
     }
     
-    // mag set ug interes sa bank account:
+    // mag set ug interest sa bank account:
     public static void setInterestRate(double rate)
     {
         interestRate = rate;
@@ -173,10 +173,9 @@ public class BankAccount
     }
 
     // withdrawing process
-    public boolean withdraw(double money)
+    public void withdraw(double money)
     {
         balance = balance >= money? balance - money : balance;
-        return balance >= money;
     }
     
     // String equivalent sa imohang account
@@ -199,7 +198,7 @@ public class BankAccount
         return this == ba;
     }
     
-    // optional: magkuha ug image sa bankaccount with the use of the bank account's number as the file name:
+    // optional: mag-kuha ug image sa BankAccount with the use of the bank account's number as the file name:
     public BufferedImage tryImage(String s, int length)
     {
         BufferedImage bf = new BufferedImage(length, length, BufferedImage.TYPE_INT_ARGB);

@@ -5,9 +5,6 @@ import BankAccountThingy.pp2.BankAccount.Utils.SortType;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
 import javax.swing.*;
 
 
@@ -15,6 +12,7 @@ public class BankAccountListPane extends JScrollPane
 {
     private static final int width = BankAccountInterface.WIDTH;
     private static final int height = BankAccountInterface.HEIGHT;
+    @Intention InitialFrame frame;
 
     private Sort currentSort = Sort.LAST_NAME;
     private SortType currentSortType = SortType.SORT_ASCENDING;
@@ -29,18 +27,19 @@ public class BankAccountListPane extends JScrollPane
      * xd - derp. REFER THE CONSTRUCTOR BELOW
      *</editor-fold>
      * */
-    public BankAccountListPane(BankAccountList b, InitialFrame frame, Sort sort, SortType type)
+    public BankAccountListPane(BankAccountPane pane, BankAccountList b, InitialFrame frame, Sort sort, SortType type)
     {
         super();
         if(b != null)
         {
             size = b.getLength();
             ba = new BankAccountList(b);
+            this.frame = frame;
             currentSort = sort;
             currentSortType = type;
-            initializeComponent(frame);
-            container.setSize(new Dimension(width, ((height + 1) * b.getLength()) + (3 * b.getLength()) + 2));
-            container.setPreferredSize(new Dimension(width, ((height + 1) * b.getLength()) + (3 * b.getLength()) + 2));
+            initializeComponent(frame, pane);
+            container.setSize(new Dimension(width, ((height + 1) * b.getLength()) + (2 * b.getLength()) + 2));
+            container.setPreferredSize(new Dimension(width, ((height + 1) * b.getLength()) + (2 * b.getLength()) + 2));
             // add components into the container here :3
             addComponents();
 
@@ -67,7 +66,7 @@ public class BankAccountListPane extends JScrollPane
         size = 0;
     }
     
-    public void initializeComponent(InitialFrame frame)
+    public void initializeComponent(InitialFrame frame, BankAccountPane pane)
     {
         // add a container to put stuff :3
         container = new JPanel();
@@ -75,52 +74,6 @@ public class BankAccountListPane extends JScrollPane
         container.setLocation(0, 0);
         container.setBackground(new Color(200, 200, 200));
         container.setDoubleBuffered(true);
-        container.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                frame.search.setFocusable(false);
-                frame.search.setText("[/] to Search   ");
-                restore();
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e)
-            {
-                if (SwingUtilities.isLeftMouseButton(e))
-                {
-                    frame.isDragging = true;
-                    frame.offset = e.getPoint();
-                }
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-                if (SwingUtilities.isLeftMouseButton(e))
-                {
-                    frame.isDragging = false;
-                }
-            }
-
-        });
-        container.addMouseMotionListener(new MouseMotionAdapter()
-        {
-            @Override
-            public void mouseDragged(MouseEvent e)
-            {
-                if (frame.isDragging)
-                {
-                    Point currentMouse = e.getLocationOnScreen();
-
-                    int deltaX = currentMouse.x - frame.offset.x - 250;
-                    int deltaY = currentMouse.y - frame.offset.y;
-
-                    setLocation(deltaX, deltaY);
-                }
-            }
-        });
     }
 
     @Intention(reason = "getter of the BankAccountList: uses within deposit and withdraw...")
@@ -144,7 +97,7 @@ public class BankAccountListPane extends JScrollPane
                 // making sure the size will accurately affect the whole list each search, and not crop one BankAccountInterface...
                 container.setSize(new Dimension(1030, 104 * (index + 1) + 1));
                 container.setPreferredSize(new Dimension(1030, 104 * (index + 1) + 1));
-                BankAccountInterface bankInterface = new BankAccountInterface(bank, this);
+                BankAccountInterface bankInterface = new BankAccountInterface(frame,bank, this);
                 bankInterface.setBounds(0, ((bankInterface.getHeight() + 1) * index++), bankInterface.getWidth(), bankInterface.getHeight());
                 container.add(bankInterface);
             }
@@ -199,7 +152,7 @@ public class BankAccountListPane extends JScrollPane
         {
             for(BankAccount bank : ba.sort(currentSort, currentSortType))
             {
-                BankAccountInterface bankInterface = new BankAccountInterface(bank, this);
+                BankAccountInterface bankInterface = new BankAccountInterface(frame, bank, this);
                 bankInterface.setBounds(0, ((bankInterface.getHeight() + 1) * index++), bankInterface.getWidth(), bankInterface.getHeight());
                 container.add(bankInterface);
             }

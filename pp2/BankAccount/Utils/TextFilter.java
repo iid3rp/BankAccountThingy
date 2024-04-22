@@ -3,35 +3,37 @@ import javax.swing.text.AttributeSet;
 import javax.swing.text.DocumentFilter;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
-import BankAccountThingy.pp2.BankAccount.Utils.DataType;
+
 /**
  * <p>This section creates a {@code DocumentFilter} to filter the text and use it in either JTextFields
  * or JTextArea for the purpose of filtering character sequence.</p><p></p>
  *
  * @see javax.swing.text.DocumentFilter
+ * @see javax.swing.JTextField
+ * @see javax.swing.JTextArea
  *
  * @Citation:  <a href="https://stackoverflow.com/questions/11093326/restricting-jtextfield-input-to-integers">Restricting JTextField input to Integers [duplicate] | Stack Overflow</a>
  * @User: <a href="https://stackoverflow.com/users/522444/hovercraft-full-of-eels">Hovercraft Full Of Eels | Stack Overflow</a>
  * @Modifier: <a href="https://github.com/iid3rp">derp :3 | GitHub</a>
  */
-public class TextFieldFilter extends DocumentFilter 
+public class TextFilter extends DocumentFilter
 {
     public String dataType; // the string equivalent of the enum
     public int characterLimit = 0;
     
-    public TextFieldFilter()
+    public TextFilter()
     {
         this.dataType = DataType.TYPE_STRING.toString();
     }   
     
     // constructor with @parameters
-    public TextFieldFilter(DataType d)
+    public TextFilter(DataType d)
     {
         this.dataType = d.toString();
         characterLimit = Integer.MAX_VALUE;
     }
 
-    public TextFieldFilter(DataType d, int charLimit)
+    public TextFilter(DataType d, int charLimit)
     {
         this.dataType = d.toString();
         characterLimit = charLimit;

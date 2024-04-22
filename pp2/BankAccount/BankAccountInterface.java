@@ -4,9 +4,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
+import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.EditBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 /*
     SOME CHANGES HAVE BEEN MADE (2024, of March 31st, Around 22:20 i think)
@@ -21,6 +23,7 @@ import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
 */
 public class BankAccountInterface extends JPanel
 {
+    @Intention InitialFrame frame;
     public static final int HEIGHT = 100;
     public static int WIDTH = 1030;
     public BankAccount b;
@@ -31,7 +34,7 @@ public class BankAccountInterface extends JPanel
     private JLabel number;
     private JLabel balance;
     
-    public BankAccountInterface(BankAccount ba, BankAccountListPane pane)
+    public BankAccountInterface(InitialFrame frame, BankAccount ba, BankAccountListPane pane)
     {
         super();
         b = ba;
@@ -78,9 +81,12 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount edit = new DepositDialog(pane.getBankList()).showDialog(ba);
-                edit = edit == null? ba : edit;
-                pane.requestDeposit(edit);
+                if(pane != null)
+                {
+                    BankAccount edit = new DepositDialog(frame, pane.getBankList()).showDialog(ba);
+                    edit = edit == null? ba : edit;
+                    pane.requestDeposit(edit);
+                }
             }
 
             @Override
@@ -115,7 +121,7 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount edit = new WithdrawDialog(pane.getBankList()).showDialog(ba);
+                BankAccount edit = new WithdrawDialog(frame, pane.getBankList()).showDialog(ba);
                 edit = edit == null? ba : edit;
                 pane.requestWithdraw(edit);
             }

@@ -5,7 +5,6 @@ import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
-import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
 public class BankReader
 {

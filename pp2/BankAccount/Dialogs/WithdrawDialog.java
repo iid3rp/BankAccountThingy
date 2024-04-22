@@ -15,15 +15,19 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
+
+import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.Utils.DataType;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Region;
-import BankAccountThingy.pp2.BankAccount.Utils.TextFieldFilter;
+import BankAccountThingy.pp2.BankAccount.Utils.TextFilter;
 public class WithdrawDialog extends JDialog
 {
     private BankAccount allocation; // this will be reference of the BankAccount to be withdrawn :#
     public JPanel panel;
+    @Intention InitialFrame frame;
      
     public JTextField accountNumber;
     public JTextField moneyHandler;
@@ -38,14 +42,15 @@ public class WithdrawDialog extends JDialog
     
     private boolean confirm = false;
     public double totalAmount;
-    public WithdrawDialog(BankAccountList b)
+    public WithdrawDialog(InitialFrame frame, BankAccountList b)
     {
         super();
         lib = b; // this creates a reference of the list of the BankAccounts when depositing/withdrawing..
+        this.frame = frame;
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL); // this ensures modality of the jDialog
+        setLocationRelativeTo(frame);
         setSize(new Dimension(500, 350));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
         setUndecorated(true);
         
         panel = createPanel();
@@ -237,7 +242,7 @@ public class WithdrawDialog extends JDialog
         textField.setFont(new Font("Segoe UI", Font.PLAIN, 18));
         textField.setText("Enter Bank Account Number:");
         PlainDocument doc = (PlainDocument) textField.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_NUMERICAL));
+        doc.setDocumentFilter(new TextFilter(DataType.TYPE_NUMERICAL));
         
         textField.addMouseListener(new MouseAdapter() 
         {
@@ -315,7 +320,7 @@ public class WithdrawDialog extends JDialog
         textField.setText("Enter Amount: [$]");
         textField.setEnabled(false);
         PlainDocument doc = (PlainDocument) textField.getDocument();
-        doc.setDocumentFilter(new TextFieldFilter(DataType.TYPE_CURRENCY));
+        doc.setDocumentFilter(new TextFilter(DataType.TYPE_CURRENCY));
 
         textField.addMouseListener(new MouseAdapter() 
         {
@@ -445,7 +450,7 @@ public class WithdrawDialog extends JDialog
         // Bank account list for reference/testing
         BankAccountList banking = new BankAccountList();
         banking.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
-        WithdrawDialog i = new WithdrawDialog(banking);
+        WithdrawDialog i = new WithdrawDialog(null,banking);
         banking.ba[0].deposit(5000); // example of what would happen to deposit smth and the withdrawal
         BankAccount b = banking.ba[0];
         b = i.showDialog(b);

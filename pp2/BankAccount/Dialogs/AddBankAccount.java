@@ -23,6 +23,8 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.io.File;
+
+import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
@@ -61,14 +63,14 @@ public class AddBankAccount extends JDialog
     public double refY = .5;
     
     private int picWidth, picHeight, picX, picY;
-    public AddBankAccount()
+    public AddBankAccount(InitialFrame frame)
     {
         super();
         setModalityType(ModalityType.APPLICATION_MODAL); // this ensures modallity of the jdialog
         setTitle("Adding a Bank Account");    
         setSize(new Dimension(550, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(frame);
         setUndecorated(true);
         
         JPanel panel = createPanel();
@@ -604,7 +606,7 @@ public class AddBankAccount extends JDialog
     
     public static void main(String[] a)
     {
-        AddBankAccount i = new AddBankAccount();
+        AddBankAccount i = new AddBankAccount(null);
         BankAccount h = i.showDialog();
         System.out.print(h);
     }

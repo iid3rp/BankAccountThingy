@@ -1,15 +1,12 @@
 package BankAccountThingy;
 import javax.swing.*;
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
+import BankAccountThingy.pp2.BankAccount.Dialogs.AddBank;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
@@ -22,6 +19,7 @@ import BankAccountThingy.pp2.BankAccount.Utils.Region;
 public class InitialFrame extends JFrame
 {
     public static Dimension dimension = new Dimension(1280, 720);
+    InitialFrame frame = this;
     private JLabel withdraw;
     private JLabel deposit;
     private JLabel interest;
@@ -32,8 +30,6 @@ public class InitialFrame extends JFrame
     public JPanel menu;
     public JLabel addAccount;
     private JPanel contentPanel;
-
-    public JTextField search;
     BankAccountPane pane;
     public boolean isDragging;
     public Point offset;
@@ -58,7 +54,7 @@ public class InitialFrame extends JFrame
         withdraw = createWithdrawMoney();
         interest = createInterestRate();
         update = createUpdateAccount();
-        changeBank = createChangeBank();
+        changeBank = createOpenBank();
                 
         menu.add(title);
         menu.add(addAccount);
@@ -82,13 +78,6 @@ public class InitialFrame extends JFrame
         panel.setBounds(0, 0, 250, 720);
         panel.addMouseListener(new MouseAdapter()
         {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                search.setFocusable(false);
-                search.setText("[/] to Search   ");
-                pane.pane.restore();
-            }
 
             @Override
             public void mousePressed(MouseEvent e)
@@ -140,14 +129,6 @@ public class InitialFrame extends JFrame
         panel.addMouseListener(new MouseAdapter()
         {
             @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                search.setFocusable(false);
-                search.setText("[/] to Search   ");
-                pane.pane.restore();
-            }
-
-            @Override
             public void mousePressed(MouseEvent e)
             {
                 if (SwingUtilities.isLeftMouseButton(e))
@@ -176,7 +157,7 @@ public class InitialFrame extends JFrame
                 {
                     Point currentMouse = e.getLocationOnScreen();
 
-                    int deltaX = currentMouse.x - offset.x;
+                    int deltaX = currentMouse.x - offset.x - 250;
                     int deltaY = currentMouse.y - offset.y;
 
                     setLocation(deltaX, deltaY);
@@ -211,29 +192,16 @@ public class InitialFrame extends JFrame
     public void initializeComponent()
     {
         setVisible(false);
-        setSize(new Dimension(1280, 720));
+        setSize(dimension);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setUndecorated(true);
-        addKeyListener(new KeyAdapter()
-        {
-            @Override
-            public void keyPressed(KeyEvent e)
-            {
-                if(e.getKeyCode() == KeyEvent.VK_SLASH)
-                {
-                    search.setFocusable(true);
-                    search.setText("");
-                    search.requestFocus();
-                }
-            }
-        });
         addWindowListener(new WindowAdapter()
         {
             @Override
             public void windowClosing(WindowEvent e)
             {
-                if(confirmClose())
+                if(confirmClose() && referenceFile != null)
                 {
                     BankMaker.rewriteFile(referenceFile, pane.pane.ba);
                     e.getWindow().dispose();
@@ -326,9 +294,9 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount b = new AddBankAccount().showDialog();
-                if(b != null) // if it confirms
+                if(pane != null)
                 {
+                    BankAccount b = new AddBankAccount(frame).showDialog();
                     pane.pane.requestAdd(b);
                 }
             }
@@ -364,9 +332,8 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount b = new DepositDialog(pane.pane.getBankList()).showDialog(null);
-                if(b != null) // if it confirms
-                {
+                if(pane != null) {
+                    BankAccount b = new DepositDialog(frame, pane.pane.getBankList()).showDialog(null);
                     pane.pane.replaceAccount(b);
                 }
             }
@@ -404,9 +371,9 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount b = new WithdrawDialog(pane.pane.getBankList()).showDialog(null);
-                if(b != null) // if it confirms
+                if(pane != null)
                 {
+                    BankAccount b = new WithdrawDialog(frame, pane.pane.getBankList()).showDialog(null);
                     pane.pane.replaceAccount(b);
                 }
             }
@@ -443,7 +410,7 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount b = new AddBankAccount().showDialog();
+                BankAccount b = new AddBankAccount(frame).showDialog();
                 if(b != null) // if it confirms
                 {
                     pane.pane.replaceAccount(b);
@@ -459,15 +426,50 @@ public class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Interest Rate: 0%");
+        label.setText("Interest Rate: " + ((int) (BankAccount.getInterestRate() * 100)) + "%");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 720 - 120 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                boolean confirm = false;
+                while(!confirm)
+                {
+                    try
+                    {
+                        String reference = JOptionPane.showInputDialog(frame,"Put Interest Rate [%]");
+                        int interest = Integer.parseInt(reference);
+                        BankAccount.setInterestRate((double) interest / 100d);
+                        label.setText("Interest Rate: " + ((int) (BankAccount.getInterestRate() * 100)) + "%");
+                        confirm = true;
+                    }
+                    catch(NumberFormatException ex)
+                    {
+                        confirm = true;
+                    }
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.blue);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.WHITE);
+            }
+        });
         return label;
     }
-    
-    public JLabel createChangeBank()
+
+    public JLabel createAddBank()
     {
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
@@ -483,11 +485,43 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                /*BankMaker b = new AddBank().showDialog();
-                if(b != null)
-                {
+                BankMaker b = new AddBank().showDialog();
+                if(b != null) {
                     createPane(b);
-                }*/
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.BLUE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.WHITE);
+            }
+        });
+        return label;
+    }
+    
+    public JLabel createOpenBank()
+    {
+        JLabel label = new JLabel();
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        label.setLayout(null);
+        label.setText("Open Bank");
+        label.setForeground(Color.WHITE);
+        Dimension d = label.getPreferredSize();
+        label.setBounds(30, 720 - 80 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
+        label.setVisible(true);
+
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
                 File b = BankChooser.showDialog();
                 if(b != null)
                 {
