@@ -9,7 +9,11 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileWriter;
 
-
+/**
+ * BankMaker class provides functionalities for creating and managing bank data.
+ *
+ * @author Francis (iid3rp) Madanlo
+ */
 public class BankMaker 
 {
     public String title, fileTitle;
@@ -19,6 +23,10 @@ public class BankMaker
     /** there's difference between the title of the bank and the file name of the bank, bc there are
      * such limitations to the file naming than the title of the bank in the interface of the
      * BankAccount's InitialFrame.
+     *
+     * <p></p><p>constructor of the class...</p>
+     * @param title the title of the String based on the bank list name
+     * @param serial the serial number of the bank list itself
      */
     public BankMaker(String title, long serial)
     {
@@ -40,9 +48,21 @@ public class BankMaker
         } catch (IOException e) { /* ignore the exception */ }
     }
 
+    /**
+     * no one uses this constructor
+     */
     private BankMaker() {}
 
-    public static void rewriteFile(File file, BankAccountList ba)
+
+
+    /**
+     * This static method rewrites the contents of a file with information from a provided BankList object.
+     *
+     * @param file The File object representing the file to be overwritten.
+     * @param ba The BankList object containing the bank data to be written.
+     * @throws IOException If there are any issues encountered during file operations.
+     */
+    public static void rewriteFile(File file, BankAccountList ba) throws IOException
     {
         String filePath = file.getAbsolutePath();
         // try-with-resources method btw :3
@@ -67,6 +87,14 @@ public class BankMaker
         }
     }
 
+    /**
+     * Creates a CSV (Comma-Separated Values) file with a user-specified filename.
+     *
+     * @param fileName The name of the CSV file to be created.
+     * @param bankInfo  the Bank information of the CSV file to be created
+     * @param header the constant string to be used as a header
+     * @throws IOException If there are any issues encountered during file creation.
+     */
     public void createCSV(String fileName, String[] bankInfo, String[] header) throws IOException 
     {
         // try-with-resources method btw :3
@@ -79,6 +107,14 @@ public class BankMaker
         }
     }
 
+    /**
+     * Creates a BankAccountPane that will put to the frame with the usage of the file...
+     *
+     * @param file The name of the CSV file to be created.
+     * @param frame the InitialFrame object to be the reference pointer.
+     * @return BankAccountPane
+     * @see BankAccountPane
+     */
     public BankAccountPane createBankAccountList(InitialFrame frame, File file)
     {
         return new BankReader().createListFromBank(frame, file);

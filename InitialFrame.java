@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
@@ -16,9 +17,10 @@ import BankAccountThingy.pp2.BankAccount.StreamIO.BankReader;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
-public class InitialFrame extends JFrame
+public final class InitialFrame extends JFrame
 {
     public static Dimension dimension = new Dimension(1280, 720);
+    private final JLabel addBank;
     InitialFrame frame = this;
     private JLabel withdraw;
     private JLabel deposit;
@@ -29,8 +31,8 @@ public class InitialFrame extends JFrame
     public JPanel panel;
     public JPanel menu;
     public JLabel addAccount;
-    private JPanel contentPanel;
-    BankAccountPane pane;
+    public JPanel contentPanel;
+    public BankAccountPane pane;
     public boolean isDragging;
     public Point offset;
     private File referenceFile;
@@ -45,7 +47,7 @@ public class InitialFrame extends JFrame
         panel.add(menu);
 
         contentPanel = createContentPanel();
-        contentPanel.setLocation(250, 0);
+        contentPanel.setLocation(200, 0);
         panel.add(contentPanel);
 
         title = createTitle();
@@ -53,16 +55,16 @@ public class InitialFrame extends JFrame
         deposit = createDepositMoney();
         withdraw = createWithdrawMoney();
         interest = createInterestRate();
-        update = createUpdateAccount();
         changeBank = createOpenBank();
+        addBank = createAddBank();
                 
         menu.add(title);
         menu.add(addAccount);
         menu.add(deposit);
         menu.add(withdraw);
         menu.add(interest);
-        menu.add(update);
         menu.add(changeBank);
+        menu.add(addBank);
 
         panel.validate();
         panel.repaint();
@@ -74,8 +76,8 @@ public class InitialFrame extends JFrame
     {
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        panel.setBackground(Color.BLACK);
-        panel.setBounds(0, 0, 250, 720);
+        panel.setBackground(Color.black);
+        panel.setBounds(0, 0, 200, 720);
         panel.addMouseListener(new MouseAdapter()
         {
 
@@ -120,11 +122,11 @@ public class InitialFrame extends JFrame
     }
 
 
-    private JPanel createContentPanel()
+    public JPanel createContentPanel()
     {
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        panel.setSize(new Dimension(1030, 720));
+        panel.setSize(new Dimension(1080, 720));
         panel.setLocation(new Point(250, 0));
         panel.addMouseListener(new MouseAdapter()
         {
@@ -203,7 +205,12 @@ public class InitialFrame extends JFrame
             {
                 if(confirmClose() && referenceFile != null)
                 {
-                    BankMaker.rewriteFile(referenceFile, pane.pane.ba);
+                    try {
+                        BankMaker.rewriteFile(referenceFile, pane.pane.ba);
+                    }
+                    catch(IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     e.getWindow().dispose();
                 }
             }
@@ -271,7 +278,7 @@ public class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Add Account");
+        label.setText("+ Add");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 220, (int) d.getWidth() + 30, (int) d.getHeight());
@@ -283,12 +290,16 @@ public class InitialFrame extends JFrame
             public void mouseEntered(MouseEvent e)
             {
                 label.setForeground(Color.BLUE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+                label.setBounds(30 - (int)((label.getPreferredSize().getWidth() - d.getWidth()) / 2), 220, (int) d.getWidth() + 30, (int) d.getHeight());
             }
             
             @Override
             public void mouseExited(MouseEvent e)
             {
                 label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+                label.setBounds(30, 220, (int) d.getWidth() + 30, (int) d.getHeight());
             }
             
             @Override
@@ -310,7 +321,7 @@ public class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Deposit Money");
+        label.setText("< Deposit");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 260, (int) d.getWidth() + 30, (int) d.getHeight());
@@ -321,12 +332,16 @@ public class InitialFrame extends JFrame
             public void mouseEntered(MouseEvent e)
             {
                 label.setForeground(Color.BLUE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+                label.setBounds(30 - (int)((label.getPreferredSize().getWidth() - d.getWidth()) / 2), 260, (int) d.getWidth() + 30, (int) d.getHeight());
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e)
             {
                 label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+                label.setBounds(30, 260, (int) d.getWidth() + 30, (int) d.getHeight());
             }
             
             @Override
@@ -349,7 +364,7 @@ public class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Withdraw Money");
+        label.setText("> Withdraw");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 300, (int) d.getWidth() + 30, (int) d.getHeight());
@@ -360,12 +375,16 @@ public class InitialFrame extends JFrame
             public void mouseEntered(MouseEvent e)
             {
                 label.setForeground(Color.BLUE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+                label.setBounds(30 - (int)((label.getPreferredSize().getWidth() - d.getWidth()) / 2), 300, (int) d.getWidth() + 30, (int) d.getHeight());
             }
-            
+
             @Override
             public void mouseExited(MouseEvent e)
             {
                 label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+                label.setBounds(30, 300, (int) d.getWidth() + 30, (int) d.getHeight());
             }
             
             @Override
@@ -383,53 +402,15 @@ public class InitialFrame extends JFrame
         return label;
     }
     
-    public JLabel createUpdateAccount()
-    {
-        JLabel label = new JLabel();
-        label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-        label.setLayout(null);
-        label.setText("Update Account");
-        label.setForeground(Color.WHITE);
-        Dimension d = label.getPreferredSize();
-        label.setBounds(30, 720 - 160 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
-        label.setVisible(true);
-        label.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                label.setForeground(Color.BLUE);
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                label.setForeground(Color.WHITE);
-            }
-            
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                BankAccount b = new AddBankAccount(frame).showDialog();
-                if(b != null) // if it confirms
-                {
-                    pane.pane.replaceAccount(b);
-                }
-            }
-            
-        });
-        return label;
-    }
-    
     public JLabel createInterestRate()
     {
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Interest Rate: " + ((int) (BankAccount.getInterestRate() * 100)) + "%");
+        label.setText("Interest: " + ((int) (BankAccount.getInterestRate() * 100)) + "%");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
-        label.setBounds(30, 720 - 120 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
+        label.setBounds(30, 720 - 160 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()
         {
@@ -444,7 +425,7 @@ public class InitialFrame extends JFrame
                         String reference = JOptionPane.showInputDialog(frame,"Put Interest Rate [%]");
                         int interest = Integer.parseInt(reference);
                         BankAccount.setInterestRate((double) interest / 100d);
-                        label.setText("Interest Rate: " + ((int) (BankAccount.getInterestRate() * 100)) + "%");
+                        label.setText("Interest: " + ((int) (BankAccount.getInterestRate() * 100)) + "%");
                         confirm = true;
                     }
                     catch(NumberFormatException ex)
@@ -457,13 +438,17 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseEntered(MouseEvent e)
             {
-                label.setForeground(Color.blue);
+                label.setForeground(Color.BLUE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+                label.setBounds(30 - (int)((label.getPreferredSize().getWidth() - d.getWidth()) / 2), 720 - 160 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
                 label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+                label.setBounds(30, 720 - 160 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
             }
         });
         return label;
@@ -474,10 +459,10 @@ public class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Open Bank");
+        label.setText("+ New Bank");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
-        label.setBounds(30, 720 - 80 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
+        label.setBounds(30, 720 - 120 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
         label.setVisible(true);
 
         label.addMouseListener(new MouseAdapter()
@@ -486,8 +471,9 @@ public class InitialFrame extends JFrame
             public void mouseClicked(MouseEvent e)
             {
                 BankMaker b = new AddBank().showDialog();
-                if(b != null) {
-                    createPane(b);
+                if(b != null)
+                {
+                    createPane(frame, b);
                 }
             }
 
@@ -495,12 +481,16 @@ public class InitialFrame extends JFrame
             public void mouseEntered(MouseEvent e)
             {
                 label.setForeground(Color.BLUE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+                label.setBounds(30 - (int)((label.getPreferredSize().getWidth() - d.getWidth()) / 2), 720 - 120 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
                 label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+                label.setBounds(30, 720 - 120 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
             }
         });
         return label;
@@ -511,7 +501,7 @@ public class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Open Bank");
+        label.setText("o Open");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 720 - 80 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
@@ -522,10 +512,10 @@ public class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                File b = BankChooser.showDialog();
+                File b = BankChooser.showDialog(frame);
                 if(b != null)
                 {
-                    createPane(b);
+                    createPane(frame, b);
                     referenceFile = b;
                 }
             }
@@ -534,12 +524,16 @@ public class InitialFrame extends JFrame
             public void mouseEntered(MouseEvent e)
             {
                 label.setForeground(Color.BLUE);
+                label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+                label.setBounds(30 - (int)((label.getPreferredSize().getWidth() - d.getWidth()) / 2), 720 - 80 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
                 label.setForeground(Color.WHITE);
+                label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+                label.setBounds(30, 720 - 80 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
             }
         });
         return label;
@@ -549,15 +543,27 @@ public class InitialFrame extends JFrame
      * 2 @Intention voids in action with 2 different purposes: one that returns BankAccountPane from creating a new Bank,
      * and the other one from a .csv file. They return the same data type but different options...
      */
-    private @Intention void createPane(BankMaker b)
+    private @Intention void createPane(InitialFrame frame, BankMaker b)
     {
-        pane = b.createBankAccountList(this, new File(b.fileTitle));
-        createBankList(); // this will automatically create a bank list for u
+        referenceFile = new File(b.fileTitle);
+        pane = b.createBankAccountList(this, referenceFile);
+        if(pane != null)
+        {
+            createBankList(); // this will automatically create a bank list for u
+        }
     }
 
-    private @Intention void createPane(File file)
+    private @Intention void createPane(InitialFrame frame, File file)
     {
         pane = new BankReader().createListFromBank(this, file);
-        createBankList(); // this will automatically create a bank list for u
+        if(pane != null)
+        {
+            createBankList(); // this will automatically create a bank list for u
+        }
+    }
+
+    public void setReferenceFile(File file)
+    {
+        referenceFile = file;
     }
 }

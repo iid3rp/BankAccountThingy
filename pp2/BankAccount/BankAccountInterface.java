@@ -9,23 +9,11 @@ import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.EditBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
-
-/*
-    SOME CHANGES HAVE BEEN MADE (2024, of March 31st, Around 22:20 i think)
-    
-    -> it will be extending within the BankAccount class itself,
-       therefore it'll embed within the interface, and @that interface can be
-       used to actually attached it as a BankAccount (polymorphism into play)
-       class. This ensures proper transition within the class and avoiding finality
-       conflicts. Hopefully :3
-       
-    - derp
-*/
 public class BankAccountInterface extends JPanel
 {
     @Intention InitialFrame frame;
     public static final int HEIGHT = 100;
-    public static int WIDTH = 1030;
+    public static int WIDTH = 1080;
     public BankAccount b;
     public JLabel image;
     
@@ -243,7 +231,7 @@ public class BankAccountInterface extends JPanel
         
         addMouseListener(new MouseAdapter()
         {
-            @Override
+            /*@Override
             public void mouseEntered(MouseEvent e)
             {
                 setBackground(new Color(200, 200, 200));
@@ -253,7 +241,7 @@ public class BankAccountInterface extends JPanel
             public void mouseExited(MouseEvent e)
             {
                 setBackground(Color.WHITE);
-            }
+            }*/
         });
         
     }

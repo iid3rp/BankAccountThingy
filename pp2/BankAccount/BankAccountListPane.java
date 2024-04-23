@@ -46,7 +46,7 @@ public class BankAccountListPane extends JScrollPane
 
             setViewportView(container);
             getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
-            setSize(new Dimension(1030, 720));
+            setSize(new Dimension(width, 720));
             setDoubleBuffered(true);
             setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
             setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -182,6 +182,8 @@ public class BankAccountListPane extends JScrollPane
         container.validate();
         repaint();
         validate();
+        frame.pane.repaint();
+        frame.pane.validate();
         System.out.println("restored " + ba.getLength());
 
     }

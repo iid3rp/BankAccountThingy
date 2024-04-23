@@ -204,26 +204,31 @@ public class BankAccount
         BufferedImage bf = new BufferedImage(length, length, BufferedImage.TYPE_INT_ARGB);
         try
         {     
-            String path = this.getClass().getResource("Accounts/" + getAccountNumber() + ".png") == null? 
+            String path = this.getClass().getResource("Accounts/" + getAccountNumber() + ".png") == null?
                           Objects.requireNonNull(this.getClass().getResource("Resources/default-image.jpg")).getPath() :  // true
                           Objects.requireNonNull(this.getClass().getResource("Accounts/" + getAccountNumber() + ".png")).getPath(); // false
                           
             Image image = ImageIO.read(new File(path));
-            image = image.getScaledInstance(length, length, Image.SCALE_SMOOTH);
+            image = image.getScaledInstance(length, length, Image.SCALE_AREA_AVERAGING);
             paintImage(bf, image, length);
         }
         catch(NullPointerException | IOException e)
         {
-            throw new RuntimeException();
+            e.printStackTrace(System.out);
+            System.exit(0);
         }  
         return bf;
     }
     
-    private void paintImage(BufferedImage b, Image i, int length)
+    private void paintImage(BufferedImage b, Image i, int length) throws IOException
     {
+        @Intention(design = "Apparently, it throws an IOException bc the file [blob-reference] cannot" +
+                            "be read when using File.separator for some reason... i guess we go hard-code..")
+        BufferedImage image = ImageIO.read(new File(Objects.requireNonNull(
+                this.getClass().getResource("Resources/blob-reference.png")).getPath()));
+
         Graphics2D g2d = b.createGraphics();
-        g2d.setColor(Color.GREEN);
-        g2d.fillOval(0, 0, length, length);
+        g2d.drawImage(image, 0, 0, null);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
         g2d.drawImage(i, 0, 0, null);
         g2d.dispose();

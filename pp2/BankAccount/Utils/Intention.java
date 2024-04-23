@@ -12,7 +12,7 @@ import java.lang.annotation.*;
  * @author Francis (iid3rp) Madanlo
  */
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
+@Target({ElementType.LOCAL_VARIABLE, ElementType.CONSTRUCTOR, ElementType.METHOD, ElementType.FIELD})
 public @interface Intention 
 {
     boolean isPublic() default true; // stating the publicity of the field / method

@@ -12,13 +12,14 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
 
 public class BankAccountPane extends JPanel
 {
     public BankAccountListPane pane;
 
     @Intention(isPublic = false, design = "reference pointing...")
-    private InitialFrame reference;
+    private InitialFrame frame;
     private JPanel info;
     private JLabel titleList;
     public JTextField search;
@@ -29,7 +30,7 @@ public class BankAccountPane extends JPanel
     {
         super();
         initializeComponent(frame);
-        reference = frame;
+        this.frame = frame;
         pane = createPane(list, frame);
         pane.setLocation(0, 40);
         info = createInfo();
@@ -49,6 +50,8 @@ public class BankAccountPane extends JPanel
         add(pane);
     }
 
+    public BankAccountPane() {}
+
     private BankAccountListPane createPane(BankAccountList b, InitialFrame frame)
     {
         if(b != null)
@@ -61,7 +64,7 @@ public class BankAccountPane extends JPanel
     private void initializeComponent(InitialFrame frame)
     {
         setLayout(null);
-        setBounds(0, 0, 1030, 720);
+        setBounds(0, 0, 1080, 720);
         setDoubleBuffered(true);
         setBackground(new Color(200, 200, 200));
         addMouseListener(new MouseAdapter()
@@ -116,21 +119,21 @@ public class BankAccountPane extends JPanel
     {
         JPanel panel = new JPanel();
         panel.setLayout(null);
-        panel.setBounds(0, 0, 1030, 40);
+        panel.setBounds(0, 0, 1080, 40);
         panel.setBackground(Color.WHITE);
         panel.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mousePressed(MouseEvent e)
             {
-                reference.offset = e.getPoint();
-                reference.isDragging = true;
+                frame.offset = e.getPoint();
+                frame.isDragging = true;
             }
 
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                reference.isDragging = false;
+                frame.isDragging = false;
             }
         });
         panel.addMouseMotionListener(new MouseMotionAdapter()
@@ -138,14 +141,14 @@ public class BankAccountPane extends JPanel
             @Override
             public void mouseDragged(MouseEvent e)
             {
-                if (reference.isDragging)
+                if (frame.isDragging)
                 {
                     Point currentMouse = e.getLocationOnScreen();
 
-                    int deltaX = currentMouse.x - reference.offset.x - 250;
-                    int deltaY = currentMouse.y - reference.offset.y;
+                    int deltaX = currentMouse.x - frame.offset.x - 250;
+                    int deltaY = currentMouse.y - frame.offset.y;
 
-                    reference.setLocation(deltaX, deltaY);
+                    frame.setLocation(deltaX, deltaY);
                 }
             }
         });
@@ -177,7 +180,7 @@ public class BankAccountPane extends JPanel
         JTextField searchBar = new JTextField();
 
         searchBar.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        searchBar.setBounds(300, 5, 400, 30);
+        searchBar.setBounds(400, 5, 400, 30);
         searchBar.setText("[/] to Search   ");
         searchBar.setEditable(true);
         searchBar.setFocusable(false);
@@ -247,7 +250,39 @@ public class BankAccountPane extends JPanel
 
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
-        label.setBounds(1030 - width - 30 - 100, 10, width, height);
+        label.setBounds(1080 - width - 30 - 100, 10, width, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                frame.contentPanel.removeAll();
+                frame.pane = null;
+                frame.contentPanel.repaint();
+                frame.contentPanel.validate();
+                frame.repaint();
+                frame.validate();
+                try {
+                    BankMaker.rewriteFile(frame.getReferenceFile(), pane.ba);
+                }
+                catch(IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+                frame.setReferenceFile(null);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.BLUE);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.BLACK);
+            }
+        });
         label.setVisible(true);
         return label;
     }
@@ -264,17 +299,22 @@ public class BankAccountPane extends JPanel
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
-        label.setBounds(1030 - width - 20, 10, width, height);
+        label.setBounds(1080 - width - 20, 10, width, height);
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                if(reference.confirmClose())
+                if(frame.confirmClose())
                 {
-                    BankMaker.rewriteFile(reference.getReferenceFile(), pane.ba);
-                    reference.dispose();
+                    try {
+                        BankMaker.rewriteFile(frame.getReferenceFile(), pane.ba);
+                    }
+                    catch(IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    frame.dispose();
                 }
             }
         });
