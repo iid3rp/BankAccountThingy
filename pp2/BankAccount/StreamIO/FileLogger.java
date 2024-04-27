@@ -6,7 +6,6 @@ import BankAccountThingy.pp2.BankAccount.Utils.Log;
 import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 
 
 /**
@@ -25,7 +24,7 @@ import java.util.ArrayList;
  * <p></p>
  * @author iid3rp
  */
-public class FileLogger extends ArrayList<String>
+public class FileLogger
 {
     // @author Francis (iid3rp) Madanlo
     // APPOPPRIATING THIS CODE IS AGAINST THE ETHICS CODE!!
@@ -33,11 +32,11 @@ public class FileLogger extends ArrayList<String>
     private final String loggerString = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "logger.csv";
     private final String header = "Account Number (Bank Account),Logging Detail,Bank Name,Date and Time\n";
     private FileWriter logger;
-    private Object s;
+    private String[] logs;
+    private int size;
 
     public FileLogger()
     {
-        super();
         File file = new File(loggerString);
         try {
             if(!file.exists())
@@ -52,6 +51,21 @@ public class FileLogger extends ArrayList<String>
         {
             throw new RuntimeException(e);
         }
+    }
+    public boolean add(String string)
+    {
+        if(logs == null)
+        {
+            logs = new String[++size];
+        }
+        else
+        {
+            String[] reference = new String[++size];
+            System.arraycopy(logs, 0, reference, 0, logs.length);
+            logs = reference;
+        }
+        logs[size - 1] = string;
+        return true;
     }
 
     public boolean add(Log log, BankAccountList list, BankAccount bank)
@@ -105,7 +119,7 @@ public class FileLogger extends ArrayList<String>
                 throw new IllegalStateException("Unexpected value: " + log);
         }
         System.out.println("logged");
-        return super.add(logString);
+        return add(logString);
     }
 
     public boolean add(Log log, BankAccountList list, BankAccount bank, double amount)
@@ -130,7 +144,7 @@ public class FileLogger extends ArrayList<String>
                 throw new IllegalStateException("Unexpected value: " + log);
         }
         System.out.println("logged");
-        return super.add(logString);
+        return add(logString);
     }
 
     private void readLogs(File file) throws IOException
@@ -150,7 +164,7 @@ public class FileLogger extends ArrayList<String>
     public void close() throws IOException
     {
         FileWriter writer = new FileWriter(loggerString);
-        writer.write(String.join("", this) + " ");
+        writer.write(String.join("", logs) + " ");
         System.out.println("Written");
         writer.close();
     }
