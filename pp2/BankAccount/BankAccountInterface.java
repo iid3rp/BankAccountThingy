@@ -9,6 +9,8 @@ import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.EditBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+import BankAccountThingy.pp2.BankAccount.Utils.Log;
+
 public class BankAccountInterface extends JPanel
 {
     @Intention InitialFrame frame;
@@ -25,6 +27,7 @@ public class BankAccountInterface extends JPanel
     public BankAccountInterface(InitialFrame frame, BankAccount ba, BankAccountListPane pane)
     {
         super();
+        this.frame = frame;
         b = ba;
         initializeComponent(); // for the panel itself.
         
@@ -71,9 +74,12 @@ public class BankAccountInterface extends JPanel
             {
                 if(pane != null)
                 {
+                    double currentBalance = ba.getBalance();
                     BankAccount edit = new DepositDialog(frame, pane.getBankList()).showDialog(ba);
                     edit = edit == null? ba : edit;
+                    currentBalance -= edit.getBalance();
                     pane.requestDeposit(edit);
+                    frame.logger.add(Log.DEPOSIT, pane.ba, edit, currentBalance);
                 }
             }
 
@@ -109,9 +115,12 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
+                double currentBalance = ba.getBalance();
                 BankAccount edit = new WithdrawDialog(frame, pane.getBankList()).showDialog(ba);
                 edit = edit == null? ba : edit;
+                currentBalance -= edit.getBalance();
                 pane.requestWithdraw(edit);
+                frame.logger.add(Log.WITHDRAW, pane.ba, edit, currentBalance);
             }
 
             @Override
@@ -149,6 +158,7 @@ public class BankAccountInterface extends JPanel
                 BankAccount edit = new EditBankAccount().showDialog(ba);
                 edit = edit == null? ba : edit;
                 pane.requestEdit(edit);
+                frame.logger.add(Log.EDIT_ACCOUNT, pane.ba, null);
             }
 
             @Override
@@ -183,7 +193,17 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                 pane.requestRemove(b);
+                int result = JOptionPane.showConfirmDialog(
+                        frame,
+                        "Are you sure you want to delete thisbank?",
+                        "Deleting bank account",
+                        JOptionPane.YES_NO_OPTION
+                );
+                if(result == JOptionPane.YES_OPTION)
+                {
+                    pane.requestRemove(b);
+                    frame.logger.add(Log.DELETE_ACCOUNT, pane.ba, null);
+                }
             }
 
             @Override
@@ -231,17 +251,7 @@ public class BankAccountInterface extends JPanel
         
         addMouseListener(new MouseAdapter()
         {
-            /*@Override
-            public void mouseEntered(MouseEvent e)
-            {
-                setBackground(new Color(200, 200, 200));
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                setBackground(Color.WHITE);
-            }*/
+            //will be added soon
         });
         
     }

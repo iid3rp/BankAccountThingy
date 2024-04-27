@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.util.Objects;
 import javax.imageio.ImageIO;
 
+/**
+ * BankAccoun
+ */
 public class BankAccount
 {
     private String accountName;

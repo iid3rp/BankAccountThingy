@@ -1,4 +1,5 @@
 package BankAccountThingy.pp2.BankAccount.Dialogs;
+import java.awt.event.*;
 import java.util.Random;
 import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
@@ -18,9 +19,6 @@ import java.awt.Cursor;
 import java.awt.FontMetrics;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.io.File;
 
@@ -469,6 +467,18 @@ public class AddBankAccount extends JDialog
                     textField.setForeground(Color.BLACK); // Set back to default color
             }
         });
+        textField.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                textField.selectAll();
+            }
+
+            @Deprecated
+            @Override
+            public void focusLost(FocusEvent e) {}
+        });
 
 
         return textField;
@@ -493,6 +503,18 @@ public class AddBankAccount extends JDialog
                     textField.setForeground(Color.BLACK); // Set back to default color
             }
         });
+        textField.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                textField.selectAll();
+            }
+
+            @Deprecated
+            @Override
+            public void focusLost(FocusEvent e) {}
+        });
 
 
         return textField;
@@ -516,6 +538,18 @@ public class AddBankAccount extends JDialog
                     textField.setText("");
                     textField.setForeground(Color.BLACK); // Set back to default color
             }
+        });
+        textField.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                textField.selectAll();
+            }
+
+            @Deprecated
+            @Override
+            public void focusLost(FocusEvent e) {}
         });
 
         return textField;

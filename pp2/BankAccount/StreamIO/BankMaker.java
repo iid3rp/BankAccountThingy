@@ -16,7 +16,7 @@ import java.io.FileWriter;
  */
 public class BankMaker 
 {
-    public String title, fileTitle;
+    private String title, fileTitle;
 
     private static final String[] header = {"First Name", "Middle Name", "Last Name", "Account Number", "Balance"};
 
@@ -118,5 +118,15 @@ public class BankMaker
     public BankAccountPane createBankAccountList(InitialFrame frame, File file)
     {
         return new BankReader().createListFromBank(frame, file);
+    }
+
+    public String getTitle()
+    {
+        return title;
+    }
+
+    public String getFileTitle()
+    {
+        return fileTitle;
     }
 }

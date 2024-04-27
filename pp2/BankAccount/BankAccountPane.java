@@ -3,6 +3,7 @@ package BankAccountThingy.pp2.BankAccount;
 import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+import BankAccountThingy.pp2.BankAccount.Utils.Log;
 import BankAccountThingy.pp2.BankAccount.Utils.SortType;
 import BankAccountThingy.pp2.BankAccount.Utils.Sort;
 import javax.swing.*;
@@ -264,6 +265,7 @@ public class BankAccountPane extends JPanel
                 frame.validate();
                 try {
                     BankMaker.rewriteFile(frame.getReferenceFile(), pane.ba);
+                    frame.logger.add(Log.CLOSE_BANK, pane.ba, null);
                 }
                 catch(IOException ex) {
                     throw new RuntimeException(ex);
@@ -308,8 +310,12 @@ public class BankAccountPane extends JPanel
             {
                 if(frame.confirmClose())
                 {
-                    try {
+                    try
+                    {
                         BankMaker.rewriteFile(frame.getReferenceFile(), pane.ba);
+                        frame.logger.add(Log.CLOSE_APPLICATION, null, null);
+                        frame.logger.close();
+                        System.out.println("fadkslakjd");
                     }
                     catch(IOException ex) {
                         throw new RuntimeException(ex);

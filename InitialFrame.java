@@ -11,15 +11,18 @@ import BankAccountThingy.pp2.BankAccount.Dialogs.AddBank;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
+import BankAccountThingy.pp2.BankAccount.StreamIO.FileLogger;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankChooser;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankReader;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+import BankAccountThingy.pp2.BankAccount.Utils.Log;
 import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
 public final class InitialFrame extends JFrame
 {
     public static Dimension dimension = new Dimension(1280, 720);
+    public FileLogger logger = new FileLogger();
     private final JLabel addBank;
     InitialFrame frame = this;
     private JLabel withdraw;
@@ -68,8 +71,9 @@ public final class InitialFrame extends JFrame
 
         panel.validate();
         panel.repaint();
-        
+
         setVisible(true);
+        logger.add(Log.OPEN_APPLICATION, null, null);
     }
 
     private JPanel createMenu()
@@ -203,10 +207,16 @@ public final class InitialFrame extends JFrame
             @Override
             public void windowClosing(WindowEvent e)
             {
-                if(confirmClose() && referenceFile != null)
+                if(confirmClose())
                 {
                     try {
-                        BankMaker.rewriteFile(referenceFile, pane.pane.ba);
+                        if(referenceFile != null)
+                        {
+                            BankMaker.rewriteFile(referenceFile, pane.pane.ba);
+                        }
+                        System.out.println("dfsfsdfa");
+                        logger.add(Log.CLOSE_APPLICATION, null, null);
+                        logger.close();
                     }
                     catch(IOException ex) {
                         throw new RuntimeException(ex);
@@ -215,7 +225,6 @@ public final class InitialFrame extends JFrame
                 }
             }
         });
-
     }
 
     public boolean confirmClose() {
@@ -305,10 +314,13 @@ public final class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                if(pane != null)
-                {
+                if(pane != null) {
                     BankAccount b = new AddBankAccount(frame).showDialog();
-                    pane.pane.requestAdd(b);
+                    if(b != null)
+                    {
+                        pane.pane.requestAdd(b);
+                        logger.add(Log.ADD_ACCOUNT, pane.pane.ba, b);
+                    }
                 }
             }
             
@@ -350,6 +362,7 @@ public final class InitialFrame extends JFrame
                 if(pane != null) {
                     BankAccount b = new DepositDialog(frame, pane.pane.getBankList()).showDialog(null);
                     pane.pane.replaceAccount(b);
+                    logger.add(Log.DEPOSIT, pane.pane.ba, b);
                 }
             }
             
@@ -392,8 +405,10 @@ public final class InitialFrame extends JFrame
             {
                 if(pane != null)
                 {
+                    System.out.println("hello");
                     BankAccount b = new WithdrawDialog(frame, pane.pane.getBankList()).showDialog(null);
                     pane.pane.replaceAccount(b);
+                    logger.add(Log.WITHDRAW, pane.pane.ba, b);
                 }
             }
             
@@ -474,6 +489,7 @@ public final class InitialFrame extends JFrame
                 if(b != null)
                 {
                     createPane(frame, b);
+                    logger.add(Log.ADD_BANK, pane.pane.ba, null);
                 }
             }
 
@@ -517,6 +533,7 @@ public final class InitialFrame extends JFrame
                 {
                     createPane(frame, b);
                     referenceFile = b;
+                    logger.add(Log.OPEN_BANK, pane.pane.ba, null);
                 }
             }
 
@@ -545,7 +562,7 @@ public final class InitialFrame extends JFrame
      */
     private @Intention void createPane(InitialFrame frame, BankMaker b)
     {
-        referenceFile = new File(b.fileTitle);
+        referenceFile = new File(b.getFileTitle());
         pane = b.createBankAccountList(this, referenceFile);
         if(pane != null)
         {
