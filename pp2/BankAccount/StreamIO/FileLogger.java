@@ -138,12 +138,12 @@ public class FileLogger
         {
             case DEPOSIT:
             {
-                logString = "Deposited $" + bank.getAccountNumber() + "," + amount + "," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Deposited $" + amount + "," + bank.getAccountNumber() + "," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             case WITHDRAW:
             {
-                logString = "Withdrawn $" + bank.getAccountNumber() + "," + amount + "," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Withdrawn $" + amount + "," + bank.getAccountNumber() + "," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             default:

@@ -47,9 +47,9 @@ public class WithdrawDialog extends JDialog
         lib = b; // this creates a reference of the list of the BankAccounts when depositing/withdrawing..
         this.frame = frame;
         setModalityType(java.awt.Dialog.ModalityType.APPLICATION_MODAL); // this ensures modality of the jDialog
-        setLocationRelativeTo(frame);
         setSize(new Dimension(500, 350));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+        setLocationRelativeTo(frame);
         setUndecorated(true);
         
         panel = createPanel();

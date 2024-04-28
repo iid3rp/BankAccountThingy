@@ -1,6 +1,7 @@
 package BankAccountThingy.pp2.BankAccount;
 
 import BankAccountThingy.InitialFrame;
+import BankAccountThingy.pp2.BankAccount.StreamIO.ImageMaker;
 import BankAccountThingy.pp2.BankAccount.Utils.DataType;
 import BankAccountThingy.pp2.BankAccount.Utils.TextFilter;
 
@@ -483,7 +484,7 @@ public class AccountInformation extends JPanel
             protected void paintComponent(Graphics g)
             {
                 super.paintComponent(g);
-                g.drawImage(bankAccount.tryImage(bankAccount.getAccountNumber() + "", length), 0, 0, null);
+                g.drawImage(ImageMaker.tryImage(bankAccount, length), 0, 0, null);
             }
         };
         label.setLayout(null);

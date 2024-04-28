@@ -8,6 +8,7 @@ import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.Dialogs.DepositDialog;
 import BankAccountThingy.pp2.BankAccount.Dialogs.EditBankAccount;
 import BankAccountThingy.pp2.BankAccount.Dialogs.WithdrawDialog;
+import BankAccountThingy.pp2.BankAccount.StreamIO.ImageMaker;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Log;
 
@@ -310,7 +311,7 @@ public class BankAccountInterface extends JPanel
             protected void paintComponent(Graphics g) 
             {
                 super.paintComponent(g);
-                g.drawImage(b.tryImage(b.getAccountNumber() + "", 70), 0, 0, getWidth(), getHeight(), null);
+                g.drawImage(ImageMaker.tryImage(b, 70), 0, 0, getWidth(), getHeight(), null);
             }
         };
         label.setLayout(null);

@@ -51,7 +51,10 @@ public class BankAccountPane extends JPanel
         add(pane);
     }
 
-    public BankAccountPane() {}
+    public BankAccountPane()
+    {
+        super();
+    }
 
     private BankAccountListPane createPane(BankAccountList b, InitialFrame frame)
     {
@@ -257,20 +260,36 @@ public class BankAccountPane extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                frame.contentPanel.removeAll();
-                frame.pane = null;
-                frame.contentPanel.repaint();
-                frame.contentPanel.validate();
-                frame.repaint();
-                frame.validate();
-                try {
-                    BankMaker.rewriteFile(frame.getReferenceFile(), pane.ba);
-                    frame.logger.add(Log.CLOSE_BANK, pane.ba, null);
+                if(confirmCloseBank())
+                {
+                    frame.panel.remove(frame.contentPanel);
+                    frame.contentPanel = frame.createContentPanel();
+                    frame.contentPanel.setLocation(200, 0);
+                    frame.panel.add(frame.contentPanel);
+                    frame.contentPanel.repaint();
+                    frame.contentPanel.validate();
+                    frame.repaint();
+                    frame.validate();
+                    try {
+                        BankMaker.rewriteFile(frame.getReferenceFile(), pane.ba);
+                        frame.logger.add(Log.CLOSE_BANK, pane.ba, null);
+                    }
+                    catch(IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    frame.setReferenceFile(null);
                 }
-                catch(IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-                frame.setReferenceFile(null);
+            }
+
+            private boolean confirmCloseBank()
+            {
+                int result = JOptionPane.showConfirmDialog(
+                        frame,
+                        "Are you sure you want to close this bank?",
+                        "Closing Bank",
+                        JOptionPane.YES_NO_OPTION
+                );
+                return result == JOptionPane.YES_OPTION;
             }
 
             @Override

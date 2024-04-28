@@ -56,7 +56,7 @@ public class BankMaker
 
 
     /**
-     * This static method rewrites the contents of a file with information from a provided BankList object.
+     * This static method rewrites the contents of a file with information from a provided BankAccountList object.
      *
      * @param file The File object representing the file to be overwritten.
      * @param ba The BankList object containing the bank data to be written.

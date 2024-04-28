@@ -46,11 +46,21 @@ public final class InitialFrame extends JFrame
     public JPanel panel;
     public JPanel menu;
     public JLabel addAccount;
-    public JPanel contentPanel;
+
+    @Intention(design = "reference point panel")
+    public BankAccountPane contentPanel;
+
+    @Intention(design = "main (empty) panel")
+    public BankAccountPane mainPanel;
+
+    @Intention(design = "panel with bank account list displayed")
     public BankAccountPane pane;
+
     public boolean isDragging;
     public Point offset;
     private File referenceFile;
+
+    private JLabel closeApplication;
 
     public InitialFrame()
     {
@@ -61,6 +71,7 @@ public final class InitialFrame extends JFrame
         add(panel);
         panel.add(menu);
 
+        closeApplication = createCloseApplication();
         contentPanel = createContentPanel();
         contentPanel.setLocation(200, 0);
         panel.add(contentPanel);
@@ -137,13 +148,11 @@ public final class InitialFrame extends JFrame
         return panel;
     }
 
-
-    public JPanel createContentPanel()
+    public BankAccountPane createContentPanel()
     {
-        JPanel panel = new JPanel();
+        BankAccountPane panel = new BankAccountPane();
         panel.setLayout(null);
         panel.setSize(new Dimension(1080, 720));
-        panel.setLocation(new Point(250, 0));
         panel.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -175,13 +184,14 @@ public final class InitialFrame extends JFrame
                 {
                     Point currentMouse = e.getLocationOnScreen();
 
-                    int deltaX = currentMouse.x - offset.x - 250;
+                    int deltaX = currentMouse.x - offset.x - 200;
                     int deltaY = currentMouse.y - offset.y;
 
                     setLocation(deltaX, deltaY);
                 }
             }
         });
+        panel.add(closeApplication);
         return panel;
     }
 
@@ -225,9 +235,9 @@ public final class InitialFrame extends JFrame
                         if(referenceFile != null)
                         {
                             BankMaker.rewriteFile(referenceFile, pane.pane.ba);
+                            logger.add(Log.CLOSE_BANK, pane.pane.ba, null);
                         }
-                        System.out.println("dfsfsdfa");
-                        logger.add(Log.CLOSE_BANK, pane.pane.ba, null);
+                        // System.out.println("log: bank closed"); // debuggers
                         logger.add(Log.CLOSE_APPLICATION, null, null);
                         logger.close();
                     }
@@ -421,11 +431,14 @@ public final class InitialFrame extends JFrame
                 if(pane != null)
                 {
                     System.out.println("hello");
-                    BankAccount b = new WithdrawDialog(frame, pane.pane.getBankList()).showDialog(null);
-                    double amount = b.getBalance();
-                    b = pane.pane.replaceAccount(b);
-                    amount -= b.getBalance();
-                    logger.add(Log.WITHDRAW, pane.pane.ba, b, amount);
+                    BankAccount b = new WithdrawDialog(frame, pane.pane.ba).showDialog(null);
+                    if(b != null)
+                    {
+                        double amount = b.getBalance();
+                        b = pane.pane.replaceAccount(b);
+                        amount -= b.getBalance();
+                        logger.add(Log.WITHDRAW, pane.pane.ba, b, amount);
+                    }
                 }
             }
             
@@ -481,6 +494,46 @@ public final class InitialFrame extends JFrame
                 label.setForeground(Color.WHITE);
                 label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
                 label.setBounds(30, 720 - 160 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
+            }
+        });
+        return label;
+    }
+
+    public JLabel createCloseApplication()
+    {
+        JLabel label = new JLabel();
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        label.setLayout(null);
+        label.setText("X");
+        label.setForeground(Color.RED);
+
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText());
+        int height = metrics.getHeight();
+        label.setBounds(1080 - width - 20, 10, width, height);
+        label.setVisible(true);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if(frame.confirmClose())
+                {
+                    try
+                    {
+                        if(referenceFile != null)
+                        {
+                            BankMaker.rewriteFile(frame.getReferenceFile(), pane.pane.ba);
+                            frame.logger.add(Log.CLOSE_BANK, pane.pane.ba, null);
+                        }
+                        frame.logger.add(Log.CLOSE_APPLICATION, null, null);
+                        frame.logger.close();
+                    }
+                    catch(IOException ex) {
+                        throw new RuntimeException(ex);
+                    }
+                    frame.dispose();
+                }
             }
         });
         return label;

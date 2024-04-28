@@ -24,7 +24,9 @@ public class BankAccountListPane extends JScrollPane
     /**<editor-fold desc="Description">
      * you need to get the panel's preferred size "daw" because that's going
      * to be the reference dimension of the JScrollPane (which is weird but whatever)
-     * xd - derp. REFER THE CONSTRUCTOR BELOW
+     * xd - derp.
+     * <p></p>
+     * REFER THE CONSTRUCTOR BELOW
      *</editor-fold>
      * */
     public BankAccountListPane(BankAccountPane pane, BankAccountList b, InitialFrame frame, Sort sort, SortType type)
@@ -72,7 +74,7 @@ public class BankAccountListPane extends JScrollPane
         container = new JPanel();
         container.setLayout(null);
         container.setLocation(0, 0);
-        container.setBackground(new Color(200, 200, 200));
+        container.setBackground(Color.white);
         container.setDoubleBuffered(true);
     }
 
