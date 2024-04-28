@@ -23,17 +23,23 @@ import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.io.File;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccountList;
+import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
+import BankAccountThingy.pp2.BankAccount.StreamIO.ImageMaker;
+
 public class EditBankAccount extends JDialog
 {
     
     public BankAccount reference;
     public JPanel imageEditor;
+    Image img;
     
     public JTextField firstName;
     public JTextField middleName;
     public JTextField lastName;
     public JLabel accountNumber;
-    
+
+    public BankAccountList ba;
     public JLabel zoomIn;
     public JLabel zoomOut;
     public JLabel removeImage;
@@ -55,9 +61,10 @@ public class EditBankAccount extends JDialog
     public double refY = .5;
     
     private int picWidth, picHeight;
-    public EditBankAccount()
+    public EditBankAccount(BankAccountList list)
     {
         super();
+        ba = list;
         setModalityType(ModalityType.APPLICATION_MODAL); // this ensures modality of the JDialog
         setTitle("Adding a Bank Account");    
         setSize(new Dimension(550, 300));
@@ -123,6 +130,7 @@ public class EditBankAccount extends JDialog
         // a bank account has made and has a picture in the library
         // and try-parse, image thingy and stuff xd..
         // also im dum why did I delete this file come on!! :sob:
+        imageEditor.repaint();
         
         if(confirm)
         {
@@ -131,11 +139,26 @@ public class EditBankAccount extends JDialog
             b.setMiddleName(middleName.getText());
             b.setLastName(lastName.getText());
             b.setAccountNumber(Long.parseLong(accountNumber.getText().replaceAll(" ", "")));
+            try
+            {
+                if(accountPicture != null)
+                {
+                    ImageMaker.createImage(b, accountPicture, getImage(), ba);
+                }
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e);
+            }
             return new BankAccount(b);
         } 
         else return null;
     }
-    
+
+    private Image getImage()
+    {
+        return img;
+    }
+
     private JPanel createPanel()
     {
         JPanel panel = new JPanel();
@@ -185,7 +208,19 @@ public class EditBankAccount extends JDialog
     
     private JPanel createImagePanel()
     {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel()
+        {
+            public @Override void paintComponent(Graphics g)
+            {
+                super.paintComponent(g);
+                try
+                {
+                    Image image = ImageIO.read(new File(BankMaker.picturesNonUnix + ba.getSerial() + "/" + reference.getAccountNumber() + ".png"));
+                    g.drawImage(image, 0, 0, null);
+                }
+                catch(IOException ignored) {}
+            }
+        };
         panel.setLayout(null);
         panel.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
         panel.setBounds(20, 50, 180, 180);
@@ -213,7 +248,7 @@ public class EditBankAccount extends JDialog
             protected void paintComponent(Graphics g)
             {
                 super.paintComponent(g);
-                Image img = i.getScaledInstance((int) (width * multiplier),(int) (height * multiplier), Image.SCALE_SMOOTH);
+                img = i.getScaledInstance((int) (width * multiplier),(int) (height * multiplier), Image.SCALE_SMOOTH);
                 g.drawImage(img, 0, 0, (int) (width * multiplier),(int) (height * multiplier), null);
             }
         };
@@ -542,12 +577,5 @@ public class EditBankAccount extends JDialog
         label.setEnabled(false);
         label.setVisible(true);
         return label;
-    }
-    
-    public static void main(String[] a)
-    {
-        BankAccount h = new BankAccount("k", "l", "m", 1234567890123456L);
-        h = new EditBankAccount().showDialog(h);
-        System.out.print(h);
     }
 }

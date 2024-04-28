@@ -17,6 +17,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBank;
@@ -96,6 +97,7 @@ public final class InitialFrame extends JFrame
         panel.repaint();
 
         setVisible(true);
+        @Intention var x = new File(BankMaker.pictures).mkdirs(); // creates a library of the pictures :3
         logger.add(Log.OPEN_APPLICATION, null, null);
     }
 
@@ -632,20 +634,31 @@ public final class InitialFrame extends JFrame
      */
     private @Intention void createPane(InitialFrame frame, BankMaker b)
     {
-        referenceFile = new File(b.getFileTitle());
+        referenceFile = new File(b.getFileName());
         pane = b.createBankAccountList(this, referenceFile);
         if(pane != null)
         {
             createBankList(); // this will automatically create a bank list for u
+            System.out.println("sddasd");
         }
     }
 
+    /**
+     * 2 @Intention voids in action with 2 different purposes: one that returns BankAccountPane from creating a new Bank,
+     * and the other one from a .csv file. They return the same data type but different options...
+     */
     private @Intention void createPane(InitialFrame frame, File file)
     {
         pane = new BankReader().createListFromBank(this, file);
         if(pane != null)
         {
-            createBankList(); // this will automatically create a bank list for u
+            @Intention(design = "this is where the serialization and security comes with the bank serial thingies")
+            var bankValidation = new File(BankMaker.pictures + pane.pane.ba.getSerial()).exists();
+            if(bankValidation)
+            {
+                createBankList(); // this will automatically create a bank list for u
+            }
+            else JOptionPane.showMessageDialog(frame, "Bank List file invalid.");
         }
     }
 

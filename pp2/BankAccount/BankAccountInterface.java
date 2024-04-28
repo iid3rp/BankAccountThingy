@@ -14,6 +14,7 @@ import BankAccountThingy.pp2.BankAccount.Utils.Log;
 
 public class BankAccountInterface extends JPanel
 {
+    private BankAccountListPane pane;
     @Intention InitialFrame frame;
     public static final int HEIGHT = 100;
     public static int WIDTH = 1080;
@@ -29,6 +30,7 @@ public class BankAccountInterface extends JPanel
     {
         super();
         this.frame = frame;
+        this.pane = pane;
         b = ba;
         initializeComponent(); // for the panel itself.
         
@@ -158,7 +160,7 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount edit = new EditBankAccount().showDialog(ba);
+                BankAccount edit = new EditBankAccount(pane.ba).showDialog(ba);
                 edit = edit == null? ba : edit;
                 pane.requestEdit(edit);
                 frame.logger.add(Log.EDIT_ACCOUNT, pane.ba, edit);
@@ -311,7 +313,7 @@ public class BankAccountInterface extends JPanel
             protected void paintComponent(Graphics g) 
             {
                 super.paintComponent(g);
-                g.drawImage(ImageMaker.tryImage(b, 70), 0, 0, getWidth(), getHeight(), null);
+                g.drawImage(ImageMaker.parseImage(b, pane.ba, 70), 0, 0, getWidth(), getHeight(), null);
             }
         };
         label.setLayout(null);

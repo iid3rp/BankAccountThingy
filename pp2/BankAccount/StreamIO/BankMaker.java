@@ -4,6 +4,7 @@ import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 import java.io.IOException;
 import java.io.File;
@@ -16,9 +17,12 @@ import java.io.FileWriter;
  */
 public class BankMaker 
 {
-    private String title, fileTitle;
+    private String title, fileTitle, fileName;
 
     private static final String[] header = {"First Name", "Middle Name", "Last Name", "Account Number", "Balance"};
+    public static final String pictures = System.getProperty("user.home") + File.separator + "Documents" + File.separator +
+                                           "BankAccount" + File.separator;
+    public static final String picturesNonUnix = pictures.replaceAll("\\u005c", "/");
 
     /** there's difference between the title of the bank and the file name of the bank, bc there are
      * such limitations to the file naming than the title of the bank in the interface of the
@@ -41,10 +45,14 @@ public class BankMaker
         String[] bankInfo = {"Title ->", title, "Serial UID ->", serial + ""};
 
         // Get the directory of the Java file (defaults at Documents folder)
-        String fileName = System.getProperty("user.home") + File.separator + "Documents" + File.separator + fileTitle +".csv";
+        fileName = System.getProperty("user.home") + File.separator + "Documents" + File.separator + fileTitle +".csv";
+
+        @Intention(design = "variable not used in this context")
+        var x = new File(BankMaker.pictures + serial).mkdirs();
+
         try
         {
-            createCSV(fileTitle, bankInfo, header);
+            createCSV(fileName, bankInfo, header);
         } catch (IOException e) { /* ignore the exception */ }
     }
 
@@ -71,13 +79,16 @@ public class BankMaker
             writer.write("Title," + ba.getTitle() + ",Serial UID," + ba.getSerial() + "\n");
             writer.write(String.join(",", header) + "\n");
 
-            for(BankAccount b : ba.ba)
+            if(ba.ba != null)
             {
-                writer.write(b.getFirstName() + "," +
-                                  b.getMiddleName() + "," +
-                                  b.getLastName() + "," +
-                                  b.getAccountNumber() + "," +
-                                  b.getBalance() + "\n");
+                for(BankAccount b : ba.ba)
+                {
+                    writer.write(b.getFirstName() + "," +
+                                      b.getMiddleName() + "," +
+                                      b.getLastName() + "," +
+                                      b.getAccountNumber() + "," +
+                                      b.getBalance() + "\n");
+                }
             }
 
             System.out.println("CSV file created successfully at: " + file.getAbsolutePath());
@@ -97,14 +108,14 @@ public class BankMaker
      */
     public void createCSV(String fileName, String[] bankInfo, String[] header) throws IOException 
     {
-        // try-with-resources method btw :3
-        try(FileWriter writer = new FileWriter(fileName))
-        {
-            writer.write(String.join(",", bankInfo) + "\n");
-            writer.write(String.join(",", header) + "\n");
+        FileWriter writer = new FileWriter(fileName);
 
-            System.out.println("CSV file created successfully at: " + fileName);
-        }
+        writer.write(String.join(",", bankInfo) + "\n");
+        writer.write(String.join(",", header) + "\n");
+
+        System.out.println("CSV file created successfully at: " + fileName);
+        writer.close();
+
     }
 
     /**
@@ -125,8 +136,8 @@ public class BankMaker
         return title;
     }
 
-    public String getFileTitle()
+    public String getFileName()
     {
-        return fileTitle;
+        return fileName;
     }
 }

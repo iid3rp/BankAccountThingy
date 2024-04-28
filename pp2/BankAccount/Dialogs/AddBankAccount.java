@@ -1,4 +1,5 @@
 package BankAccountThingy.pp2.BankAccount.Dialogs;
+import java.awt.*;
 import java.awt.event.*;
 import java.util.Random;
 import javax.imageio.ImageIO;
@@ -10,27 +11,24 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
-import java.awt.Image;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Cursor;
-import java.awt.FontMetrics;
-import java.awt.Color;
-import java.awt.Graphics;
 import java.io.IOException;
 import java.io.File;
 
 import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
+import BankAccountThingy.pp2.BankAccount.StreamIO.ImageMaker;
 
 public class AddBankAccount extends JDialog
 {
+    private final InitialFrame frame;
     private boolean result;
+
+    private BufferedImage image;
+    private Image img;
     
-    
+    private File accountImage;
     public JPanel imageEditor;
     
     public JTextField firstName;
@@ -64,6 +62,7 @@ public class AddBankAccount extends JDialog
     public AddBankAccount(InitialFrame frame)
     {
         super();
+        this.frame = frame;
         setModalityType(ModalityType.APPLICATION_MODAL); // this ensures modallity of the jdialog
         setTitle("Adding a Bank Account");    
         setSize(new Dimension(550, 300));
@@ -113,7 +112,7 @@ public class AddBankAccount extends JDialog
         
     }
     
-    public BankAccount showDialog() 
+    public BankAccount showDialog()
     {
         setVisible(true);
         if(confirm)
@@ -123,11 +122,26 @@ public class AddBankAccount extends JDialog
             b.setMiddleName(middleName.getText());
             b.setLastName(lastName.getText());
             b.setAccountNumber(Long.parseLong(accountNumber.getText().replaceAll(" ", "")));
+            try
+            {
+                if(accountPicture != null)
+                {
+                    ImageMaker.createImage(b, accountPicture, getImage(), frame.pane.pane.ba);
+                }
+            }
+            catch(IOException e) {
+                throw new RuntimeException(e);
+            }
             return new BankAccount(b);
         } 
         else return null;
     }
-    
+
+    private Image getImage() throws IOException
+    {
+        return img;
+    }
+
     private JPanel createPanel()
     {
         JPanel panel = new JPanel();
@@ -191,8 +205,7 @@ public class AddBankAccount extends JDialog
     // also create zooming in/out properties...
     private JLabel createImageEditor(BufferedImage i)
     {
-        System.out.println(i.getWidth() + " "+  i.getHeight());
-        
+        // System.out.println(i.getWidth() + " "+  i.getHeight());
         double ratio = (double) Math.min(i.getWidth(), i.getHeight()) / 180;
         int width = (int) (i.getWidth() / ratio);  
         int height = (int) (i.getHeight() / ratio);
@@ -205,8 +218,8 @@ public class AddBankAccount extends JDialog
             protected void paintComponent(Graphics g)
             {
                 super.paintComponent(g);
-                Image img = i.getScaledInstance((int) (width * mult),(int) (height * mult), Image.SCALE_SMOOTH); 
-                g.drawImage(i, 0, 0, (int) (width * mult),(int) (height * mult), null);
+                img = i.getScaledInstance((int) (width * mult),(int) (height * mult), Image.SCALE_SMOOTH);
+                g.drawImage(img, 0, 0, (int) (width * mult),(int) (height * mult), null);
             }
         };
         label.setLayout(null);
@@ -260,14 +273,13 @@ public class AddBankAccount extends JDialog
                     Point mouseLocation = e.getLocationOnScreen();
                     int newX = mouseLocation.x - parentContainerLocation.x - offset.x;
                     int newY = mouseLocation.y - parentContainerLocation.y - offset.y;
-                    
                     newX = newX > 0? 0
                          : Math.max(newX, imageEditor.getWidth() - label.getWidth());
                     newY = newY > 0? 0
                          : Math.max(newY, imageEditor.getHeight() - label.getHeight());
                     refX = (Math.abs(newX) + ((double) imageEditor.getWidth() / 2)) / (width * mult);
                     refY = (Math.abs(newY) + ((double) imageEditor.getWidth() / 2)) / (height * mult);
-                    System.out.println(refX + ", " + refY);
+                    // System.out.println(refX + ", " + refY);
                     label.setLocation(newX, newY);
                 }
             }
@@ -298,7 +310,7 @@ public class AddBankAccount extends JDialog
                 // System.out.println(mult); // debug;
                 double zoomedWidth = picWidth * mult;
                 double zoomedHeight = picHeight * mult; 
-                System.out.print(zoomedWidth + " " + zoomedHeight + " " + picWidth + " " + picHeight); //debug
+                // System.out.print(zoomedWidth + " " + zoomedHeight + " " + picWidth + " " + picHeight); //debug
             
                 double xOffset = (imageEditor.getWidth() - zoomedWidth) * refX;
                 double yOffset = (imageEditor.getWidth() - zoomedHeight) * refY;
@@ -338,8 +350,6 @@ public class AddBankAccount extends JDialog
     
     private void fileChoosing()
     {
-        BufferedImage image;
-
         // ... file chooser setup ...
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Image Files", "jpg", "png", "jpeg");
@@ -351,12 +361,12 @@ public class AddBankAccount extends JDialog
         if (result == JFileChooser.APPROVE_OPTION) 
         {
             // Get the selected file
-            File selectedFile = fileChooser.getSelectedFile();
+            accountImage = fileChooser.getSelectedFile();
                 
             // Load the selected image file
             try 
             {
-                image = ImageIO.read(selectedFile);
+                image = ImageIO.read(accountImage);
                 accountPicture = createImageEditor(image); // Initialize the image editor
                 if(imageEditor.getComponentCount() == 0) // checking if the panel is empty...
                 {

@@ -16,7 +16,6 @@ import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
-import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 public class AddBank extends JDialog
 {
@@ -334,46 +333,18 @@ public class AddBank extends JDialog
     private String generateNumber()
     {
         StringBuilder str  = new StringBuilder("1234");
-        do {
-            for(int i = 0; i < 12; i++)
-            {
-                if(i == 0)
-                {
-                    str.append(rand.nextInt(9) + 1);
-                }
-                else
-                {
-                    str.append(rand.nextInt(10));
-                }
-            }
-        } while(isValidCreditCardNumber(str.toString()));
-        return str.toString();
-    }
-
-    @Intention(design = "generates a credit card number using Luhn's algorithm:" +
-                        "checks every time if the number is valid until it" +
-                        "generates a valid number..")
-    private boolean isValidCreditCardNumber(String number) {
-
-        if (number == null || number.isEmpty() || !number.matches("\\d+")) {
-            return false;
-        }
-        int sum = 0;
-        boolean isSecondDigit = false;
-        for (int i = number.length() - 1; i >= 0; i--)
+        for(int i = 0; i < 12; i++)
         {
-            int digit = Character.getNumericValue(number.charAt(i));
-
-            if (isSecondDigit) {
-                digit = digit * 2;
-                if (digit > 9) {
-                    digit = digit - 10 + 1;
-                }
+            if(i == 0)
+            {
+                str.append(rand.nextInt(9) + 1);
             }
-            sum += digit;
-            isSecondDigit = !isSecondDigit;
+            else
+            {
+                str.append(rand.nextInt(10));
+            }
         }
-        return (sum % 10 == 0);
+        return str.toString();
     }
     
     public static void main(String[] a)
