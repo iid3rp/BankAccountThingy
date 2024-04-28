@@ -1,10 +1,22 @@
 package BankAccountThingy;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
-
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBank;
@@ -215,6 +227,7 @@ public final class InitialFrame extends JFrame
                             BankMaker.rewriteFile(referenceFile, pane.pane.ba);
                         }
                         System.out.println("dfsfsdfa");
+                        logger.add(Log.CLOSE_BANK, pane.pane.ba, null);
                         logger.add(Log.CLOSE_APPLICATION, null, null);
                         logger.close();
                     }
@@ -361,8 +374,10 @@ public final class InitialFrame extends JFrame
             {
                 if(pane != null) {
                     BankAccount b = new DepositDialog(frame, pane.pane.getBankList()).showDialog(null);
-                    pane.pane.replaceAccount(b);
-                    logger.add(Log.DEPOSIT, pane.pane.ba, b);
+                    double amount = b.getBalance();
+                    b = pane.pane.replaceAccount(b);
+                    amount -= b.getBalance();
+                    logger.add(Log.DEPOSIT, pane.pane.ba, b, amount);
                 }
             }
             
@@ -407,8 +422,10 @@ public final class InitialFrame extends JFrame
                 {
                     System.out.println("hello");
                     BankAccount b = new WithdrawDialog(frame, pane.pane.getBankList()).showDialog(null);
-                    pane.pane.replaceAccount(b);
-                    logger.add(Log.WITHDRAW, pane.pane.ba, b);
+                    double amount = b.getBalance();
+                    b = pane.pane.replaceAccount(b);
+                    amount -= b.getBalance();
+                    logger.add(Log.WITHDRAW, pane.pane.ba, b, amount);
                 }
             }
             

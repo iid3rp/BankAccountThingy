@@ -1,9 +1,14 @@
 package BankAccountThingy.pp2.BankAccount.StreamIO;
 import BankAccountThingy.pp2.BankAccount.BankAccount;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Log;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -30,7 +35,7 @@ public class FileLogger
     // APPOPPRIATING THIS CODE IS AGAINST THE ETHICS CODE!!
     // no using of AI was made here...
     private final String loggerString = System.getProperty("user.home") + File.separator + "Documents" + File.separator + "logger.csv";
-    private final String header = "Account Number (Bank Account),Logging Detail,Bank Name,Date and Time\n";
+    private final String header = "Logging Detail,Account Number (Bank Account),Bank Name,Date and Time\n";
     private FileWriter logger;
     private String[] logs;
     private int size;
@@ -68,7 +73,7 @@ public class FileLogger
         return true;
     }
 
-    public boolean add(Log log, BankAccountList list, BankAccount bank)
+    public @Intention boolean add(Log log, BankAccountList list, BankAccount bank)
     {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy | hh:mm:ss a.");
@@ -78,41 +83,41 @@ public class FileLogger
         {
             case OPEN_APPLICATION:
             {
-                logString = ",Opened the application,," + currentDateTime + "\n";
+                logString = "Opened the application,,," + currentDateTime + "\n";
                 break;
             }
             case CLOSE_APPLICATION:
             {
-                logString = ",Closed the applicatiom,," + currentDateTime + "\n";
+                logString = "Closed the applicatiom,,," + currentDateTime + "\n";
                 break;
             }
             case OPEN_BANK:
             {
-                logString = ",Opened a bank," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Opened a bank,," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             case ADD_BANK:
             {
-                logString = ",Created a bank," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Created a bank,," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             case ADD_ACCOUNT:
             {
-                logString = bank.getAccountNumber() + ",Added an account," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Added an account," + bank.getAccountNumber() + "," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             case EDIT_ACCOUNT:
             {
-                logString = bank.getAccountNumber() + ",Edited an account," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Edited an account," + bank.getAccountNumber() + "," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             case DELETE_ACCOUNT:
             {
-                logString = bank.getAccountNumber() + ",Deleted bank account," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Deleted bank account," + bank.getAccountNumber() + "," +  list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             case CLOSE_BANK: {
-                logString = ",Closed bank," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Closed bank,," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             default:
@@ -122,9 +127,10 @@ public class FileLogger
         return add(logString);
     }
 
-    public boolean add(Log log, BankAccountList list, BankAccount bank, double amount)
+    public @Intention boolean add(Log log, BankAccountList list, BankAccount bank, double amount)
     {
         LocalDateTime now = LocalDateTime.now();
+        amount = Math.abs(amount);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy | hh:mm:ss a.");
         String currentDateTime = formatter.format(now);
         String logString;
@@ -132,12 +138,12 @@ public class FileLogger
         {
             case DEPOSIT:
             {
-                logString = bank.getAccountNumber() + ",Deposited " + amount + "," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Deposited $" + bank.getAccountNumber() + "," + amount + "," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             case WITHDRAW:
             {
-                logString = bank.getAccountNumber() + ",Withdrawn " + amount + "," + list.getTitle() + "," + currentDateTime + "\n";
+                logString = "Withdrawn $" + bank.getAccountNumber() + "," + amount + "," + list.getTitle() + "," + currentDateTime + "\n";
                 break;
             }
             default:

@@ -313,6 +313,7 @@ public class BankAccountPane extends JPanel
                     try
                     {
                         BankMaker.rewriteFile(frame.getReferenceFile(), pane.ba);
+                        frame.logger.add(Log.CLOSE_BANK, pane.ba, null);
                         frame.logger.add(Log.CLOSE_APPLICATION, null, null);
                         frame.logger.close();
                         System.out.println("fadkslakjd");

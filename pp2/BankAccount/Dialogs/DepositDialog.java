@@ -380,10 +380,12 @@ public class DepositDialog extends JDialog
         if((moneyHandler.getText().equals("Enter Amount: [$]") || moneyHandler.getText().isEmpty()))
         {
             amount.setText("$0.00");
+            addInterest.setSelected(false);
         }
         else
         {
             double moneyAmount = Double.parseDouble(moneyHandler.getText());
+            addInterest.setSelected(moneyAmount >= 1000);
             totalAmount = moneyAmount * (addInterest.isSelected() ? (1 + BankAccount.getInterestRate()) : 1);
             // Format the total amount like currency
             String formattedAmount = String.format("$%.2f", totalAmount);

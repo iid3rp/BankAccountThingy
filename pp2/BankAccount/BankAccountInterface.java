@@ -117,10 +117,12 @@ public class BankAccountInterface extends JPanel
             {
                 double currentBalance = ba.getBalance();
                 BankAccount edit = new WithdrawDialog(frame, pane.getBankList()).showDialog(ba);
-                edit = edit == null? ba : edit;
-                currentBalance -= edit.getBalance();
-                pane.requestWithdraw(edit);
-                frame.logger.add(Log.WITHDRAW, pane.ba, edit, currentBalance);
+                if(edit != null)
+                {
+                    currentBalance -= edit.getBalance();
+                    pane.requestWithdraw(edit);
+                    frame.logger.add(Log.WITHDRAW, pane.ba, edit, currentBalance);
+                }
             }
 
             @Override
@@ -158,7 +160,7 @@ public class BankAccountInterface extends JPanel
                 BankAccount edit = new EditBankAccount().showDialog(ba);
                 edit = edit == null? ba : edit;
                 pane.requestEdit(edit);
-                frame.logger.add(Log.EDIT_ACCOUNT, pane.ba, null);
+                frame.logger.add(Log.EDIT_ACCOUNT, pane.ba, edit);
             }
 
             @Override

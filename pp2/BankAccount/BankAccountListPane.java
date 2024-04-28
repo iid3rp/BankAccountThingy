@@ -159,16 +159,21 @@ public class BankAccountListPane extends JScrollPane
         }
     }
     
-    public void replaceAccount(BankAccount b)
+    public BankAccount replaceAccount(BankAccount b)
     {
-        for(int i = 0; i < ba.ba.length; i++)
+        if(b != null)
         {
-            if(b.getAccountNumber() == ba.ba[i].getAccountNumber())
+            for(int i = 0; i < ba.ba.length; i++)
             {
-                ba.ba[i] = b;
+                if(b.getAccountNumber() == ba.ba[i].getAccountNumber())
+                {
+                    ba.ba[i] = b;
+                }
             }
+            restore();
+            return b;
         }
-        restore();
+        else return null;
     }
     
     public void restore()
