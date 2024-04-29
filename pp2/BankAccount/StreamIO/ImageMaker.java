@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 
 public class ImageMaker
 {
@@ -19,7 +19,7 @@ public class ImageMaker
     /**
      * optional: mag-kuha ug image sa BankAccount with the use of the bank account's number as the file name:
      */
-    public static BufferedImage parseImage(BankAccount bank, BankAccountList list, int length)
+    public static BufferedImage parseImage(BankAccount2 bank, BankAccountList list, int length)
     {
         BufferedImage bf = new BufferedImage(length, length, BufferedImage.TYPE_INT_ARGB);
         try
@@ -27,7 +27,7 @@ public class ImageMaker
             @Intention(design = "Apparently, it throws an IOException bc the file readers cannot" +
                     "be read when using File.separator for some reason... i guess we go hard-code..")
             File path = new File(BankMaker.picturesNonUnix + list.getSerial() + "/" + bank.getAccountNumber() + ".png");
-            URL defaultImageURL = Objects.requireNonNull(BankAccount.class.getResource("Resources/default-image.jpg"));
+            URL defaultImageURL = Objects.requireNonNull(BankAccount2.class.getResource("Resources/default-image.jpg"));
 
             Image image =  path.exists() ?
                     ImageIO.read(path) : ImageIO.read(defaultImageURL);
@@ -48,7 +48,7 @@ public class ImageMaker
         @Intention(design = "Apparently, it throws an IOException bc the file [blob-reference] cannot" +
                 "be read when using File.separator for some reason... i guess we go hard-code..")
         BufferedImage image = ImageIO.read(new File(Objects.requireNonNull(
-                BankAccount.class.getResource("Resources/blob-reference.png")).getPath()));
+                BankAccount2.class.getResource("Resources/blob-reference.png")).getPath()));
 
         Graphics2D g2d = b.createGraphics();
         g2d.drawImage(image, 0, 0, null);
@@ -57,7 +57,7 @@ public class ImageMaker
         g2d.dispose();
     }
 
-    public static void createImage(BankAccount bank, JLabel label, Image image, BankAccountList list) throws IOException
+    public static void createImage(BankAccount2 bank, JLabel label, Image image, BankAccountList list) throws IOException
     {
         int x = label.getX();
         int y = label.getY();

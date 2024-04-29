@@ -5,7 +5,7 @@ import BankAccountThingy.pp2.BankAccount.Utils.SortType;
 public class BankAccountList
 {
     private int size;
-    public BankAccount[] ba; // this is public for certain reasons...
+    public BankAccount2[] ba; // this is public for certain reasons...
     private String title; // this will be the reference of the title of the list...
     private long serial; // the serial code to be used within the bank list itself...
     
@@ -27,15 +27,15 @@ public class BankAccountList
     }
     
     // addition sa bank account sa array
-    public boolean add(BankAccount b)
+    public boolean add(BankAccount2 b)
     {
         if(ba == null)
         {
-            ba = new BankAccount[++size];
+            ba = new BankAccount2[++size];
         }
         else
         {
-            BankAccount[] reference = new BankAccount[++size];
+            BankAccount2[] reference = new BankAccount2[++size];
             System.arraycopy(ba, 0, reference, 0, ba.length);
             ba = reference;
         }
@@ -45,12 +45,12 @@ public class BankAccountList
     
     // addition sa bank account sa array (but including index to specifically put it)
     @Deprecated
-    public boolean add(int index, BankAccount b)
+    public boolean add(int index, BankAccount2 b)
     {
         if(index >= 0 || index <= size)
         {
             // ibutang sa ang existing inputs first sa reference
-            BankAccount[] reference = new BankAccount[++size];
+            BankAccount2[] reference = new BankAccount2[++size];
             if(index >= 0) System.arraycopy(ba, 0, reference, 0, index);
             
             // and then add tong index based sa katong part
@@ -66,7 +66,7 @@ public class BankAccountList
     }
     
     // removes the part...
-    public void removeBankAccount(BankAccount b)
+    public void removeBankAccount(BankAccount2 b)
     {
         // mangita siya sa BankAccount, one by one, in order.
         for(int i = 0; i < size; i++)
@@ -85,7 +85,7 @@ public class BankAccountList
     {
         if(index >= 0 && index < size)
         {
-            BankAccount[] reference = new BankAccount[--size];
+            BankAccount2[] reference = new BankAccount2[--size];
             // iterate the first loops of the existing ones
             System.arraycopy(ba, 0, reference, 0, index);
             // then i-skip tong index na i-delete, then iterate and add the rest
@@ -99,10 +99,10 @@ public class BankAccountList
     }
     
     // sorting the whole stuff based on the enum Sort
-    public BankAccount[] sort(Sort s, SortType t)
+    public BankAccount2[] sort(Sort s, SortType t)
     {
         // the reference getting to actually return as a BankAccount[]
-        BankAccount[] ref = ba;
+        BankAccount2[] ref = ba;
 
         if(ref != null)
         {
@@ -132,7 +132,7 @@ public class BankAccountList
                     {
                         // bali-balihon ang mga classes to sort the way we wanted xd
                         // pp1 days ww.,.,.,.,,,..,
-                        BankAccount temp = ref[j];
+                        BankAccount2 temp = ref[j];
                         ref[j] = ref[j + 1];
                         ref[j + 1] = temp;
                     }
@@ -143,7 +143,7 @@ public class BankAccountList
     }
 
     @Deprecated
-    public void replace(BankAccount b)
+    public void replace(BankAccount2 b)
     {
         for(int i = 0; i < ba.length; i++)
         {
@@ -162,9 +162,9 @@ public class BankAccountList
     
     // same sa searchByName() na method, pero dapat exact number ang ibutang...
     // not @Deprecated anymore
-    public BankAccount searchByNumber(long num)
+    public BankAccount2 searchByNumber(long num)
     {
-        for(BankAccount b : ba)
+        for(BankAccount2 b : ba)
         {
             if(b != null)
             {
@@ -199,7 +199,7 @@ public class BankAccountList
     
     // search sa index
     @Deprecated
-    public BankAccount searchByIndex(int i)
+    public BankAccount2 searchByIndex(int i)
     {
         if(i >= 0 && i <= size)
         {
@@ -210,9 +210,9 @@ public class BankAccountList
     
     // search sa pangalan
     @Deprecated
-    public BankAccount searchByName(String name)
+    public BankAccount2 searchByName(String name)
     {
-        for(BankAccount b : ba)
+        for(BankAccount2 b : ba)
         {
             if(b != null) // pag dili null ang array (para dili mag error)
             {
@@ -236,7 +236,7 @@ public class BankAccountList
     
     // getting the ArrayList<BankAccount>
     @Deprecated // reason: intentionally making the list be public..
-    public BankAccount[] getList()
+    public BankAccount2[] getList()
     {
         return this.ba;
     }

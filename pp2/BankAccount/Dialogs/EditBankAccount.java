@@ -22,7 +22,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.io.File;
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
 import BankAccountThingy.pp2.BankAccount.StreamIO.ImageMaker;
@@ -30,7 +30,7 @@ import BankAccountThingy.pp2.BankAccount.StreamIO.ImageMaker;
 public class EditBankAccount extends JDialog
 {
     
-    public BankAccount reference;
+    public BankAccount2 reference;
     public JPanel imageEditor;
     Image img;
     
@@ -50,7 +50,9 @@ public class EditBankAccount extends JDialog
     public boolean isDragging;
     
     private boolean confirm = false;
-    
+    private Image image;
+    private boolean isImageRemoved = false;
+
     private enum zoom
     {
         IN, OUT
@@ -66,7 +68,7 @@ public class EditBankAccount extends JDialog
         super();
         ba = list;
         setModalityType(ModalityType.APPLICATION_MODAL); // this ensures modality of the JDialog
-        setTitle("Adding a Bank Account");    
+        setTitle("Editing a Bank Account");
         setSize(new Dimension(550, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -99,7 +101,7 @@ public class EditBankAccount extends JDialog
         panel.add(createCancel(getHeight() - 50, "Cancel"));
         
         
-        panel.add(createTitle(20, 20, 10, "Add Account"));
+        panel.add(createTitle(20, 20, 10, "Edit Account"));
         panel.add(createTitle(15, 220, 150, "<html> Account Number: <br> [you cannot change it once made.]"));
         accountNumber = createNumber();
         panel.add(accountNumber);
@@ -116,13 +118,14 @@ public class EditBankAccount extends JDialog
         
     }
     
-    public BankAccount showDialog(BankAccount edit) 
+    public BankAccount2 showDialog(BankAccount2 edit)
     {
-        reference = new BankAccount(edit);
+        reference = new BankAccount2(edit);
         firstName.setText(edit.getFirstName());
         middleName.setText(edit.getMiddleName());
         lastName.setText(edit.getLastName());
         accountNumber.setText(reference.getAccountNumber() + "");
+        double balance = edit.getBalance();
         setVisible(true);
         
         // empty spot must be done here
@@ -134,22 +137,27 @@ public class EditBankAccount extends JDialog
         
         if(confirm)
         {
-            BankAccount b = new BankAccount();
+            BankAccount2 b = new BankAccount2();
             b.setFirstName(firstName.getText());
             b.setMiddleName(middleName.getText());
             b.setLastName(lastName.getText());
             b.setAccountNumber(Long.parseLong(accountNumber.getText().replaceAll(" ", "")));
+            b.setBalance(balance);
             try
             {
                 if(accountPicture != null)
                 {
                     ImageMaker.createImage(b, accountPicture, getImage(), ba);
                 }
+                else if(image == null)
+                {
+                    var ignored = new File(BankMaker.pictures + File.separator + ba.getSerial() + File.separator + b.getAccountNumber() + ".png").delete();
+                }
             }
             catch(IOException e) {
                 throw new RuntimeException(e);
             }
-            return new BankAccount(b);
+            return new BankAccount2(b);
         } 
         else return null;
     }
@@ -215,7 +223,7 @@ public class EditBankAccount extends JDialog
                 super.paintComponent(g);
                 try
                 {
-                    Image image = ImageIO.read(new File(BankMaker.picturesNonUnix + ba.getSerial() + "/" + reference.getAccountNumber() + ".png"));
+                    image = isImageRemoved? null : ImageIO.read(new File(BankMaker.picturesNonUnix + ba.getSerial() + "/" + reference.getAccountNumber() + ".png"));
                     g.drawImage(image, 0, 0, null);
                 }
                 catch(IOException ignored) {}
@@ -378,6 +386,12 @@ public class EditBankAccount extends JDialog
                 if(accountPicture != null)
                 {
                     imageEditor.remove(accountPicture);
+                    imageEditor.repaint();
+                }
+                else
+                {
+                    isImageRemoved = true;
+                    image = null;
                     imageEditor.repaint();
                 }
             }

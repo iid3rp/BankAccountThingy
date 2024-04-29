@@ -89,7 +89,7 @@ public class BankAccountListPane extends JScrollPane
     {
         container.removeAll();
         int index = 0; 
-        for(BankAccount bank : ba.ba)
+        for(BankAccount2 bank : ba.ba)
         {
             if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getFirstName().toLowerCase().trim())) || 
                (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getMiddleName().toLowerCase().trim())) ||
@@ -110,13 +110,13 @@ public class BankAccountListPane extends JScrollPane
         validate();
     }
 
-    public void requestAdd(BankAccount b)
+    public void requestAdd(BankAccount2 b)
     {
         ba.add(b);
         restore();
     }
 
-    public void requestEdit(BankAccount b)
+    public void requestEdit(BankAccount2 b)
     {
         for(int i = 0; i < ba.ba.length; i++)
         {
@@ -129,19 +129,19 @@ public class BankAccountListPane extends JScrollPane
     }
 
     @Intention(reason = "Different method purposes")
-    public void requestDeposit(BankAccount b)
+    public void requestDeposit(BankAccount2 b)
     {
         requestEdit(b);
     }
 
     @Intention(reason = "Different method purposes")
-    public void requestWithdraw(BankAccount b)
+    public void requestWithdraw(BankAccount2 b)
     {
         requestEdit(b);
     }
 
 
-    public void requestRemove(BankAccount b)
+    public void requestRemove(BankAccount2 b)
     {
         ba.removeBankAccount(b);
         restore();
@@ -152,7 +152,7 @@ public class BankAccountListPane extends JScrollPane
         int index = 0; // iterator
         if(ba.ba != null)
         {
-            for(BankAccount bank : ba.sort(currentSort, currentSortType))
+            for(BankAccount2 bank : ba.sort(currentSort, currentSortType))
             {
                 BankAccountInterface bankInterface = new BankAccountInterface(frame, bank, this);
                 bankInterface.setBounds(0, ((bankInterface.getHeight() + 1) * index++), bankInterface.getWidth(), bankInterface.getHeight());
@@ -161,7 +161,7 @@ public class BankAccountListPane extends JScrollPane
         }
     }
     
-    public BankAccount replaceAccount(BankAccount b)
+    public BankAccount2 replaceAccount(BankAccount2 b)
     {
         if(b != null)
         {

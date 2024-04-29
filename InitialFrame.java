@@ -18,7 +18,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBank;
 import BankAccountThingy.pp2.BankAccount.Dialogs.AddBankAccount;
@@ -233,7 +233,8 @@ public final class InitialFrame extends JFrame
             {
                 if(confirmClose())
                 {
-                    try {
+                    try
+                    {
                         if(referenceFile != null)
                         {
                             BankMaker.rewriteFile(referenceFile, pane.pane.ba);
@@ -256,7 +257,7 @@ public final class InitialFrame extends JFrame
         int result = JOptionPane.showConfirmDialog(
                 this,
                 "Are you sure you want to close?",
-                "Confirmation",
+                "Closing Application",
                 JOptionPane.YES_NO_OPTION
         );
         return result == JOptionPane.YES_OPTION;
@@ -340,7 +341,7 @@ public final class InitialFrame extends JFrame
             public void mouseClicked(MouseEvent e)
             {
                 if(pane != null) {
-                    BankAccount b = new AddBankAccount(frame).showDialog();
+                    BankAccount2 b = new AddBankAccount(frame).showDialog();
                     if(b != null)
                     {
                         pane.pane.requestAdd(b);
@@ -385,7 +386,7 @@ public final class InitialFrame extends JFrame
             public void mouseClicked(MouseEvent e)
             {
                 if(pane != null) {
-                    BankAccount b = new DepositDialog(frame, pane.pane.getBankList()).showDialog(null);
+                    BankAccount2 b = new DepositDialog(frame, pane.pane.getBankList()).showDialog(null);
                     double amount = b.getBalance();
                     b = pane.pane.replaceAccount(b);
                     amount -= b.getBalance();
@@ -433,7 +434,7 @@ public final class InitialFrame extends JFrame
                 if(pane != null)
                 {
                     System.out.println("hello");
-                    BankAccount b = new WithdrawDialog(frame, pane.pane.ba).showDialog(null);
+                    BankAccount2 b = new WithdrawDialog(frame, pane.pane.ba).showDialog(null);
                     if(b != null)
                     {
                         double amount = b.getBalance();
@@ -454,7 +455,7 @@ public final class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
         label.setLayout(null);
-        label.setText("Interest: " + ((int) (BankAccount.getInterestRate() * 100)) + "%");
+        label.setText("Interest: " + ((int) (BankAccount2.getInterestRate() * 100)) + "%");
         label.setForeground(Color.WHITE);
         Dimension d = label.getPreferredSize();
         label.setBounds(30, 720 - 160 - (int) d.getHeight(), (int) d.getWidth() + 30, (int) d.getHeight());
@@ -471,8 +472,8 @@ public final class InitialFrame extends JFrame
                     {
                         String reference = JOptionPane.showInputDialog(frame,"Put Interest Rate [%]");
                         int interest = Integer.parseInt(reference);
-                        BankAccount.setInterestRate((double) interest / 100d);
-                        label.setText("Interest: " + ((int) (BankAccount.getInterestRate() * 100)) + "%");
+                        BankAccount2.setInterestRate((double) interest / 100d);
+                        label.setText("Interest: " + ((int) (BankAccount2.getInterestRate() * 100)) + "%");
                         confirm = true;
                     }
                     catch(NumberFormatException ex)

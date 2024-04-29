@@ -1,5 +1,5 @@
 package BankAccountThingy.pp2.BankAccount.StreamIO;
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Log;
@@ -25,7 +25,7 @@ import java.time.format.DateTimeFormatter;
  *  <p></p>
  * the file string will always be:
  * <p></p>
- * {@code  C:\Users\<your_username_goes_here>\Documents\logger.txt}
+ * {@code  C:\Users\<your_username_goes_here>\Documents\logger.csv}
  * <p></p>
  * @author iid3rp
  */
@@ -73,7 +73,7 @@ public class FileLogger
         return true;
     }
 
-    public @Intention boolean add(Log log, BankAccountList list, BankAccount bank)
+    public @Intention boolean add(Log log, BankAccountList list, BankAccount2 bank)
     {
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy | hh:mm:ss a.");
@@ -127,7 +127,7 @@ public class FileLogger
         return add(logString);
     }
 
-    public @Intention boolean add(Log log, BankAccountList list, BankAccount bank, double amount)
+    public @Intention boolean add(Log log, BankAccountList list, BankAccount2 bank, double amount)
     {
         LocalDateTime now = LocalDateTime.now();
         amount = Math.abs(amount);

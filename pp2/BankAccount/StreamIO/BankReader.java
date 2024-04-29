@@ -1,8 +1,10 @@
 package BankAccountThingy.pp2.BankAccount.StreamIO;
 
 import java.io.*;
+import java.util.InputMismatchException;
+
 import BankAccountThingy.InitialFrame;
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
 
@@ -39,6 +41,7 @@ public class BankReader
     public BankAccountPane createListFromBank(InitialFrame frame, File file)
     {
         try {
+            // FileWriter ug BufferedReader
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String[] stuff = reader.readLine().split(",");
 
@@ -57,12 +60,12 @@ public class BankReader
                 String[] items = line.split(",");
                 long number = Long.parseLong(items[3]);
                 double balance = Double.parseDouble(items[4]);
-                list.add(new BankAccount(items[0], items[1], items[2], number, balance));
+                list.add(new BankAccount2(items[0], items[1], items[2], number, balance));
                 line = reader.readLine();
             }
             return new BankAccountPane(frame, list);
         }
-        catch(IOException | ArrayIndexOutOfBoundsException e) {
+        catch(InputMismatchException | IOException | ArrayIndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(frame, "File Invalid.");
             return null;
         }

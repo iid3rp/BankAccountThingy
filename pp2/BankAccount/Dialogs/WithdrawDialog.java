@@ -16,7 +16,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 import BankAccountThingy.InitialFrame;
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.Utils.DataType;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
@@ -24,7 +24,7 @@ import BankAccountThingy.pp2.BankAccount.Utils.Region;
 import BankAccountThingy.pp2.BankAccount.Utils.TextFilter;
 public class WithdrawDialog extends JDialog
 {
-    private BankAccount allocation; // this will be reference of the BankAccount to be withdrawn :#
+    private BankAccount2 allocation; // this will be reference of the BankAccount to be withdrawn :#
     public JPanel panel;
     @Intention InitialFrame frame;
      
@@ -80,11 +80,11 @@ public class WithdrawDialog extends JDialog
     }
     
     // depositing method (double for certain reasons)
-    public BankAccount showDialog(BankAccount b) 
+    public BankAccount2 showDialog(BankAccount2 b)
     {
         if(b != null)
         {
-            allocation = new BankAccount(b); // deep copying ig
+            allocation = new BankAccount2(b); // deep copying ig
             // modify if the bank is not null lol
             accountNumber.setText(String.valueOf(b.getAccountNumber()));
             accountNumber.setEnabled(false);
@@ -293,7 +293,7 @@ public class WithdrawDialog extends JDialog
         catch(NumberFormatException e) { /* ignore exception */ }
         finally
         {
-            BankAccount b = lib.searchByNumber(num);
+            BankAccount2 b = lib.searchByNumber(num);
             if(b == null)
             {
                 bankIdentifier.setText("No Bank Account was found.");
@@ -304,7 +304,7 @@ public class WithdrawDialog extends JDialog
             {
                 bankIdentifier.setText("<html> Bank Account identified as <b>'" + b.getAccountName() + "'</b>");
                 checkBalance.setText("<html>Your current balance is $<b>" + b.getBalance() +"</b></html>");
-                allocation = new BankAccount(b); // deep copying
+                allocation = new BankAccount2(b); // deep copying
                 moneyHandler.setEnabled(true);
             }
         }
@@ -448,10 +448,10 @@ public class WithdrawDialog extends JDialog
     {
         // Bank account list for reference/testing
         BankAccountList banking = new BankAccountList();
-        banking.add(new BankAccount("FirstName", "MiddleName", "LastName", 1234567890123456L));
+        banking.add(new BankAccount2("FirstName", "MiddleName", "LastName", 1234567890123456L));
         WithdrawDialog i = new WithdrawDialog(null,banking);
         banking.ba[0].deposit(5000); // example of what would happen to deposit smth and the withdrawal
-        BankAccount b = banking.ba[0];
+        BankAccount2 b = banking.ba[0];
         b = i.showDialog(b);
         System.out.print(b);
     }

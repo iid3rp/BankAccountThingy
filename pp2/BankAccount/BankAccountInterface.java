@@ -18,7 +18,7 @@ public class BankAccountInterface extends JPanel
     @Intention InitialFrame frame;
     public static final int HEIGHT = 100;
     public static int WIDTH = 1080;
-    public BankAccount b;
+    public BankAccount2 b;
     public JLabel image;
     
     //
@@ -26,7 +26,7 @@ public class BankAccountInterface extends JPanel
     private JLabel number;
     private JLabel balance;
     
-    public BankAccountInterface(InitialFrame frame, BankAccount ba, BankAccountListPane pane)
+    public BankAccountInterface(InitialFrame frame, BankAccount2 ba, BankAccountListPane pane)
     {
         super();
         this.frame = frame;
@@ -58,7 +58,7 @@ public class BankAccountInterface extends JPanel
         setVisible(true);
     }
 
-    private JLabel createDeposit(BankAccount ba, BankAccountListPane pane)
+    private JLabel createDeposit(BankAccount2 ba, BankAccountListPane pane)
     {
         JLabel label = new JLabel();
         label.setLayout(null);
@@ -78,7 +78,7 @@ public class BankAccountInterface extends JPanel
                 if(pane != null)
                 {
                     double currentBalance = ba.getBalance();
-                    BankAccount edit = new DepositDialog(frame, pane.getBankList()).showDialog(ba);
+                    BankAccount2 edit = new DepositDialog(frame, pane.getBankList()).showDialog(ba);
                     edit = edit == null? ba : edit;
                     currentBalance -= edit.getBalance();
                     pane.requestDeposit(edit);
@@ -101,7 +101,7 @@ public class BankAccountInterface extends JPanel
         return label;
     }
 
-    private JLabel createWithdraw(BankAccount ba, BankAccountListPane pane)
+    private JLabel createWithdraw(BankAccount2 ba, BankAccountListPane pane)
     {
         JLabel label = new JLabel();
         label.setLayout(null);
@@ -119,7 +119,7 @@ public class BankAccountInterface extends JPanel
             public void mouseClicked(MouseEvent e)
             {
                 double currentBalance = ba.getBalance();
-                BankAccount edit = new WithdrawDialog(frame, pane.getBankList()).showDialog(ba);
+                BankAccount2 edit = new WithdrawDialog(frame, pane.getBankList()).showDialog(ba);
                 if(edit != null)
                 {
                     currentBalance -= edit.getBalance();
@@ -143,7 +143,7 @@ public class BankAccountInterface extends JPanel
         return label;
     }
 
-    private JLabel createEditBankAccount(BankAccount ba, BankAccountListPane pane)
+    private JLabel createEditBankAccount(BankAccount2 ba, BankAccountListPane pane)
     {
         JLabel label = new JLabel();
         label.setLayout(null);
@@ -160,7 +160,7 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount edit = new EditBankAccount(pane.ba).showDialog(ba);
+                BankAccount2 edit = new EditBankAccount(pane.ba).showDialog(ba);
                 edit = edit == null? ba : edit;
                 pane.requestEdit(edit);
                 frame.logger.add(Log.EDIT_ACCOUNT, pane.ba, edit);
@@ -181,7 +181,7 @@ public class BankAccountInterface extends JPanel
         return label;
     }
 
-    public JLabel createDeleteBankAccount(BankAccount b, BankAccountListPane pane)
+    public JLabel createDeleteBankAccount(BankAccount2 b, BankAccountListPane pane)
     {
         JLabel label = new JLabel();
         label.setLayout(null);
@@ -200,7 +200,8 @@ public class BankAccountInterface extends JPanel
             {
                 int result = JOptionPane.showConfirmDialog(
                         frame,
-                        "Are you sure you want to delete thisbank?",
+                        "Are you sure you want to delete this " +
+                                "bank?",
                         "Deleting bank account",
                         JOptionPane.YES_NO_OPTION
                 );
@@ -231,7 +232,7 @@ public class BankAccountInterface extends JPanel
     {
         initializeComponent(); // for the panel itself.
 
-        b = new BankAccount(first, second, last, num);
+        b = new BankAccount2(first, second, last, num);
         name = createName();
         number = createNumber();
         balance = createBalance();

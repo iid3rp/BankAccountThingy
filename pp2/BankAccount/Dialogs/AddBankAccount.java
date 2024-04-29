@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.io.File;
 
 import BankAccountThingy.InitialFrame;
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.StreamIO.ImageMaker;
 
@@ -112,12 +112,12 @@ public class AddBankAccount extends JDialog
         
     }
     
-    public BankAccount showDialog()
+    public BankAccount2 showDialog()
     {
         setVisible(true);
         if(confirm)
         {
-            BankAccount b = new BankAccount();
+            BankAccount2 b = new BankAccount2();
             b.setFirstName(firstName.getText());
             b.setMiddleName(middleName.getText());
             b.setLastName(lastName.getText());
@@ -132,7 +132,7 @@ public class AddBankAccount extends JDialog
             catch(IOException e) {
                 throw new RuntimeException(e);
             }
-            return new BankAccount(b);
+            return new BankAccount2(b);
         } 
         else return null;
     }
@@ -273,14 +273,15 @@ public class AddBankAccount extends JDialog
                     Point mouseLocation = e.getLocationOnScreen();
                     int newX = mouseLocation.x - parentContainerLocation.x - offset.x;
                     int newY = mouseLocation.y - parentContainerLocation.y - offset.y;
+
                     newX = newX > 0? 0
-                         : Math.max(newX, imageEditor.getWidth() - label.getWidth());
+                            : Math.max(newX, imageEditor.getWidth() - label.getWidth());
                     newY = newY > 0? 0
-                         : Math.max(newY, imageEditor.getHeight() - label.getHeight());
+                            : Math.max(newY, imageEditor.getHeight() - label.getHeight());
+                    System.out.println(refX + ", " + refY);
+                    label.setLocation(newX, newY);
                     refX = (Math.abs(newX) + ((double) imageEditor.getWidth() / 2)) / (width * mult);
                     refY = (Math.abs(newY) + ((double) imageEditor.getWidth() / 2)) / (height * mult);
-                    // System.out.println(refX + ", " + refY);
-                    label.setLocation(newX, newY);
                 }
             }
         });
@@ -651,7 +652,7 @@ public class AddBankAccount extends JDialog
     public static void main(String[] a)
     {
         AddBankAccount i = new AddBankAccount(null);
-        BankAccount h = i.showDialog();
+        BankAccount2 h = i.showDialog();
         System.out.print(h);
     }
 }

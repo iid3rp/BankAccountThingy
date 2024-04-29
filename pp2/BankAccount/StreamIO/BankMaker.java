@@ -1,7 +1,7 @@
 package BankAccountThingy.pp2.BankAccount.StreamIO;
 
 import BankAccountThingy.InitialFrame;
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
@@ -61,8 +61,6 @@ public class BankMaker
      */
     private BankMaker() {}
 
-
-
     /**
      * This static method rewrites the contents of a file with information from a provided BankAccountList object.
      *
@@ -81,7 +79,7 @@ public class BankMaker
 
             if(ba.ba != null)
             {
-                for(BankAccount b : ba.ba)
+                for(BankAccount2 b : ba.ba)
                 {
                     writer.write(b.getFirstName() + "," +
                                       b.getMiddleName() + "," +

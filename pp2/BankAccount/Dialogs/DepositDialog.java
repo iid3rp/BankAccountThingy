@@ -19,13 +19,13 @@ import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
 
 import BankAccountThingy.InitialFrame;
-import BankAccountThingy.pp2.BankAccount.BankAccount;
+import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.Utils.DataType;
 import BankAccountThingy.pp2.BankAccount.Utils.TextFilter;
 public class DepositDialog extends JDialog
 {
-    private BankAccount allocation; // this will be reference of the bankAccount to be withdrawn :#
+    private BankAccount2 allocation; // this will be reference of the bankAccount to be withdrawn :#
     private boolean result;
     
     public JPanel imageEditor;
@@ -86,11 +86,11 @@ public class DepositDialog extends JDialog
     }
     
     // depositing method (double for certain reasons)
-    public BankAccount showDialog(BankAccount b) 
+    public BankAccount2 showDialog(BankAccount2 b)
     {
         if(b != null)
         {
-            allocation = new BankAccount(b); // deep copying ig
+            allocation = new BankAccount2(b); // deep copying ig
             // modify if the bank is not null lol
             accountNumber.setText(String.valueOf(b.getAccountNumber()));
             accountNumber.setEnabled(false);
@@ -242,7 +242,7 @@ public class DepositDialog extends JDialog
         JCheckBox checkBox = new JCheckBox();
         checkBox.setLayout(null);
         checkBox.setFont(new Font("Segoe UI", Font.BOLD, 15));
-        checkBox.setText("Add Interest rate on deposit [" + ((int)(100 * BankAccount.getInterestRate())) + "%]");
+        checkBox.setText("Add Interest rate on deposit [" + ((int)(100 * BankAccount2.getInterestRate())) + "%]");
         Dimension d = checkBox.getPreferredSize();
         checkBox.setBounds(20, 200, (int) d.getWidth() + 20, (int) d.getHeight());
         checkBox.addItemListener(e -> putAmount());
@@ -309,7 +309,7 @@ public class DepositDialog extends JDialog
         catch(NumberFormatException e) { /* ignore the exception */ }
         finally
         {
-           BankAccount b = lib.searchByNumber(num);
+           BankAccount2 b = lib.searchByNumber(num);
             if(b == null)
             {
                 bankIdentifier.setText("No Bank Account was found.");
@@ -319,7 +319,7 @@ public class DepositDialog extends JDialog
             else 
             {
                 bankIdentifier.setText("<html> Bank Account identified as <b>'" + b.getAccountName() + "'</b>");
-                allocation = new BankAccount(b); // deep copying
+                allocation = new BankAccount2(b); // deep copying
                 moneyHandler.setEnabled(true);
             }
         }
@@ -386,7 +386,7 @@ public class DepositDialog extends JDialog
         {
             double moneyAmount = Double.parseDouble(moneyHandler.getText());
             addInterest.setSelected(moneyAmount >= 1000);
-            totalAmount = moneyAmount * (addInterest.isSelected() ? (1 + BankAccount.getInterestRate()) : 1);
+            totalAmount = moneyAmount * (addInterest.isSelected() ? (1 + BankAccount2.getInterestRate()) : 1);
             // Format the total amount like currency
             String formattedAmount = String.format("$%.2f", totalAmount);
             amount.setText(formattedAmount);

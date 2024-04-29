@@ -2,17 +2,10 @@ package BankAccountThingy.pp2.BankAccount;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import BankAccountThingy.pp2.BankAccount.Utils.Region;
 
-import java.awt.*;
-import java.awt.image.*;
-import java.io.File;
-import java.io.IOException;
-import java.util.Objects;
-import javax.imageio.ImageIO;
-
 /**
  * BankAccouny :3
  */
-public class BankAccount
+public class BankAccount2
 {
     private String accountName;
     private String firstName;
@@ -24,7 +17,7 @@ public class BankAccount
     private static double interestRate = .15;
     
     // default constructor
-    public BankAccount()
+    public BankAccount2()
     {
         accountName = "";
         accountNumber = 0;
@@ -36,7 +29,7 @@ public class BankAccount
     
     // constructor with parameters
     @Deprecated
-    public BankAccount(String name, long num, double balance)
+    public BankAccount2(String name, long num, double balance)
     {
         accountName = name;
         accountNumber = num;
@@ -44,7 +37,7 @@ public class BankAccount
     }
     
     @Intention(design = "reading a BankAccount to its .csv file.")
-    public BankAccount(String first, String second, String last, long num, double b)
+    public BankAccount2(String first, String second, String last, long num, double b)
     {
         firstName = first;
         middleName = second;
@@ -56,7 +49,7 @@ public class BankAccount
     }
 
     @Region(value = "prior constructor.")
-    public BankAccount(String first, String second, String last, long num)
+    public BankAccount2(String first, String second, String last, long num)
     {
         firstName = first;
         middleName = second;
@@ -66,7 +59,7 @@ public class BankAccount
         accountNumber = num;
     }
     
-    public BankAccount(BankAccount bank)
+    public BankAccount2(BankAccount2 bank)
     {
         firstName = bank.getFirstName();
         middleName = bank.getMiddleName();
@@ -79,7 +72,7 @@ public class BankAccount
     
     // citation: Mrs. Kim Vera Tequin (from her `makeCopy()` method)
     // i didn't realize i kinda needed this method now qwq
-    public void referenceFromBank(BankAccount bank)
+    public void referenceFromBank(BankAccount2 bank)
     {
         firstName = bank.getFirstName();
         middleName = bank.getMiddleName();
@@ -123,8 +116,10 @@ public class BankAccount
     {
         return balance;
     }
-    
-    // mag change ka sa imohang past name
+
+    /**
+     * mag change ka sa imohang past name
+     * */
     public void setAccountName(String name)
     {
         accountName = name;
@@ -190,22 +185,26 @@ public class BankAccount
     }
     
     // optional: shallow copy
-    public BankAccount getCopy()
+    public BankAccount2 getCopy()
     {
         return this;
     }
     
     // optional: pag identify kung ang duha ka BankAccount class kay equal sila...
-    public boolean equals(BankAccount ba)
+    public boolean equals(BankAccount2 ba)
     {
         return this == ba;
     }
 
 
     @Deprecated
-    public BankAccount setEmpty()
+    public BankAccount2 setEmpty()
     {
         return null;
     }
 
+    public void setBalance(double balance)
+    {
+        this.balance = balance;
+    }
 }
