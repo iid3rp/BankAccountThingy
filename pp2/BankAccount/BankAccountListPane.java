@@ -5,6 +5,8 @@ import BankAccountThingy.pp2.BankAccount.Utils.SortType;
 import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.*;
 
 
@@ -88,43 +90,47 @@ public class BankAccountListPane extends JScrollPane
     public void search(String query)
     {
         container.removeAll();
-        int index = 0; 
-        for(BankAccount2 bank : ba.ba)
+        int index = 0;
+
+        if(ba.ba != null)
         {
-            // if condition with 5 searching-type-containing method algorithms:
-            if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
-                query.contains(bank.getFirstName().toLowerCase().trim())) ||
-
-               (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
-                query.contains(bank.getMiddleName().toLowerCase().trim())) ||
-
-               (bank.getLastName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
-                query.contains(bank.getLastName().toLowerCase().trim())) ||
-
-               (bank.getAccountName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
-                query.contains(bank.getAccountName().toLowerCase().trim())) ||
-
-               (bank.getAccountNumber() + "").contains(query))
-
+            for(BankAccount2 bank : ba.ba)
             {
-                // making sure the size will accurately affect the whole list each search, and not crop one BankAccountInterface...
-                container.setSize(new Dimension(1030, BankAccountInterface.HEIGHT * (index + 1)));
-                container.setPreferredSize(new Dimension(1030, BankAccountInterface.HEIGHT * (index + 1)));
-                BankAccountInterface bankInterface = new BankAccountInterface(frame,bank, this);
-                bankInterface.setBounds(0, ((BankAccountInterface.HEIGHT * index++)), BankAccountInterface.WIDTH, BankAccountInterface.HEIGHT);
-                container.add(bankInterface);
+                // if condition with 5 searching-type-containing method algorithms:
+                if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
+                    query.contains(bank.getFirstName().toLowerCase().trim())) ||
+
+                   (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
+                    query.contains(bank.getMiddleName().toLowerCase().trim())) ||
+
+                   (bank.getLastName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
+                    query.contains(bank.getLastName().toLowerCase().trim())) ||
+
+                   (bank.getAccountName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
+                    query.contains(bank.getAccountName().toLowerCase().trim())) ||
+
+                   (bank.getAccountNumber() + "").contains(query))
+
+                {
+                    // making sure the size will accurately affect the whole list each search, and not crop one BankAccountInterface...
+                    container.setSize(new Dimension(1030, (BankAccountInterface.HEIGHT + 2) * (index + 1)));
+                    container.setPreferredSize(new Dimension(1030, (BankAccountInterface.HEIGHT + 2) * (index + 1)));
+                    BankAccountInterface bankInterface = new BankAccountInterface(frame,bank, this);
+                    bankInterface.setBounds(0, ((BankAccountInterface.HEIGHT * index++)), BankAccountInterface.WIDTH, BankAccountInterface.HEIGHT);
+                    container.add(bankInterface);
+                }
+            }
+            if(index == 0)
+            {
+                setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
+                container.setSize(new Dimension(1030, 700));
+                container.setPreferredSize(new Dimension(1030, 700));
+                container.add(createNotFound(-1, 200, 60, Font.BOLD, "No Bank Account Found!"));
+                container.add(createNotFound(-1, 300, 20, Font.PLAIN, "Maybe search with something else?"));
+                setViewportView(container);
             }
         }
-        // else if nothing was searched from the given query
-        if(index == 0)
-        {
-            setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
-            container.setSize(new Dimension(1030, 700));
-            container.setPreferredSize(new Dimension(1030, 700));
-            container.add(createNotFound(-1, 200, 60, Font.BOLD, "No Bank Account Found!"));
-            container.add(createNotFound(-1, 300, 20, Font.PLAIN, "Maybe search with something else?"));
-            setViewportView(container);
-        }
+
         container.repaint();
         container.validate();
         repaint();
@@ -210,6 +216,16 @@ public class BankAccountListPane extends JScrollPane
         restore();
     }
 
+    public void setCurrentSort(Sort currentSort)
+    {
+        this.currentSort = currentSort;
+    }
+
+    public void setCurrentSortType(SortType currentSortType)
+    {
+        this.currentSortType = currentSortType;
+    }
+
     public void addComponents()
     {
         int index = 0; // iterator
@@ -221,7 +237,76 @@ public class BankAccountListPane extends JScrollPane
                 bankInterface.setBounds(0, (BankAccountInterface.HEIGHT * index++), bankInterface.getWidth(), bankInterface.getHeight());
                 container.add(bankInterface);
             }
+            frame.pane.sortTypes.setEnabled(true);
+            frame.pane.search.setEnabled(true);
         }
+        else
+        {
+            container.add(createAddAccount());
+            container.add(createEmptyList());
+            if(frame.pane != null)
+            {
+                frame.pane.sortTypes.setEnabled(false);
+                frame.pane.search.setEnabled(false);
+            }
+        }
+    }
+
+    private JLabel createAddAccount()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setForeground(Color.black);
+        label.setText("<html><u>Add an account to fill it up!</u></html>");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 30));
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText().toUpperCase());
+        int height = metrics.getHeight();
+        label.setBounds((container.getWidth() / 2) - (width / 2), 180, width, height);
+        label.setVisible(true);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                addBankAccount();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.blue);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.black);
+            }
+        });
+        return label;
+    }
+
+    private void addBankAccount()
+    {
+        frame.addBankAccount();
+    }
+
+    public JLabel createEmptyList()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setForeground(Color.black);
+        label.setText("This bank seems empty!");
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 55));
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText().toUpperCase());
+        int height = metrics.getHeight();
+        label.setBounds((container.getWidth() / 2) - (width / 2), 100, width, height);
+        label.setVisible(true);
+        return label;
     }
     
     public BankAccount2 replaceAccount(BankAccount2 b)
@@ -244,8 +329,8 @@ public class BankAccountListPane extends JScrollPane
     public void restore()
     {
         container.removeAll();
-        container.setSize(new Dimension(width, (height) * ba.getLength()));
-        container.setPreferredSize(new Dimension(width, (height) * ba.getLength()));
+        container.setSize(new Dimension(width, (height + 2) * ba.getLength()));
+        container.setPreferredSize(new Dimension(width, (height + 2) * ba.getLength()));
         // add the components to the panel to be put into the scrollPane...
         addComponents();
         setViewportView(container);

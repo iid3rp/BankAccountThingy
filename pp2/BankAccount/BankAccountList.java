@@ -86,8 +86,10 @@ public class  BankAccountList
         if(index >= 0 && index < size)
         {
             BankAccount2[] reference = new BankAccount2[--size];
+
             // iterate the first loops of the existing ones
             System.arraycopy(ba, 0, reference, 0, index);
+
             // then i-skip tong index na i-delete, then iterate and add the rest
             if(size + 1 - (index + 1) >= 0)
             {
@@ -95,6 +97,7 @@ public class  BankAccountList
             }
             // then point it back...
             ba = reference;
+            ba = size == 0? null : reference; // double checking, if null, makes it null
         }
     }
     

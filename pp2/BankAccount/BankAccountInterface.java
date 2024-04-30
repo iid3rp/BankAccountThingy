@@ -71,7 +71,7 @@ public class BankAccountInterface extends JPanel
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds(650, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
+        label.setBounds(755, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -117,7 +117,7 @@ public class BankAccountInterface extends JPanel
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds(800, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
+        label.setBounds(845, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -160,7 +160,7 @@ public class BankAccountInterface extends JPanel
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds(600, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
+        label.setBounds(700, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -217,7 +217,7 @@ public class BankAccountInterface extends JPanel
                 if(result == JOptionPane.YES_OPTION)
                 {
                     pane.requestRemove(b);
-                    frame.logger.add(Log.DELETE_ACCOUNT, pane.ba, null);
+                    frame.logger.add(Log.DELETE_ACCOUNT, pane.ba, b);
                 }
             }
 
@@ -335,7 +335,7 @@ public class BankAccountInterface extends JPanel
             protected void paintComponent(Graphics g) 
             {
                 super.paintComponent(g);
-                g.drawImage(ImageMaker.parseImage(b, pane.ba, 70), 0, 0, getWidth(), getHeight(), null);
+                g.drawImage(ImageMaker.parseImage(b, pane.ba, 80), 0, 0, getWidth(), getHeight(), null);
             }
         };
         label.setLayout(null);

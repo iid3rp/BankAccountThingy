@@ -1,17 +1,16 @@
 package BankAccountThingy;
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 
 import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
@@ -139,7 +138,23 @@ public final class InitialFrame extends JFrame
 
     public BankAccountPane createContentPanel()
     {
-        BankAccountPane panel = new BankAccountPane();
+        BankAccountPane panel = new BankAccountPane()
+        {
+            @Override
+            public void paintComponent(Graphics g)
+            {
+                super.paintComponent(g);
+                try {
+                    BufferedImage x = ImageIO.read(Objects.requireNonNull(BankAccount2.class.getResource("Resources/bankie.png")));
+                    g.setColor(Color.WHITE);
+                    g.fillRect(0, 0, getWidth(), getHeight());
+                    g.drawImage(x, 300, 300, null);
+                }
+                catch(IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        };
         panel.setLayout(null);
         panel.setSize(new Dimension(1080, 720));
         panel.addMouseListener(new MouseAdapter()
@@ -336,14 +351,7 @@ public final class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                if(pane != null) {
-                    BankAccount2 b = new AddBankAccount(frame).showDialog();
-                    if(b != null)
-                    {
-                        pane.pane.requestAdd(b);
-                        logger.add(Log.ADD_ACCOUNT, pane.pane.ba, b);
-                    }
-                }
+                addBankAccount();
             }
             
         });
@@ -468,6 +476,10 @@ public final class InitialFrame extends JFrame
                     {
                         String reference = JOptionPane.showInputDialog(frame,"Put Interest Rate [%]");
                         int interest = Integer.parseInt(reference);
+
+                        // no more negative numbers ok :3
+                        if(interest < 0) throw new NumberFormatException();
+
                         BankAccount2.setInterestRate((double) interest / 100d);
                         label.setText("Interest: " + ((int) (BankAccount2.getInterestRate() * 100)) + "%");
                         confirm = true;
@@ -654,11 +666,11 @@ public final class InitialFrame extends JFrame
         label.setForeground(Color.black);
         label.setText("<html>Welcome to" +
                 "<br>Bank Account Center!<br/><html/>");
-        label.setFont(new Font("Segoe UI", Font.BOLD, 45));
+        label.setFont(new Font("Segoe UI", Font.BOLD, 60));
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight() * 2;
-        label.setBounds((getWidth() / 2) - (width / 2) + 100, 100, width, height);
+        label.setBounds(50, 100, width, height);
         label.setVisible(true);
         return label;
     }
@@ -673,7 +685,7 @@ public final class InitialFrame extends JFrame
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight() * 2;
-        label.setBounds(100, 430, width, height);
+        label.setBounds(50, 430, width, height);
         label.setVisible(true);
         return label;
     }
@@ -688,7 +700,7 @@ public final class InitialFrame extends JFrame
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds(100, 510, width, height);
+        label.setBounds(50, 510, width, height);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -732,7 +744,7 @@ public final class InitialFrame extends JFrame
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds(100, 475, width, height);
+        label.setBounds(50, 475, width, height);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -766,13 +778,29 @@ public final class InitialFrame extends JFrame
                 logger.add(Log.CLOSE_BANK, pane.pane.ba, null);
             }
             createPane(frame, b);
-            referenceFile = b;
-            logger.add(Log.OPEN_BANK, pane.pane.ba, null);
+            if(pane != null)
+            {
+                referenceFile = b;
+                logger.add(Log.OPEN_BANK, pane.pane.ba, null);
+            }
         }
     }
 
     public void setReferenceFile(File file)
     {
         referenceFile = file;
+    }
+
+    public void addBankAccount()
+    {
+        if(pane != null)
+        {
+            BankAccount2 b = new AddBankAccount(frame).showDialog();
+            if(b != null)
+            {
+                pane.pane.requestAdd(b);
+                logger.add(Log.ADD_ACCOUNT, pane.pane.ba, b);
+            }
+        }
     }
 }

@@ -7,6 +7,7 @@ import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.BankAccountPane;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 import javax.swing.*;
 
@@ -48,24 +49,31 @@ public class BankReader
             String title = stuff[1];
             long serial = Long.parseLong(stuff[3]);
 
-            BankAccountList list = new BankAccountList();
-            list.setSerial(serial);
-            list.setTitle(title);
-            reader.readLine(); // this is for reference to skip another line...
-
-            // for loop for the iteration of other bank account list
-            String line = reader.readLine();
-            while(line != null)
+            BankAccountList list = null;
+            @Intention(design = "this is where the serialization and security comes with the bank serial thingies")
+            var bankValidation = new File(BankMaker.pictures + serial).exists();
+            if(bankValidation)
             {
-                String[] items = line.split(",");
-                long number = Long.parseLong(items[3]);
-                double balance = Double.parseDouble(items[4]);
-                list.add(new BankAccount2(items[0], items[1], items[2], number, balance));
-                line = reader.readLine();
+                list = new BankAccountList();
+                list.setSerial(serial);
+                list.setTitle(title);
+                reader.readLine(); // this is for reference to skip another line...
+
+                // for loop for the iteration of other bank account list
+                String line = reader.readLine();
+                while(line != null)
+                {
+                    String[] items = line.split(",");
+                    long number = Long.parseLong(items[3]);
+                    double balance = Double.parseDouble(items[4]);
+                    list.add(new BankAccount2(items[0], items[1], items[2], number, balance));
+                    line = reader.readLine();
+                }
             }
+            else throw new NullPointerException("");
             return new BankAccountPane(frame, list);
         }
-        catch(InputMismatchException | IOException | ArrayIndexOutOfBoundsException e) {
+        catch(NullPointerException | InputMismatchException | IOException | ArrayIndexOutOfBoundsException e) {
             JOptionPane.showMessageDialog(frame, "File Invalid.");
             return null;
         }

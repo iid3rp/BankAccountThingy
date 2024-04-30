@@ -10,9 +10,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.io.IOException;
 
 public class BankAccountPane extends JPanel
@@ -26,14 +24,18 @@ public class BankAccountPane extends JPanel
     public JTextField search;
     public JLabel closeBank;
     public JLabel closeApplication;
+    public JComboBox<String> sortTypes;
 
+    @Intention(design = "theres such thing that  a pane must have to be the last" +
+            "container to be initialized such that the other components will be used if" +
+            "there will be a new/opened bank somehow..." +
+
+            "REFER ON LINES 54-55!")
     public BankAccountPane(InitialFrame frame, BankAccountList list)
     {
         super();
         initializeComponent(frame);
         this.frame = frame;
-        pane = createPane(list, frame);
-        pane.setLocation(0, 40);
         info = createInfo();
 
         //JLabels for the header
@@ -41,11 +43,16 @@ public class BankAccountPane extends JPanel
         search = createSearch();
         closeBank = createCloseBank();
         closeApplication = createCloseApp();
+        sortTypes = createSorting();
 
         info.add(titleList);
         info.add(search);
         info.add(closeBank);
         info.add(closeApplication);
+        info.add(sortTypes);
+
+        pane = createPane(list, frame);
+        pane.setLocation(0, 40);
 
         add(info);
         add(pane);
@@ -60,7 +67,10 @@ public class BankAccountPane extends JPanel
     {
         if(b != null)
         {
-            return new BankAccountListPane(this, b, frame, Sort.LAST_NAME, SortType.SORT_ASCENDING);
+            BankAccountListPane listPane = new BankAccountListPane(this, b, frame, Sort.LAST_NAME, SortType.SORT_ASCENDING);
+            this.search.setEnabled(false);
+            this.sortTypes.setEnabled(false);
+            return listPane;
         }
         else return new BankAccountListPane();
     }
@@ -184,10 +194,11 @@ public class BankAccountPane extends JPanel
         JTextField searchBar = new JTextField();
 
         searchBar.setFont(new Font("Segoe UI", Font.PLAIN, 15));
-        searchBar.setBounds(400, 5, 400, 30);
+        searchBar.setBounds(300, 5, 300, 30);
         searchBar.setText("[/] to Search   ");
         searchBar.setEditable(true);
         searchBar.setFocusable(false);
+        searchBar.setEnabled(false);
         searchBar.setHorizontalAlignment(SwingConstants.RIGHT);
 
         searchBar.getDocument().addDocumentListener(new DocumentListener()
@@ -228,11 +239,14 @@ public class BankAccountPane extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                search.setEditable(true);
-                search.setFocusable(true);
-                searchBar.setText(""); // Set back
-                search.requestFocus();
-                pane.restore();
+                if(search.isEnabled())
+                {
+                    search.setEditable(true);
+                    search.setFocusable(true);
+                    searchBar.setText(""); // Set back
+                    search.requestFocus();
+                    pane.restore();
+                }
             }
         });
         searchBar.setVisible(true);
@@ -246,7 +260,7 @@ public class BankAccountPane extends JPanel
         JLabel label = new JLabel();
         label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         label.setLayout(null);
-        label.setText("closeBank");
+        label.setText("Close Bank");
         label.setForeground(Color.BLACK);
 
         FontMetrics metrics = getFontMetrics(label.getFont());
@@ -312,6 +326,66 @@ public class BankAccountPane extends JPanel
         return label;
     }
 
+    public JComboBox<String> createSorting()
+    {
+        String[] choices = {"Sort First Name A-Z", "Sort First Name Z-A",
+                "Sort Middle Name A-Z", "Sort Middle Name Z-A",
+                "Sort Last Name A-Z", "Sort Last Name Z-A",
+                "Sort Account Number 0-9", "Sort Account Number 9-0"};
+        JComboBox<String> box = new JComboBox<>(choices);
+        box.setLayout(null);
+        box.setBackground(Color.white);
+        box.setEnabled(false);
+        box.setFont(new Font("Segoe UI", Font.PLAIN, 15));
+        FontMetrics metrics = getFontMetrics(box.getFont());
+        int width = metrics.stringWidth(choices[7]);
+        int height = metrics.getHeight();
+        box.setBounds(650, 10, width, height);
+        box.addActionListener(e ->
+        {
+            assert box.getSelectedItem() == null;
+            String choice = box.getSelectedItem().toString();
+            switch(choice)
+            {
+                case "Sort First Name A-Z":
+                    pane.setCurrentSort(Sort.FIRST_NAME);
+                    pane.setCurrentSortType(SortType.SORT_ASCENDING);
+                    break;
+                case "Sort First Name Z-A":
+                    pane.setCurrentSort(Sort.FIRST_NAME);
+                    pane.setCurrentSortType(SortType.SORT_DESCENDING);
+                    break;
+                case "Sort Middle Name A-Z":
+                    pane.setCurrentSort(Sort.MIDDLE_NAME);
+                    pane.setCurrentSortType(SortType.SORT_ASCENDING);
+                    break;
+                case "Sort Middle Name Z-A":
+                    pane.setCurrentSort(Sort.MIDDLE_NAME);
+                    pane.setCurrentSortType(SortType.SORT_DESCENDING);
+                    break;
+                case "Sort Last Name A-Z":
+                    pane.setCurrentSort(Sort.LAST_NAME);
+                    pane.setCurrentSortType(SortType.SORT_ASCENDING);
+                    break;
+                case "Sort Last Name Z-A":
+                    pane.setCurrentSort(Sort.LAST_NAME);
+                    pane.setCurrentSortType(SortType.SORT_DESCENDING);
+                    break;
+                case "Sort Account Number 0-9":
+                    pane.setCurrentSort(Sort.ACCOUNT_NUMBER);
+                    pane.setCurrentSortType(SortType.SORT_ASCENDING);
+                    break;
+                case "Sort Account Number 9-0":
+                    pane.setCurrentSort(Sort.ACCOUNT_NUMBER);
+                    pane.setCurrentSortType(SortType.SORT_DESCENDING);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + choice);
+            }
+            pane.restore();
+        });
+        return box;
+    }
 
     public JLabel createCloseApp()
     {

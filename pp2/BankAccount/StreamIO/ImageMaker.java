@@ -33,7 +33,7 @@ public class ImageMaker
                     ImageIO.read(path) : ImageIO.read(defaultImageURL);
 
             image = image.getScaledInstance(length, length, Image.SCALE_AREA_AVERAGING);
-            paintImage(bf, image, length);
+            bf = paintImage(bf, image, length);
         }
         catch(NullPointerException | IOException e)
         {
@@ -43,18 +43,28 @@ public class ImageMaker
         return bf;
     }
 
-    private static void paintImage(BufferedImage b, Image i, int length) throws IOException
+    private static BufferedImage paintImage(BufferedImage b, Image i, int length) throws IOException
     {
         @Intention(design = "Apparently, it throws an IOException bc the file [blob-reference] cannot" +
                 "be read when using File.separator for some reason... i guess we go hard-code..")
-        BufferedImage image = ImageIO.read(new File(Objects.requireNonNull(
-                BankAccount2.class.getResource("Resources/blob-reference.png")).getPath()));
+        BufferedImage blur = ImageIO.read(new File(Objects.requireNonNull(
+                BankAccount2.class.getResource("Resources/blurCircle.png")).getPath()));
+        BufferedImage smol = ImageIO.read(new File(Objects.requireNonNull(
+                BankAccount2.class.getResource("Resources/smolCircle.png")).getPath()));
 
         Graphics2D g2d = b.createGraphics();
-        g2d.drawImage(image, 0, 0, null);
+        g2d.drawImage(smol, 0, 0, null);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_IN, 1f));
         g2d.drawImage(i, 0, 0, null);
         g2d.dispose();
+
+        BufferedImage image = new BufferedImage(b.getWidth(), b.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        g2d = image.createGraphics();
+        g2d.drawImage(blur, 0 , 0, null);
+        g2d.drawImage(b, 0, 0, null);
+        g2d.dispose();
+
+        return image;
     }
 
     public static void createImage(BankAccount2 bank, JLabel label, Image image, BankAccountList list) throws IOException
