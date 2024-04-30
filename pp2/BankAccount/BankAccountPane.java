@@ -21,11 +21,11 @@ public class BankAccountPane extends JPanel
 
     @Intention(isPublic = false, design = "reference pointing...")
     private InitialFrame frame;
-    private JPanel info;
-    private JLabel titleList;
+    public JPanel info;
+    public JLabel titleList;
     public JTextField search;
-    private JLabel closeBank;
-    private JLabel closeApplication;
+    public JLabel closeBank;
+    public JLabel closeApplication;
 
     public BankAccountPane(InitialFrame frame, BankAccountList list)
     {
@@ -268,6 +268,10 @@ public class BankAccountPane extends JPanel
                     frame.panel.add(frame.contentPanel);
                     frame.contentPanel.repaint();
                     frame.contentPanel.validate();
+                    frame.menu.remove(frame.addAccount);
+                    frame.menu.remove(frame.deposit);
+                    frame.menu.remove(frame.withdraw);
+                    frame.menu.remove(frame.interest);
                     frame.repaint();
                     frame.validate();
                     try {

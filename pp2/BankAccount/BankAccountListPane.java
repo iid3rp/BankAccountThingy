@@ -40,8 +40,8 @@ public class BankAccountListPane extends JScrollPane
             currentSort = sort;
             currentSortType = type;
             initializeComponent(frame, pane);
-            container.setSize(new Dimension(width, ((height + 1) * b.getLength()) + (2 * b.getLength()) + 2));
-            container.setPreferredSize(new Dimension(width, ((height + 1) * b.getLength()) + (2 * b.getLength()) + 2));
+            container.setSize(new Dimension(width,(int) ((height + 1.5) * b.getLength())));
+            container.setPreferredSize(new Dimension(width, (int) ((height + 1.5) * b.getLength())));
             // add components into the container here :3
             addComponents();
 
@@ -91,18 +91,39 @@ public class BankAccountListPane extends JScrollPane
         int index = 0; 
         for(BankAccount2 bank : ba.ba)
         {
-            if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getFirstName().toLowerCase().trim())) || 
-               (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getMiddleName().toLowerCase().trim())) ||
-               (bank.getLastName().toLowerCase().trim().contains(query.toLowerCase().trim()) || query.contains(bank.getLastName().toLowerCase().trim())) ||
-               ((bank.getAccountNumber() + "").contains(query))) 
+            // if condition with 5 searching-type-containing method algorithms:
+            if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
+                query.contains(bank.getFirstName().toLowerCase().trim())) ||
+
+               (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
+                query.contains(bank.getMiddleName().toLowerCase().trim())) ||
+
+               (bank.getLastName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
+                query.contains(bank.getLastName().toLowerCase().trim())) ||
+
+               (bank.getAccountName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
+                query.contains(bank.getAccountName().toLowerCase().trim())) ||
+
+               (bank.getAccountNumber() + "").contains(query))
+
             {
                 // making sure the size will accurately affect the whole list each search, and not crop one BankAccountInterface...
-                container.setSize(new Dimension(1030, 104 * (index + 1) + 1));
-                container.setPreferredSize(new Dimension(1030, 104 * (index + 1) + 1));
+                container.setSize(new Dimension(1030, BankAccountInterface.HEIGHT * (index + 1)));
+                container.setPreferredSize(new Dimension(1030, BankAccountInterface.HEIGHT * (index + 1)));
                 BankAccountInterface bankInterface = new BankAccountInterface(frame,bank, this);
-                bankInterface.setBounds(0, ((bankInterface.getHeight() + 1) * index++), bankInterface.getWidth(), bankInterface.getHeight());
+                bankInterface.setBounds(0, ((BankAccountInterface.HEIGHT * index++)), BankAccountInterface.WIDTH, BankAccountInterface.HEIGHT);
                 container.add(bankInterface);
             }
+        }
+        // else if nothing was searched from the given query
+        if(index == 0)
+        {
+            setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
+            container.setSize(new Dimension(1030, 700));
+            container.setPreferredSize(new Dimension(1030, 700));
+            container.add(createNotFound(-1, 200, 60, Font.BOLD, "No Bank Account Found!"));
+            container.add(createNotFound(-1, 300, 20, Font.PLAIN, "Maybe search with something else?"));
+            setViewportView(container);
         }
         container.repaint();
         container.validate();
@@ -126,6 +147,48 @@ public class BankAccountListPane extends JScrollPane
             }
         }
         restore();
+    }
+
+    private JLabel createNotFound(int x, int y, int size, int font, String text)
+    {
+        JLabel label = new JLabel();
+        label.setForeground(Color.BLACK);
+        label.setText(text);
+        label.setFont(new Font("Segoe UI", font, size));
+        label.setBounds(x, y, width, height);
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText());
+        int height = metrics.getHeight();
+
+        if(x == -1)
+        {
+            if(y == -1)
+            {
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                label.setVerticalAlignment(SwingConstants.CENTER);
+                label.setBounds((getWidth() / 2) - (width / 2), (getHeight() / 2) - (height / 2), width, height);
+            }
+            else
+            {
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                label.setBounds((getWidth() / 2) - (width / 2), y, width, height);
+            }
+        }
+        else
+        {
+            if(y == -1)
+            {
+                label.setVerticalAlignment(SwingConstants.CENTER);
+                label.setBounds((getWidth() / 2) - (width / 2), (getHeight() / 2) - (height / 2), width, height);
+            }
+            else
+            {
+                label.setBounds(x, y, width, height);
+            }
+
+        }
+
+        return label;
     }
 
     @Intention(reason = "Different method purposes")
@@ -155,7 +218,7 @@ public class BankAccountListPane extends JScrollPane
             for(BankAccount2 bank : ba.sort(currentSort, currentSortType))
             {
                 BankAccountInterface bankInterface = new BankAccountInterface(frame, bank, this);
-                bankInterface.setBounds(0, ((bankInterface.getHeight() + 1) * index++), bankInterface.getWidth(), bankInterface.getHeight());
+                bankInterface.setBounds(0, (BankAccountInterface.HEIGHT * index++), bankInterface.getWidth(), bankInterface.getHeight());
                 container.add(bankInterface);
             }
         }
@@ -181,10 +244,11 @@ public class BankAccountListPane extends JScrollPane
     public void restore()
     {
         container.removeAll();
-        container.setSize(new Dimension(width, ((height + 1) * ba.getLength()) + (3 * ba.getLength()) + 1));
-        container.setPreferredSize(new Dimension(width, ((height + 1) * ba.getLength()) + (3 * ba.getLength()) + 1));
+        container.setSize(new Dimension(width, (height) * ba.getLength()));
+        container.setPreferredSize(new Dimension(width, (height) * ba.getLength()));
         // add the components to the panel to be put into the scrollPane...
         addComponents();
+        setViewportView(container);
         container.repaint();
         container.validate();
         repaint();

@@ -22,14 +22,18 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
 import java.io.File;
+
+import BankAccountThingy.InitialFrame;
 import BankAccountThingy.pp2.BankAccount.BankAccount2;
 import BankAccountThingy.pp2.BankAccount.BankAccountList;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
 import BankAccountThingy.pp2.BankAccount.StreamIO.ImageMaker;
+import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 
 public class EditBankAccount extends JDialog
 {
-    
+
+    private @Intention final InitialFrame frame;
     public BankAccount2 reference;
     public JPanel imageEditor;
     Image img;
@@ -63,15 +67,16 @@ public class EditBankAccount extends JDialog
     public double refY = .5;
     
     private int picWidth, picHeight;
-    public EditBankAccount(BankAccountList list)
+    public EditBankAccount(InitialFrame frame, BankAccountList list)
     {
         super();
+        this.frame = frame;
         ba = list;
         setModalityType(ModalityType.APPLICATION_MODAL); // this ensures modality of the JDialog
         setTitle("Editing a Bank Account");
         setSize(new Dimension(550, 300));
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        setLocationRelativeTo(null);
+        setLocationRelativeTo(frame);
         setUndecorated(true);
         
         JPanel panel = createPanel();
@@ -153,6 +158,7 @@ public class EditBankAccount extends JDialog
                 {
                     var ignored = new File(BankMaker.pictures + File.separator + ba.getSerial() + File.separator + b.getAccountNumber() + ".png").delete();
                 }
+
             }
             catch(IOException e) {
                 throw new RuntimeException(e);
@@ -322,13 +328,13 @@ public class EditBankAccount extends JDialog
                          : Math.max(newX, imageEditor.getWidth() - label.getWidth());
                     newY = newY > 0? 0
                          : Math.max(newY, imageEditor.getHeight() - label.getHeight());
-                    refX = (Math.abs(newX) + ((double) imageEditor.getWidth() / 2)) / (width * multiplier);
-                    refY = (Math.abs(newY) + ((double) imageEditor.getWidth() / 2)) / (height * multiplier);
-                    System.out.println(refX + ", " + refY);
-                    label.setLocation(newX, newY);
+                    refX = (Math.abs(newX) + ((double) imageEditor.getWidth() / 2)) / (imageEditor.getWidth() * multiplier);
+                    refY = (Math.abs(newY) + ((double) imageEditor.getWidth() / 2)) / (imageEditor.getHeight() * multiplier);
+                    label.setBounds(newX, newY, label.getWidth(), label.getHeight());
                 }
             }
         });
+        label.setDoubleBuffered(true);
         return label;
     }
     
@@ -356,12 +362,13 @@ public class EditBankAccount extends JDialog
                 double zoomedWidth = picWidth * multiplier;
                 double zoomedHeight = picHeight * multiplier;
                 System.out.print(zoomedWidth + " " + zoomedHeight + " " + picWidth + " " + picHeight); //debug
-            
+
                 double xOffset = (imageEditor.getWidth() - zoomedWidth) * refX;
                 double yOffset = (imageEditor.getWidth() - zoomedHeight) * refY;
                 
                 // Set new bounds for the component (replace with your library's method)
                 accountPicture.setBounds((int) xOffset, (int) yOffset, (int) (picWidth * multiplier), (int) (picHeight * multiplier));
+
                 accountPicture.repaint();
                 accountPicture.validate();
                 imageEditor.repaint();

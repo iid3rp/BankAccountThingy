@@ -1,10 +1,5 @@
 package BankAccountThingy;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -38,21 +33,17 @@ public final class InitialFrame extends JFrame
     public FileLogger logger = new FileLogger();
     private final JLabel addBank;
     InitialFrame frame = this;
-    private JLabel withdraw;
-    private JLabel deposit;
-    private JLabel interest;
-    private JLabel update;
-    private JLabel changeBank;
-    private JLabel title;
+    public JLabel withdraw;
+    public JLabel deposit;
+    public JLabel interest;
+    public JLabel changeBank;
+    public JLabel title;
     public JPanel panel;
     public JPanel menu;
     public JLabel addAccount;
 
     @Intention(design = "reference point panel")
     public BankAccountPane contentPanel;
-
-    @Intention(design = "main (empty) panel")
-    public BankAccountPane mainPanel;
 
     @Intention(design = "panel with bank account list displayed")
     public BankAccountPane pane;
@@ -84,12 +75,8 @@ public final class InitialFrame extends JFrame
         interest = createInterestRate();
         changeBank = createOpenBank();
         addBank = createAddBank();
-                
+
         menu.add(title);
-        menu.add(addAccount);
-        menu.add(deposit);
-        menu.add(withdraw);
-        menu.add(interest);
         menu.add(changeBank);
         menu.add(addBank);
 
@@ -175,7 +162,6 @@ public final class InitialFrame extends JFrame
                     isDragging = false;
                 }
             }
-
         });
         panel.addMouseMotionListener(new MouseMotionAdapter()
         {
@@ -194,11 +180,21 @@ public final class InitialFrame extends JFrame
             }
         });
         panel.add(closeApplication);
+        panel.add(createWelcome());
+        panel.add(createSecondWelcome());
+        panel.add(createNewBankMain());
+        panel.add(createOpenBankMain());
         return panel;
     }
 
     public void createBankList()
     {
+        // adds the functionalities afterward
+        menu.add(addAccount);
+        menu.add(deposit);
+        menu.add(withdraw);
+        menu.add(interest);
+
         contentPanel.removeAll();
         contentPanel.add(pane);
         contentPanel.repaint();
@@ -558,12 +554,7 @@ public final class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankMaker b = new AddBank().showDialog();
-                if(b != null)
-                {
-                    createPane(frame, b);
-                    logger.add(Log.ADD_BANK, pane.pane.ba, null);
-                }
+                creatingBank();
             }
 
             @Override
@@ -601,13 +592,7 @@ public final class InitialFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                File b = BankChooser.showDialog(frame);
-                if(b != null)
-                {
-                    createPane(frame, b);
-                    referenceFile = b;
-                    logger.add(Log.OPEN_BANK, pane.pane.ba, null);
-                }
+                openingBank();
             }
 
             @Override
@@ -640,7 +625,6 @@ public final class InitialFrame extends JFrame
         if(pane != null)
         {
             createBankList(); // this will automatically create a bank list for u
-            System.out.println("sddasd");
         }
     }
 
@@ -660,6 +644,130 @@ public final class InitialFrame extends JFrame
                 createBankList(); // this will automatically create a bank list for u
             }
             else JOptionPane.showMessageDialog(frame, "Bank List file invalid.");
+        }
+    }
+
+    public JLabel createWelcome()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setForeground(Color.black);
+        label.setText("<html>Welcome to" +
+                "<br>Bank Account Center!<br/><html/>");
+        label.setFont(new Font("Segoe UI", Font.BOLD, 45));
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText());
+        int height = metrics.getHeight() * 2;
+        label.setBounds((getWidth() / 2) - (width / 2) + 100, 100, width, height);
+        label.setVisible(true);
+        return label;
+    }
+
+    public JLabel createSecondWelcome()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setForeground(Color.black);
+        label.setText("You can get started by either:");
+        label.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText());
+        int height = metrics.getHeight() * 2;
+        label.setBounds(100, 430, width, height);
+        label.setVisible(true);
+        return label;
+    }
+
+    public JLabel createNewBankMain()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setForeground(Color.black);
+        label.setText("Create new bank");
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText().toUpperCase());
+        int height = metrics.getHeight();
+        label.setBounds(100, 510, width, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                creatingBank();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.blue);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.black);
+            }
+        });
+        return label;
+    }
+
+    private void creatingBank()
+    {
+        BankMaker b = new AddBank().showDialog();
+        if(b != null)
+        {
+            createPane(frame, b);
+            logger.add(Log.ADD_BANK, pane.pane.ba, null);
+        }
+    }
+
+    public JLabel createOpenBankMain()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setForeground(Color.black);
+        label.setText("Opening existing bank");
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText().toUpperCase());
+        int height = metrics.getHeight();
+        label.setBounds(100, 475, width, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                openingBank();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.blue);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.black);
+            }
+        });
+        return label;
+    }
+
+    private void openingBank()
+    {
+        File b = BankChooser.showDialog(frame);
+        if(b != null)
+        {
+            if(referenceFile != null)
+            {
+                logger.add(Log.CLOSE_BANK, pane.pane.ba, null);
+            }
+            createPane(frame, b);
+            referenceFile = b;
+            logger.add(Log.OPEN_BANK, pane.pane.ba, null);
         }
     }
 

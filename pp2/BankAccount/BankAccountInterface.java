@@ -1,6 +1,7 @@
 package BankAccountThingy.pp2.BankAccount;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -15,6 +16,7 @@ import BankAccountThingy.pp2.BankAccount.Utils.Log;
 public class BankAccountInterface extends JPanel
 {
     private BankAccountListPane pane;
+    JPanel panel = this;
     @Intention InitialFrame frame;
     public static final int HEIGHT = 100;
     public static int WIDTH = 1080;
@@ -62,14 +64,14 @@ public class BankAccountInterface extends JPanel
     {
         JLabel label = new JLabel();
         label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         label.setText("Deposit");
         label.setForeground(Color.BLACK);
 
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds(600, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
+        label.setBounds(650, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -79,10 +81,12 @@ public class BankAccountInterface extends JPanel
                 {
                     double currentBalance = ba.getBalance();
                     BankAccount2 edit = new DepositDialog(frame, pane.getBankList()).showDialog(ba);
-                    edit = edit == null? ba : edit;
-                    currentBalance -= edit.getBalance();
-                    pane.requestDeposit(edit);
-                    frame.logger.add(Log.DEPOSIT, pane.ba, edit, currentBalance);
+                    if(edit != null)
+                    {
+                        currentBalance -= edit.getBalance();
+                        pane.requestDeposit(edit);
+                        frame.logger.add(Log.DEPOSIT, pane.ba, edit, currentBalance);
+                    }
                 }
             }
 
@@ -90,6 +94,7 @@ public class BankAccountInterface extends JPanel
             public void mouseEntered(MouseEvent e)
             {
                 label.setForeground(Color.blue);
+                panel.setBackground(new Color(230, 230, 230));
             }
 
             @Override
@@ -105,14 +110,14 @@ public class BankAccountInterface extends JPanel
     {
         JLabel label = new JLabel();
         label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         label.setText("Withdraw");
         label.setForeground(Color.BLACK);
 
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds(750, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
+        label.setBounds(800, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -132,6 +137,7 @@ public class BankAccountInterface extends JPanel
             public void mouseEntered(MouseEvent e)
             {
                 label.setForeground(Color.blue);
+                panel.setBackground(new Color(230, 230, 230));
             }
 
             @Override
@@ -147,29 +153,32 @@ public class BankAccountInterface extends JPanel
     {
         JLabel label = new JLabel();
         label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         label.setText("Edit");
         label.setForeground(Color.BLACK);
 
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds(500, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
+        label.setBounds(600, (BankAccountInterface.HEIGHT /2) - (height / 2), width, height);
         label.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                BankAccount2 edit = new EditBankAccount(pane.ba).showDialog(ba);
-                edit = edit == null? ba : edit;
-                pane.requestEdit(edit);
-                frame.logger.add(Log.EDIT_ACCOUNT, pane.ba, edit);
+                BankAccount2 edit = new EditBankAccount(frame, pane.ba).showDialog(ba);
+                if(edit != null)
+                {
+                    pane.requestEdit(edit);
+                    frame.logger.add(Log.EDIT_ACCOUNT, pane.ba, edit);
+                }
             }
 
             @Override
             public void mouseEntered(MouseEvent e)
             {
                 label.setForeground(Color.blue);
+                panel.setBackground(new Color(230, 230, 230));
             }
 
             @Override
@@ -185,9 +194,9 @@ public class BankAccountInterface extends JPanel
     {
         JLabel label = new JLabel();
         label.setLayout(null);
-        label.setFont(new Font("Segoe UI", Font.BOLD, 24));
-        label.setText("X");
-        label.setForeground(Color.RED);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        label.setText("Delete");
+        label.setForeground(Color.black);
 
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
@@ -215,13 +224,14 @@ public class BankAccountInterface extends JPanel
             @Override
             public void mouseEntered(MouseEvent e)
             {
-                label.setFont(new Font("Segoe UI", Font.BOLD, 24));
+                label.setForeground(Color.RED);
+                panel.setBackground(new Color(230, 230, 230));
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-                label.setFont(new Font("Segoe UI", Font.PLAIN, 24));
+                label.setForeground(Color.black);
             }
         });
         return label;
@@ -254,10 +264,21 @@ public class BankAccountInterface extends JPanel
         setLayout(null);
         setBackground(Color.WHITE);
         setSize(WIDTH, HEIGHT);
+        setBorder(new LineBorder(new Color(200, 200, 200), 1));
         
         addMouseListener(new MouseAdapter()
         {
-            //will be added soon
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                setBackground(new Color(230, 230, 230));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                setBackground(Color.white);
+            }
         });
         
     }

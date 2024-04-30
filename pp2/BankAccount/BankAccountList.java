@@ -2,7 +2,7 @@ package BankAccountThingy.pp2.BankAccount;
 import BankAccountThingy.pp2.BankAccount.Utils.Sort;
 import BankAccountThingy.pp2.BankAccount.Utils.SortType;
 
-public class BankAccountList
+public class  BankAccountList
 {
     private int size;
     public BankAccount2[] ba; // this is public for certain reasons...
@@ -217,7 +217,8 @@ public class BankAccountList
             if(b != null) // pag dili null ang array (para dili mag error)
             {
                 // para ma search imohang pangalan na mas better (dili case-sensitive, ug ma-search ug dali)
-                if(b.getAccountName().toLowerCase().contains(name.toLowerCase()) || name.toLowerCase().contains(b.getAccountName().toLowerCase()))
+                if(b.getAccountName().toLowerCase().contains(name.toLowerCase()) ||
+                        name.toLowerCase().contains(b.getAccountName().toLowerCase()))
                 {
                     return b;
                 }
