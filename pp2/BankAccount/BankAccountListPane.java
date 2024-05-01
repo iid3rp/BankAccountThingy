@@ -100,20 +100,17 @@ public class BankAccountListPane extends JScrollPane
         {
             for(BankAccount2 bank : ba.ba)
             {
-                // if condition with 5 searching-type-containing method algorithms:
-                if((bank.getFirstName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
-                    query.contains(bank.getFirstName().toLowerCase().trim())) ||
+                // if condition with 4 searching-type-containing method algorithms:
+                if((bank.getFirstName().toLowerCase().contains(query.toLowerCase()) ||
+                    query.contains(bank.getFirstName().toLowerCase()) ||
 
-                   (bank.getMiddleName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
-                    query.contains(bank.getMiddleName().toLowerCase().trim())) ||
+                   (bank.getMiddleName().toLowerCase().contains(query.toLowerCase()) ||
+                    query.contains(bank.getMiddleName().toLowerCase())) ||
 
-                   (bank.getLastName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
-                    query.contains(bank.getLastName().toLowerCase().trim())) ||
+                   (bank.getLastName().toLowerCase().contains(query.toLowerCase()) ||
+                    query.contains(bank.getLastName().toLowerCase())) ||
 
-                   (bank.getAccountName().toLowerCase().trim().contains(query.toLowerCase().trim()) ||
-                    query.contains(bank.getAccountName().toLowerCase().trim())) ||
-
-                   (bank.getAccountNumber() + "").contains(query))
+                   (bank.getAccountNumber() + "").contains(query)))
 
                 {
                     // making sure the size will accurately affect the whole list each search, and not crop one BankAccountInterface...

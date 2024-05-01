@@ -354,7 +354,7 @@ public class DepositDialog extends JDialog
                 if(moneyHandler.isEnabled())
                 {
                     textField.setCaretColor(Color.BLACK);
-                    textField.requestFocus();
+                    textField.setText("");
                     textField.setForeground(Color.BLACK); // Set back to default color
                 }
             }
