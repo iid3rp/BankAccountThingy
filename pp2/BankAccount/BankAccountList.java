@@ -95,9 +95,7 @@ public class  BankAccountList
             {
                 System.arraycopy(ba, index + 1, reference, index + 1 - 1, size + 1 - (index + 1));
             }
-            // then point it back...
-            ba = reference;
-            ba = size == 0? null : reference; // double checking, if null, makes it null
+            ba = size == 0? null : reference; // double-checking, if null, makes it null
         }
     }
     

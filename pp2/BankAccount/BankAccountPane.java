@@ -68,8 +68,8 @@ public class BankAccountPane extends JPanel
         if(b != null)
         {
             BankAccountListPane listPane = new BankAccountListPane(this, b, frame, Sort.LAST_NAME, SortType.SORT_ASCENDING);
-            this.search.setEnabled(false);
-            this.sortTypes.setEnabled(false);
+            this.search.setEnabled(b.ba != null);
+            this.sortTypes.setEnabled(b.ba != null);
             return listPane;
         }
         else return new BankAccountListPane();
@@ -243,11 +243,22 @@ public class BankAccountPane extends JPanel
                 {
                     search.setEditable(true);
                     search.setFocusable(true);
-                    searchBar.setText(""); // Set back
                     search.requestFocus();
                     pane.restore();
                 }
             }
+        });
+
+        searchBar.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                search.selectAll();
+            }
+
+            @Override
+            public void focusLost(FocusEvent ignored) {}
         });
         searchBar.setVisible(true);
 
@@ -328,9 +339,9 @@ public class BankAccountPane extends JPanel
 
     public JComboBox<String> createSorting()
     {
-        String[] choices = {"Sort First Name A-Z", "Sort First Name Z-A",
+        String[] choices = {"Sort Last Name A-Z", "Sort Last Name Z-A",
+                "Sort First Name A-Z", "Sort First Name Z-A",
                 "Sort Middle Name A-Z", "Sort Middle Name Z-A",
-                "Sort Last Name A-Z", "Sort Last Name Z-A",
                 "Sort Account Number 0-9", "Sort Account Number 9-0"};
         JComboBox<String> box = new JComboBox<>(choices);
         box.setLayout(null);

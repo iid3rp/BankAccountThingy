@@ -7,6 +7,10 @@ import BankAccountThingy.pp2.BankAccount.Utils.Intention;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.Objects;
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 
@@ -22,6 +26,7 @@ public class BankAccountListPane extends JScrollPane
     public BankAccountList ba;
     private JPanel container;
     private int size;
+    private boolean nothing;
 
     /**<editor-fold desc="Description">
      * you need to get the panel's preferred size "daw" because that's going
@@ -42,11 +47,10 @@ public class BankAccountListPane extends JScrollPane
             currentSort = sort;
             currentSortType = type;
             initializeComponent(frame, pane);
-            container.setSize(new Dimension(width,(int) ((height + 1.5) * b.getLength())));
-            container.setPreferredSize(new Dimension(width, (int) ((height + 1.5) * b.getLength())));
+            container.setSize(new Dimension(width, ((height) * b.getLength()) + b.getLength()));
+            container.setPreferredSize(new Dimension(width, ((height) * b.getLength()) + b.getLength()));
             // add components into the container here :3
             addComponents();
-
 
             setViewportView(container);
             getViewport().setScrollMode(JViewport.SIMPLE_SCROLL_MODE);
@@ -113,8 +117,8 @@ public class BankAccountListPane extends JScrollPane
 
                 {
                     // making sure the size will accurately affect the whole list each search, and not crop one BankAccountInterface...
-                    container.setSize(new Dimension(1030, (BankAccountInterface.HEIGHT + 2) * (index + 1)));
-                    container.setPreferredSize(new Dimension(1030, (BankAccountInterface.HEIGHT + 2) * (index + 1)));
+                    container.setSize(new Dimension(1030, ((BankAccountInterface.HEIGHT) * (index + 1)) + index));
+                    container.setPreferredSize(new Dimension(1030, ((BankAccountInterface.HEIGHT) * (index + 1)) + index));
                     BankAccountInterface bankInterface = new BankAccountInterface(frame,bank, this);
                     bankInterface.setBounds(0, ((BankAccountInterface.HEIGHT * index++)), BankAccountInterface.WIDTH, BankAccountInterface.HEIGHT);
                     container.add(bankInterface);
@@ -125,16 +129,41 @@ public class BankAccountListPane extends JScrollPane
                 setHorizontalScrollBarPolicy(HORIZONTAL_SCROLLBAR_NEVER);
                 container.setSize(new Dimension(1030, 700));
                 container.setPreferredSize(new Dimension(1030, 700));
-                container.add(createNotFound(-1, 200, 60, Font.BOLD, "No Bank Account Found!"));
-                container.add(createNotFound(-1, 300, 20, Font.PLAIN, "Maybe search with something else?"));
+                container.add(createNotFound(-1, 100, 60, Font.BOLD, "No Bank Account Found!"));
+                container.add(createNotFound(-1, 200, 20, Font.PLAIN, "Maybe search with something else?"));
+                container.add(addBankDesign());
                 setViewportView(container);
             }
         }
-
         container.repaint();
         container.validate();
         repaint();
         validate();
+    }
+
+    public JLabel addBankDesign()
+    {
+        BufferedImage x;
+        try {
+            x = ImageIO.read(Objects.requireNonNull(BankAccount2.class.getResource("Resources/bankie.png")));
+        }
+        catch(IOException e) {
+            throw new RuntimeException(e);
+        }
+        JLabel label = new JLabel()
+        {
+            @Override
+            public void paintComponent(Graphics g)
+            {
+                super.paintComponent(g);
+                g.drawImage(x, 0, 0, null);
+            }
+        };
+        label.setLayout(null);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        label.setBounds((1080 / 2) - (x.getWidth() / 2) + 10, 300, x.getWidth(), x.getHeight());
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        return label;
     }
 
     public void requestAdd(BankAccount2 b)
@@ -159,9 +188,9 @@ public class BankAccountListPane extends JScrollPane
     {
         JLabel label = new JLabel();
         label.setForeground(Color.BLACK);
+        label.setLayout(null);
         label.setText(text);
         label.setFont(new Font("Segoe UI", font, size));
-        label.setBounds(x, y, width, height);
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText());
         int height = metrics.getHeight();
@@ -170,22 +199,22 @@ public class BankAccountListPane extends JScrollPane
         {
             if(y == -1)
             {
+                label.setBounds((getWidth() / 2) - (width / 2), (getHeight() / 2) - (height / 2), width, height);
                 label.setHorizontalAlignment(SwingConstants.CENTER);
                 label.setVerticalAlignment(SwingConstants.CENTER);
-                label.setBounds((getWidth() / 2) - (width / 2), (getHeight() / 2) - (height / 2), width, height);
             }
             else
             {
-                label.setHorizontalAlignment(SwingConstants.CENTER);
                 label.setBounds((getWidth() / 2) - (width / 2), y, width, height);
+                label.setHorizontalAlignment(SwingConstants.CENTER);
             }
         }
         else
         {
             if(y == -1)
             {
-                label.setVerticalAlignment(SwingConstants.CENTER);
                 label.setBounds((getWidth() / 2) - (width / 2), (getHeight() / 2) - (height / 2), width, height);
+                label.setVerticalAlignment(SwingConstants.CENTER);
             }
             else
             {
@@ -237,17 +266,36 @@ public class BankAccountListPane extends JScrollPane
                 bankInterface.setBounds(0, (BankAccountInterface.HEIGHT * index++), bankInterface.getWidth(), bankInterface.getHeight());
                 container.add(bankInterface);
             }
-            frame.pane.sortTypes.setEnabled(true);
-            frame.pane.search.setEnabled(true);
+            if(frame.pane != null)
+            {
+                frame.pane.sortTypes.setEnabled(true);
+                frame.pane.search.setEnabled(true);
+            }
+            frame.menu.add(frame.deposit);
+            frame.menu.add(frame.withdraw);
+            frame.menu.add(frame.interest);
+
+            nothing = false;
+            container.repaint();
+            repaint();
+            frame.menu.repaint();
         }
         else
         {
             container.add(createAddAccount());
             container.add(createEmptyList());
+            container.add(addBankDesign());
             if(frame.pane != null)
             {
                 frame.pane.sortTypes.setEnabled(false);
                 frame.pane.search.setEnabled(false);
+                frame.menu.remove(frame.deposit);
+                frame.menu.remove(frame.withdraw);
+                frame.menu.remove(frame.interest);
+                nothing = true;
+                container.repaint();
+                repaint();
+                frame.menu.repaint();
             }
         }
     }
@@ -258,12 +306,12 @@ public class BankAccountListPane extends JScrollPane
         label.setLayout(null);
         label.setForeground(Color.black);
         label.setText("<html><u>Add an account to fill it up!</u></html>");
-        label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font("Segoe UI", Font.PLAIN, 30));
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
-        label.setBounds((container.getWidth() / 2) - (width / 2), 180, width, height);
+        label.setBounds((1030 / 2) - (width / 2), 180, width, height);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVisible(true);
         label.addMouseListener(new MouseAdapter()
         {
@@ -299,12 +347,12 @@ public class BankAccountListPane extends JScrollPane
         label.setLayout(null);
         label.setForeground(Color.black);
         label.setText("This bank seems empty!");
-        label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setFont(new Font("Segoe UI", Font.BOLD, 55));
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
         int height = metrics.getHeight();
         label.setBounds((container.getWidth() / 2) - (width / 2), 100, width, height);
+        label.setHorizontalAlignment(SwingConstants.CENTER);
         label.setVisible(true);
         return label;
     }
@@ -329,8 +377,8 @@ public class BankAccountListPane extends JScrollPane
     public void restore()
     {
         container.removeAll();
-        container.setSize(new Dimension(width, (height + 2) * ba.getLength()));
-        container.setPreferredSize(new Dimension(width, (height + 2) * ba.getLength()));
+        container.setSize(new Dimension(width, (BankAccountInterface.HEIGHT * ba.getLength()) + (ba.getLength())));
+        container.setPreferredSize(new Dimension(width, (BankAccountInterface.HEIGHT * ba.getLength()) + (ba.getLength())));
         // add the components to the panel to be put into the scrollPane...
         addComponents();
         setViewportView(container);

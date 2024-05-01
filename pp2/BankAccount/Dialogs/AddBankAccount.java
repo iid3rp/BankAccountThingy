@@ -69,6 +69,18 @@ public class AddBankAccount extends JDialog
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(frame);
         setUndecorated(true);
+        addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                if(e.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    dispose();
+                    confirm = true;
+                }
+            }
+        });
         
         JPanel panel = createPanel();
         add(panel);

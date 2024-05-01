@@ -1,4 +1,5 @@
 package BankAccountThingy.pp2.BankAccount.Dialogs;
+import java.awt.event.*;
 import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -11,9 +12,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
@@ -296,6 +294,17 @@ public class DepositDialog extends JDialog
                 consistentLabelling();
             }
         });
+        textField.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                textField.selectAll();
+            }
+
+            @Override
+            public void focusLost(FocusEvent ignored) {}
+        });
         return textField;
     }
     
@@ -345,7 +354,7 @@ public class DepositDialog extends JDialog
                 if(moneyHandler.isEnabled())
                 {
                     textField.setCaretColor(Color.BLACK);
-                    textField.setText("");
+                    textField.requestFocus();
                     textField.setForeground(Color.BLACK); // Set back to default color
                 }
             }
@@ -371,6 +380,17 @@ public class DepositDialog extends JDialog
                 // Not needed for plain text components
             }
          
+        });
+        textField.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                textField.selectAll();
+            }
+
+            @Override
+            public void focusLost(FocusEvent ignored) {}
         });
         return textField;
     }

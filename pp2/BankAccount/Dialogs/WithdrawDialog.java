@@ -9,9 +9,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.PlainDocument;
@@ -251,7 +249,7 @@ public class WithdrawDialog extends JDialog
                 if(accountNumber.isEnabled())
                 {
                     textField.setCaretColor(Color.BLACK);
-                    textField.setText("");
+                    textField.requestFocus();
                     textField.setForeground(Color.BLACK); // Set back to default color
                 }
             }
@@ -279,6 +277,17 @@ public class WithdrawDialog extends JDialog
                 searchQuery();
                 consistentLabelling();
             }
+        });
+        textField.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                textField.selectAll();
+            }
+
+            @Override
+            public void focusLost(FocusEvent ignored) {}
         });
         return textField;
     }
@@ -329,7 +338,7 @@ public class WithdrawDialog extends JDialog
                 if(moneyHandler.isEnabled())
                 {
                     textField.setCaretColor(Color.BLACK);
-                    textField.setText("");
+                    textField.requestFocus();
                     textField.setForeground(Color.BLACK); // Set back to default color
                 }
             }
@@ -355,6 +364,17 @@ public class WithdrawDialog extends JDialog
                 // Not needed for plain text components
             }
          
+        });
+        textField.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                textField.selectAll();
+            }
+
+            @Override
+            public void focusLost(FocusEvent ignored) {}
         });
         return textField;
     }

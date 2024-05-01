@@ -1,4 +1,5 @@
 package BankAccountThingy.pp2.BankAccount.Dialogs;
+import java.awt.event.*;
 import java.util.Random;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
@@ -10,9 +11,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Color;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import BankAccountThingy.pp2.BankAccount.StreamIO.BankMaker;
@@ -231,7 +229,7 @@ public class AddBank extends JDialog
             public void mouseClicked(MouseEvent e)
             {
                     textField.setCaretColor(Color.BLACK);
-                    textField.setText("");
+                    textField.requestFocus();
                     textField.setForeground(Color.BLACK); // Set back to default color
             }
         });
@@ -261,6 +259,17 @@ public class AddBank extends JDialog
                                                                              .replaceAll("[^a-zA-Z0-9_.-]", "") + ".csv' </b> at <br><b> " + System.getProperty("user.home") + "\\Documents <b/> <html/>");
                 consistentLabelling();
             }
+        });
+        textField.addFocusListener(new FocusListener()
+        {
+            @Override
+            public void focusGained(FocusEvent e)
+            {
+                textField.selectAll();
+            }
+
+            @Override
+            public void focusLost(FocusEvent ignored) {}
         });
         return textField;
     }

@@ -39,10 +39,10 @@ public class BankAccount2
     @Intention(design = "reading a BankAccount to its .csv file.")
     public BankAccount2(String first, String second, String last, long num, double b)
     {
-        firstName = first;
-        middleName = second;
-        lastName = last;
-        givenName = last == null? first : last;
+        firstName = first.isEmpty()? " " : first;
+        middleName = second.isEmpty()? " " : second;
+        lastName = last.isEmpty()? " " : last;
+        givenName = last.equals(" ") ? first : last;
         accountName = givenName + ", " + firstName + " " + middleName.toUpperCase().charAt(0) + ".";
         accountNumber = num;
         balance = b;

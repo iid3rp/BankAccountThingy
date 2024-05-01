@@ -10,6 +10,7 @@ import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.util.Objects;
 
 import BankAccountThingy.pp2.BankAccount.BankAccount2;
@@ -204,11 +205,8 @@ public final class InitialFrame extends JFrame
 
     public void createBankList()
     {
-        // adds the functionalities afterward
+        // add the add account functionality first
         menu.add(addAccount);
-        menu.add(deposit);
-        menu.add(withdraw);
-        menu.add(interest);
 
         contentPanel.removeAll();
         contentPanel.add(pane);
@@ -690,12 +688,52 @@ public final class InitialFrame extends JFrame
         return label;
     }
 
+    public JLabel createGithubRepo()
+    {
+        JLabel label = new JLabel();
+        label.setLayout(null);
+        label.setForeground(Color.black);
+        label.setText("<html><u>Github Repository</u></html>");
+        label.setFont(new Font("Segoe UI", Font.BOLD, 15));
+        FontMetrics metrics = getFontMetrics(label.getFont());
+        int width = metrics.stringWidth(label.getText().toUpperCase());
+        int height = metrics.getHeight();
+        label.setBounds(50, 700, width, height);
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                String someText = "https://github.com/iid3rp/bankaccountthingy";
+                try {
+                    Desktop.getDesktop().browse(URI.create(someText));
+                }
+                catch(IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                label.setForeground(Color.blue);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                label.setForeground(Color.black);
+            }
+        });
+        return label;
+    }
+
     public JLabel createNewBankMain()
     {
         JLabel label = new JLabel();
         label.setLayout(null);
         label.setForeground(Color.black);
-        label.setText("Create new bank");
+        label.setText("<html><u>Create new bank</u></html>");
         label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
@@ -739,7 +777,7 @@ public final class InitialFrame extends JFrame
         JLabel label = new JLabel();
         label.setLayout(null);
         label.setForeground(Color.black);
-        label.setText("Opening existing bank");
+        label.setText("<html><u>Opening existing bank<u/></html>");
         label.setFont(new Font("Segoe UI", Font.BOLD, 20));
         FontMetrics metrics = getFontMetrics(label.getFont());
         int width = metrics.stringWidth(label.getText().toUpperCase());
